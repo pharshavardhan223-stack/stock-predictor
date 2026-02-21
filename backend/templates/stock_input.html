@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <title>Live Stock Data | Stock Predictor</title>
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+
+        .live-box{
+            background:white;
+            padding:20px;
+            border-radius:12px;
+            margin-top:25px;
+            text-align:center;
+            box-shadow:0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .live-box h3{
+            color:#1976d2;
+        }
+
+        .track-btn{
+            background:#1976d2;
+            color:white;
+            padding:10px 20px;
+            border:none;
+            border-radius:8px;
+            cursor:pointer;
+            margin-top:15px;
+        }
+
+        .track-btn:hover{
+            background:#125aa0;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>
+        <i class="fa-solid fa-bolt"></i>
+        Live Stock Tracking
+    </h2>
+
+    <p style="text-align:center;">
+        Enter a stock symbol to fetch real-time data.
+    </p>
+
+
+    <!-- Input Card -->
+    <div class="card">
+
+        <label>
+            <i class="fa-solid fa-chart-simple"></i>
+            Stock Symbol
+        </label>
+
+        <input
+            type="text"
+            id="symbol"
+            placeholder="Example: AAPL, TSLA, RELIANCE.NS"
+        >
+
+        <br><br>
+
+        <button class="track-btn" onclick="startLiveRefresh()">
+            ▶ Start Live Tracking
+        </button>
+
+    </div>
+
+
+    <!-- Live Data Box -->
+    <div class="live-box">
+
+        <h3>Live Price</h3>
+
+        <p id="livePrice">₹ --</p>
+
+        <p>
+            Last Update:
+            <span id="lastUpdate">--</span>
+        </p>
+
+    </div>
+
+
+    <!-- Messages -->
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <p style="color:red; text-align:center;">
+            {{ messages[0] }}
+        </p>
+    {% endif %}
+    {% endwith %}
+
+
+    <!-- Navigation -->
+    <div style="text-align:center; margin-top:25px;">
+
+        <a href="/upload">
+            <i class="fa-solid fa-upload"></i>
+            Upload CSV
+        </a>
+
+        &nbsp;&nbsp;
+
+        <a href="/logout" style="color:#c62828;">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            Logout
+        </a>
+
+    </div>
+
+</div>
+
+
+<!-- ========================= -->
+<!-- AUTO REFRESH SCRIPT -->
+<!-- ========================= -->
+
+<script>
+
+let refreshInterval = null;
+
+
+function startLiveRefresh() {
+
+    const symbol = document.getElementById("symbol").value;
+
+    if (!symbol) {
+        alert("Please enter stock symbol first!");
+        return;
+    }
+
+    // First call
+    fetchLiveData(symbol);
+
+    // Clear old interval
+    if (refreshInterval) {
+        clearInterval(refreshInterval);
+    }
+
+    // Auto refresh every 10 sec
+    refreshInterval = setInterval(() => {
+        fetchLiveData(symbol);
+    }, 10000);
+
+}
+
+
+function fetchLiveData(symbol) {
+
+    fetch(`/live-data/${symbol}`)
+        .then(response => response.json())
+        .then(data => {
+
+            document.getElementById("livePrice").innerText =
+                "₹ " + data.price;
+
+            document.getElementById("lastUpdate").innerText =
+                data.time;
+
+        })
+        .catch(err => {
+
+            document.getElementById("livePrice").innerText = "Error";
+
+            console.log(err);
+
+        });
+}
+
+</script>
+
+</body>
+</html>

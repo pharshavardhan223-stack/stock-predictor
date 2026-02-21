@@ -1,0 +1,31 @@
+username,date,column,last,avg,action
+username,stock,action,confidence,date
+user1,2026-02-13 13:57:09.926825,no of orders,15.0,23.5,BUY
+user1,2026-02-13 13:57:09.926825,item,26.0,23.5,SELL
+user1,2026-02-13 14:20:23.640218,no of orders,15.0,18.27,BUY
+user1,2026-02-13 14:20:23.640218,payment amount,12000.0,14670.0,BUY
+user1,2026-02-13 14:20:23.640218,item,26.0,31.61,BUY
+user1,2026-02-13 14:21:07.889825,no of orders,15.0,18.27,BUY
+user1,2026-02-13 14:21:07.889825,payment amount,12000.0,14670.0,BUY
+user1,2026-02-13 14:26:59.725713,no of orders,15.0,18.27,BUY
+user1,2026-02-13 14:26:59.725713,payment amount,12000.0,14670.0,BUY
+
+admin,no of orders,BUY,67.0,20-02-2026 08:55
+admin,payment amount,BUY,68.2,20-02-2026 08:55
+admin,price,BUY,99.4,20-02-2026 11:10
+admin,price,BUY,99.4,20-02-2026 11:15
+admin,price,BUY,99.4,20-02-2026 11:18
+admin,price,BUY,97.9,20-02-2026 11:20
+admin,no of orders,BUY,67.0,20-02-2026 14:08
+admin,no of orders,BUY,67.0,20-02-2026 15:02
+admin,no of orders,BUY,67.0,20-02-2026 15:03
+admin,price,BUY,99.4,20-02-2026 15:22
+admin,payment amount,BUY,68.2,20-02-2026 16:16
+admin,price,SELL,98.0,20-02-2026 16:18
+admin,price,SELL,98.0,20-02-2026 16:19
+admin,Record ID,BUY,100.0,20-02-2026 17:04
+admin,Record ID,BUY,100.0,20-02-2026 17:05
+admin,price,BUY,99.4,20-02-2026 20:49
+admin,no of orders,BUY,67.0,20-02-2026 20:52
+admin,no of orders,BUY,67.0,21-02-2026 11:48
+admin,no of orders,BUY,67.0,21-02-2026 11:54

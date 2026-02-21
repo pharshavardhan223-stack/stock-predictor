@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Result</title>
+</head>
+<body>
+
+<h2>Prediction & Recommendation</h2>
+
+{% for col, result in results.items() %}
+
+<hr>
+
+<h3>{{ col }}</h3>
+
+<p>Last Actual Value: {{ result.last }}</p>
+<p>Predicted Average: {{ result.avg }}</p>
+
+<h4>Recommendation: {{ result.action }}</h4>
+<p>Reason: {{ result.reason }}</p>
+
+<h4>Next 7 Predictions:</h4>
+
+<ul>
+    {% for val in predictions[col] %}
+        <li>{{ "%.2f"|format(val) }}</li>
+    {% endfor %}
+</ul>
+
+{% endfor %}
+
+<br>
+
+<a href="/upload">Upload New File</a> |
+<a href="/logout">Logout</a>
+
+</body>
+</html>

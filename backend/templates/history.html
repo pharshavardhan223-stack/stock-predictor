@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<title>AI Prediction History | Stock AI</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+/* ================= GLOBAL ================= */
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Inter',sans-serif;
+}
+
+body{
+min-height:100vh;
+background:
+linear-gradient(-45deg,#020617,#0f172a,#1e293b,#020617);
+background-size:400% 400%;
+animation:bgFlow 15s ease infinite;
+color:#e5e7eb;
+}
+
+@keyframes bgFlow{
+0%{background-position:0% 50%}
+50%{background-position:100% 50%}
+100%{background-position:0% 50%}
+}
+
+/* ================= CONTAINER ================= */
+
+.container{
+width:90%;
+max-width:1100px;
+margin:50px auto;
+animation:fadeUp 1s ease;
+}
+
+@keyframes fadeUp{
+from{opacity:0;transform:translateY(40px)}
+to{opacity:1;transform:translateY(0)}
+}
+
+/* ================= HEADER ================= */
+
+.header{
+text-align:center;
+margin-bottom:30px;
+}
+
+.header h2{
+font-size:32px;
+font-weight:600;
+background:linear-gradient(90deg,#38bdf8,#22d3ee,#7dd3fc);
+-webkit-background-clip:text;
+color:transparent;
+}
+
+/* ================= SEARCH ================= */
+
+.search-box{
+display:flex;
+justify-content:center;
+margin-bottom:25px;
+}
+
+.search-box input{
+width:300px;
+padding:10px 15px;
+border-radius:20px;
+border:1px solid rgba(255,255,255,.2);
+background:rgba(255,255,255,.05);
+color:#e5e7eb;
+outline:none;
+transition:.3s;
+}
+
+.search-box input:focus{
+border-color:#38bdf8;
+box-shadow:0 0 15px #38bdf8;
+}
+
+/* ================= TABLE CARD ================= */
+
+.table-card{
+background:rgba(255,255,255,0.05);
+backdrop-filter:blur(20px);
+border-radius:22px;
+padding:25px;
+border:1px solid rgba(255,255,255,.1);
+box-shadow:0 30px 80px rgba(0,0,0,.7);
+overflow:hidden;
+}
+
+/* ================= TABLE ================= */
+
+table{
+width:100%;
+border-collapse:collapse;
+font-size:14px;
+}
+
+thead{
+position:sticky;
+top:0;
+background:rgba(2,6,23,.95);
+z-index:10;
+}
+
+th,td{
+padding:14px 10px;
+text-align:center;
+border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+th{
+color:#7dd3fc;
+font-weight:600;
+}
+
+tbody tr{
+transition:.3s;
+}
+
+tbody tr:hover{
+background:rgba(56,189,248,.12);
+transform:scale(1.01);
+}
+
+/* ================= TAGS ================= */
+
+.tag{
+padding:4px 12px;
+border-radius:14px;
+font-size:12px;
+font-weight:600;
+display:inline-block;
+}
+
+.buy{
+background:rgba(34,197,94,.2);
+color:#4ade80;
+box-shadow:0 0 8px #22c55e;
+}
+
+.sell{
+background:rgba(239,68,68,.2);
+color:#f87171;
+box-shadow:0 0 8px #ef4444;
+}
+
+.hold{
+background:rgba(250,204,21,.2);
+color:#fde047;
+box-shadow:0 0 8px #facc15;
+}
+
+/* ================= EMPTY ================= */
+
+.empty{
+text-align:center;
+color:#94a3b8;
+padding:40px;
+font-size:16px;
+}
+
+/* ================= FOOTER ================= */
+
+.footer{
+text-align:center;
+margin-top:30px;
+display:flex;
+justify-content:center;
+gap:25px;
+flex-wrap:wrap;
+}
+
+.footer a{
+padding:10px 22px;
+border-radius:20px;
+text-decoration:none;
+font-weight:600;
+transition:.3s;
+display:inline-flex;
+align-items:center;
+gap:6px;
+}
+
+.btn-blue{
+background:linear-gradient(45deg,#38bdf8,#22d3ee);
+color:#020617;
+}
+
+.btn-red{
+background:linear-gradient(45deg,#ef4444,#f87171);
+color:#020617;
+}
+
+.footer a:hover{
+transform:translateY(-3px) scale(1.05);
+box-shadow:0 0 25px rgba(56,189,248,.7);
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:768px){
+
+.search-box input{
+width:90%;
+}
+
+table{
+font-size:12px;
+}
+
+th,td{
+padding:10px 6px;
+}
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+<div class="container">
+
+<!-- HEADER -->
+
+<div class="header">
+
+<h2>
+<i class="fa-solid fa-clock-rotate-left"></i>
+AI Prediction History
+</h2>
+
+</div>
+
+
+<!-- SEARCH -->
+
+{% if records %}
+
+<div class="search-box">
+
+<input type="text" id="search"
+placeholder="Search history...">
+
+</div>
+
+{% endif %}
+
+
+<!-- TABLE -->
+
+<div class="table-card">
+
+{% if records %}
+
+<table id="historyTable">
+
+<thead>
+<tr>
+<th>Date</th>
+<th>Column</th>
+<th>Last Value</th>
+<th>Predicted Avg</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody>
+
+{% for row in records %}
+
+<tr>
+
+<td>{{ row.date }}</td>
+<td>{{ row.column }}</td>
+<td>{{ row.last }}</td>
+<td>{{ row.avg }}</td>
+
+<td>
+
+<span class="tag
+{% if row.action=='BUY' %}buy
+{% elif row.action=='SELL' %}sell
+{% else %}hold{% endif %}">
+
+{{ row.action }}
+
+</span>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+{% else %}
+
+<div class="empty">
+<i class="fa-solid fa-database"></i><br><br>
+No prediction history available yet.
+</div>
+
+{% endif %}
+
+</div>
+
+
+<!-- FOOTER -->
+
+<div class="footer">
+
+<a href="/dashboard" class="btn-blue">
+<i class="fa-solid fa-house"></i> Dashboard
+</a>
+
+<a href="/logout" class="btn-red">
+<i class="fa-solid fa-right-from-bracket"></i> Logout
+</a>
+
+</div>
+
+
+</div>
+
+
+<!-- ================= SEARCH SCRIPT ================= -->
+
+<script>
+
+const search = document.getElementById("search");
+const table = document.getElementById("historyTable");
+
+if(search){
+
+search.addEventListener("keyup",()=>{
+
+const val = search.value.toLowerCase();
+
+const rows = table.querySelectorAll("tbody tr");
+
+rows.forEach(row=>{
+
+row.style.display =
+row.innerText.toLowerCase().includes(val)
+? ""
+: "none";
+
+});
+
+});
+
+}
+
+</script>
+
+
+</body>
+</html>

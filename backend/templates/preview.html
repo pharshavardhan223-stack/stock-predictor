@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<title>Preview Dataset | Stock AI</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+/* ========== GLOBAL ========== */
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Inter',sans-serif;
+}
+
+body{
+min-height:100vh;
+background:
+linear-gradient(-45deg,#020617,#0f172a,#1e293b,#020617);
+background-size:400% 400%;
+animation:bgFlow 16s ease infinite;
+color:#e5e7eb;
+overflow:hidden;
+}
+
+@keyframes bgFlow{
+0%{background-position:0% 50%}
+50%{background-position:100% 50%}
+100%{background-position:0% 50%}
+}
+
+/* Grid */
+
+body::before{
+content:"";
+position:fixed;
+inset:0;
+background:
+linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),
+linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);
+background-size:40px 40px;
+z-index:-1;
+animation:gridMove 30s linear infinite;
+}
+
+@keyframes gridMove{
+to{transform:translate(40px,40px)}
+}
+
+/* Particles */
+
+#bgCanvas{
+position:fixed;
+inset:0;
+z-index:-2;
+}
+
+/* ========== CONTAINER ========== */
+
+.container{
+width:85%;
+max-width:1000px;
+margin:60px auto;
+background:rgba(255,255,255,.05);
+backdrop-filter:blur(20px);
+border-radius:24px;
+padding:35px;
+border:1px solid rgba(255,255,255,.1);
+box-shadow:0 40px 90px rgba(0,0,0,.7);
+animation:fadeUp 1s ease;
+position:relative;
+overflow:hidden;
+}
+
+@keyframes fadeUp{
+from{opacity:0;transform:translateY(40px)}
+to{opacity:1;transform:translateY(0)}
+}
+
+/* Shine */
+
+.container::after{
+content:"";
+position:absolute;
+inset:0;
+background:linear-gradient(
+120deg,
+transparent,
+rgba(255,255,255,.08),
+transparent
+);
+animation:shine 6s infinite;
+pointer-events:none;
+}
+
+@keyframes shine{
+to{transform:translateX(100%)}
+}
+
+/* ========== TITLE ========== */
+
+h2{
+text-align:center;
+margin-bottom:25px;
+font-weight:600;
+background:linear-gradient(90deg,#38bdf8,#22d3ee,#7dd3fc);
+-webkit-background-clip:text;
+color:transparent;
+}
+
+/* ========== TABLE ========== */
+
+.table-box{
+max-height:320px;
+overflow:auto;
+border-radius:14px;
+border:1px solid rgba(255,255,255,.1);
+background:rgba(255,255,255,.03);
+}
+
+/* Style Pandas Table */
+
+.table-box table{
+width:100%;
+border-collapse:collapse;
+font-size:13px;
+color:#e5e7eb;
+}
+
+.table-box thead{
+position:sticky;
+top:0;
+background:rgba(2,6,23,.95);
+z-index:5;
+}
+
+.table-box th,
+.table-box td{
+padding:10px 12px;
+text-align:center;
+border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.table-box th{
+color:#7dd3fc;
+font-weight:600;
+}
+
+.table-box tr:hover{
+background:rgba(56,189,248,.1);
+}
+
+/* Scrollbar */
+
+.table-box::-webkit-scrollbar{
+height:8px;
+width:8px;
+}
+
+.table-box::-webkit-scrollbar-thumb{
+background:#38bdf8;
+border-radius:10px;
+}
+
+/* ========== COLUMNS ========== */
+
+.columns{
+margin-top:25px;
+}
+
+.columns h3{
+color:#7dd3fc;
+margin-bottom:12px;
+}
+
+/* Pills */
+
+.col-wrap{
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+}
+
+.col-pill{
+position:relative;
+}
+
+.col-pill input{
+display:none;
+}
+
+.col-pill label{
+display:block;
+padding:6px 14px;
+border-radius:20px;
+border:1px solid rgba(255,255,255,.2);
+cursor:pointer;
+font-size:13px;
+transition:.3s;
+color:#c7d2fe;
+}
+
+.col-pill input:checked + label{
+background:linear-gradient(45deg,#38bdf8,#22d3ee);
+color:#020617;
+border-color:transparent;
+box-shadow:0 0 15px #38bdf8;
+}
+
+/* ========== BUTTONS ========== */
+
+.actions{
+margin-top:25px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+flex-wrap:wrap;
+gap:15px;
+}
+
+button{
+padding:12px 30px;
+border:none;
+border-radius:25px;
+background:linear-gradient(45deg,#38bdf8,#22d3ee);
+color:#020617;
+font-weight:600;
+cursor:pointer;
+font-size:14px;
+transition:.3s;
+position:relative;
+overflow:hidden;
+}
+
+button:hover{
+transform:scale(1.05);
+box-shadow:0 0 30px #38bdf8;
+}
+
+/* Progress */
+
+.loader{
+width:0;
+height:3px;
+background:#22d3ee;
+margin-top:8px;
+border-radius:5px;
+transition:1s;
+}
+
+button.loading + .loader{
+width:100%;
+}
+
+/* Back */
+
+.back{
+color:#7dd3fc;
+text-decoration:none;
+font-size:14px;
+transition:.3s;
+}
+
+.back:hover{
+color:#22d3ee;
+text-shadow:0 0 10px #22d3ee;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- Background -->
+<canvas id="bgCanvas"></canvas>
+
+<div class="container">
+
+<h2>📊 Preview Dataset</h2>
+
+<!-- TABLE -->
+
+<div class="table-box">
+{{ table | safe }}
+</div>
+
+
+<!-- COLUMNS -->
+
+<form method="POST" action="/select" id="selectForm">
+
+<div class="columns">
+
+<h3>Select Columns for Analysis</h3>
+
+<div class="col-wrap">
+
+{% for col in columns %}
+
+<div class="col-pill">
+
+<input type="checkbox"
+id="col{{ loop.index }}"
+name="columns"
+value="{{ col }}">
+
+<label for="col{{ loop.index }}">
+{{ col }}
+</label>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</div>
+
+
+<!-- ACTIONS -->
+
+<div class="actions">
+
+<div>
+<button type="submit" id="goBtn">
+Continue →
+</button>
+
+<div class="loader" id="loader"></div>
+</div>
+
+<a href="/upload" class="back">
+← Upload New File
+</a>
+
+</div>
+
+</form>
+
+</div>
+
+
+<!-- ========== SCRIPT ========== -->
+
+<script>
+
+/* Background Particles */
+
+const canvas=document.getElementById("bgCanvas");
+const ctx=canvas.getContext("2d");
+
+function resize(){
+canvas.width=innerWidth;
+canvas.height=innerHeight;
+}
+resize();
+addEventListener("resize",resize);
+
+let dots=[];
+
+for(let i=0;i<80;i++){
+dots.push({
+x:Math.random()*canvas.width,
+y:Math.random()*canvas.height,
+dx:(Math.random()-.5)*.5,
+dy:(Math.random()-.5)*.5
+});
+}
+
+function animateBG(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height);
+
+dots.forEach(d=>{
+
+d.x+=d.dx;
+d.y+=d.dy;
+
+if(d.x<0||d.x>canvas.width) d.dx*=-1;
+if(d.y<0||d.y>canvas.height) d.dy*=-1;
+
+ctx.fillStyle="rgba(56,189,248,.6)";
+ctx.beginPath();
+ctx.arc(d.x,d.y,1.6,0,Math.PI*2);
+ctx.fill();
+
+});
+
+requestAnimationFrame(animateBG);
+}
+
+animateBG();
+
+
+/* Loader on Submit */
+
+const form=document.getElementById("selectForm");
+const btn=document.getElementById("goBtn");
+const loader=document.getElementById("loader");
+
+form.addEventListener("submit",()=>{
+
+btn.classList.add("loading");
+loader.style.width="100%";
+
+});
+
+</script>
+
+</body>
+</html>

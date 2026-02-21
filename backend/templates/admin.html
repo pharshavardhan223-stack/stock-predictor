@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Panel</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>🛠 Admin Dashboard</h2>
+
+<hr>
+
+
+<!-- USERS -->
+<h3>👤 Users</h3>
+
+<table border="1" width="100%">
+
+<tr>
+    <th>Username</th>
+</tr>
+
+{% for user in users %}
+
+<tr>
+    <td>{{ user }}</td>
+</tr>
+
+{% endfor %}
+
+</table>
+
+
+<br><br>
+
+
+<!-- HISTORY -->
+<h3>📜 Prediction History</h3>
+
+<table border="1" width="100%">
+
+<tr>
+    <th>Record</th>
+</tr>
+
+{% for row in history %}
+
+<tr>
+    <td>{{ row }}</td>
+</tr>
+
+{% endfor %}
+
+</table>
+
+
+<br>
+
+<a href="/dashboard">⬅ Back</a>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<title>AI Prediction Report | Stock AI</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+/* ================= GLOBAL ================= */
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Inter',sans-serif;
+}
+
+body{
+min-height:100vh;
+background:
+linear-gradient(-45deg,#020617,#0f172a,#1e293b,#020617);
+background-size:400% 400%;
+animation:bgFlow 15s ease infinite;
+color:#e5e7eb;
+}
+
+@keyframes bgFlow{
+0%{background-position:0% 50%}
+50%{background-position:100% 50%}
+100%{background-position:0% 50%}
+}
+
+/* ================= CONTAINER ================= */
+
+.container{
+width:90%;
+max-width:1200px;
+margin:50px auto;
+animation:fadeUp 1.2s ease;
+}
+
+@keyframes fadeUp{
+from{opacity:0;transform:translateY(40px)}
+to{opacity:1;transform:translateY(0)}
+}
+
+/* ================= HEADER ================= */
+
+.header{
+text-align:center;
+margin-bottom:35px;
+}
+
+.header h2{
+font-size:32px;
+font-weight:600;
+background:linear-gradient(90deg,#38bdf8,#22d3ee,#7dd3fc);
+-webkit-background-clip:text;
+color:transparent;
+}
+
+/* ================= CARD ================= */
+
+.card{
+background:rgba(255,255,255,0.05);
+backdrop-filter:blur(20px);
+border-radius:22px;
+padding:30px;
+border:1px solid rgba(255,255,255,.1);
+box-shadow:0 30px 80px rgba(0,0,0,.7);
+margin-bottom:35px;
+position:relative;
+overflow:hidden;
+transition:.4s;
+}
+
+.card:hover{
+transform:translateY(-6px);
+box-shadow:0 40px 90px rgba(56,189,248,.3);
+}
+
+/* Shine */
+
+.card::after{
+content:"";
+position:absolute;
+inset:0;
+background:linear-gradient(
+120deg,
+transparent,
+rgba(255,255,255,.07),
+transparent
+);
+animation:shine 6s infinite;
+pointer-events:none;
+}
+
+@keyframes shine{
+to{transform:translateX(100%)}
+}
+
+/* ================= TITLE ================= */
+
+.card h3{
+color:#7dd3fc;
+margin-bottom:15px;
+}
+
+/* ================= TAGS ================= */
+
+.tag{
+padding:4px 12px;
+border-radius:15px;
+font-size:12px;
+font-weight:600;
+}
+
+/* BUY SELL HOLD */
+
+.buy{
+background:rgba(34,197,94,.2);
+color:#4ade80;
+box-shadow:0 0 10px #22c55e;
+}
+
+.sell{
+background:rgba(239,68,68,.2);
+color:#f87171;
+box-shadow:0 0 10px #ef4444;
+}
+
+.hold{
+background:rgba(250,204,21,.2);
+color:#fde047;
+box-shadow:0 0 10px #facc15;
+}
+
+/* ================= INFO ================= */
+
+.info-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:18px;
+margin:18px 0;
+}
+
+.info{
+background:rgba(255,255,255,.04);
+border-radius:12px;
+padding:12px 15px;
+font-size:14px;
+}
+
+/* ================= CONFIDENCE ================= */
+
+.confidence{
+margin:12px 0;
+}
+
+.bar{
+width:100%;
+height:10px;
+background:rgba(255,255,255,.15);
+border-radius:10px;
+overflow:hidden;
+}
+
+.fill{
+height:100%;
+width:0;
+background:linear-gradient(90deg,#22d3ee,#38bdf8);
+border-radius:10px;
+animation:fillBar 2s forwards;
+}
+
+@keyframes fillBar{
+to{width:var(--w);}
+}
+
+/* ================= ANALYTICS ================= */
+
+.analytics{
+margin-top:15px;
+}
+
+.models{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:15px;
+margin-top:10px;
+}
+
+.model{
+background:rgba(255,255,255,.04);
+border-radius:12px;
+padding:12px;
+font-size:13px;
+transition:.3s;
+}
+
+.model:hover{
+background:rgba(56,189,248,.15);
+}
+
+/* ================= TABLE ================= */
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:15px;
+font-size:13px;
+}
+
+th,td{
+padding:10px;
+text-align:center;
+border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+th{
+color:#7dd3fc;
+}
+
+tr:hover{
+background:rgba(56,189,248,.1);
+}
+
+/* ================= ACTIONS ================= */
+
+.actions{
+text-align:center;
+margin:35px 0;
+display:flex;
+justify-content:center;
+gap:25px;
+flex-wrap:wrap;
+}
+
+/* Buttons */
+
+.btn{
+padding:12px 28px;
+border-radius:22px;
+border:none;
+font-weight:600;
+cursor:pointer;
+text-decoration:none;
+transition:.3s;
+display:inline-flex;
+align-items:center;
+gap:6px;
+font-size:14px;
+}
+
+.btn-blue{
+background:linear-gradient(45deg,#38bdf8,#22d3ee);
+color:#020617;
+}
+
+.btn-red{
+background:linear-gradient(45deg,#ef4444,#f87171);
+color:#020617;
+}
+
+.btn-green{
+background:linear-gradient(45deg,#22c55e,#4ade80);
+color:#020617;
+}
+
+.btn:hover{
+transform:translateY(-3px) scale(1.05);
+box-shadow:0 0 25px rgba(56,189,248,.7);
+}
+
+/* ================= FOOTER ================= */
+
+.footer{
+text-align:center;
+margin-top:20px;
+font-size:14px;
+}
+
+.footer a{
+color:#7dd3fc;
+text-decoration:none;
+margin:0 10px;
+transition:.3s;
+}
+
+.footer a:hover{
+color:#22d3ee;
+text-shadow:0 0 10px #22d3ee;
+}
+
+</style>
+</head>
+
+
+<body>
+
+<div class="container">
+
+<!-- HEADER -->
+
+<div class="header">
+<h2>AI Prediction & Analytics Report</h2>
+</div>
+
+
+<!-- ================= LOOP ================= -->
+
+{% for col, result in results.items() %}
+
+<div class="card">
+
+<h3>📈 {{ col }}</h3>
+
+
+<!-- ACTION -->
+
+<p>
+<b>Action:</b>
+<span class="tag
+{% if result.action=='BUY' %}buy
+{% elif result.action=='SELL' %}sell
+{% else %}hold{% endif %}">
+{{ result.action }}
+</span>
+</p>
+
+
+<!-- INFO -->
+
+<div class="info-grid">
+
+<div class="info">
+<b>Last Value:</b> {{ result.last }}
+</div>
+
+<div class="info">
+<b>Predicted Avg:</b> {{ result.avg }}
+</div>
+
+<div class="info">
+<b>Risk:</b> {{ result.risk }}
+</div>
+
+<div class="info">
+<b>Reason:</b> {{ result.reason }}
+</div>
+
+</div>
+
+
+<!-- CONFIDENCE -->
+
+<div class="confidence">
+
+<p><b>AI Confidence:</b> {{ result.confidence }}%</p>
+
+<div class="bar">
+<div class="fill" style="--w:{{ result.confidence }}%;"></div>
+</div>
+
+</div>
+
+
+<!-- ================= ANALYTICS ================= -->
+
+<div class="analytics">
+
+<h4>Model Analytics</h4>
+
+{% if col in analytics %}
+
+<div class="info-grid">
+
+<div class="info">
+<b>Trend:</b> {{ analytics[col]["trend_percent"] }}%
+</div>
+
+<div class="info">
+<b>Best Model:</b> {{ analytics[col]["best_model"] }}
+</div>
+
+<div class="info">
+<b>R²:</b> {{ analytics[col]["r2"] }}
+</div>
+
+<div class="info">
+<b>MAE:</b> {{ analytics[col]["mae"] }}
+</div>
+
+<div class="info">
+<b>RMSE:</b> {{ analytics[col]["rmse"] }}
+</div>
+
+<div class="info">
+<b>MA7:</b> {{ analytics[col]["ma7"] }}
+</div>
+
+<div class="info">
+<b>MA14:</b> {{ analytics[col]["ma14"] }}
+</div>
+
+</div>
+
+
+<!-- MODELS -->
+
+<h5 style="margin-top:15px;">Model Comparison</h5>
+
+<div class="models">
+
+{% for name,data in analytics[col]["models"].items() %}
+
+<div class="model">
+
+<b>{{ name }}</b><br>
+
+R²: {{ data["r2"] }}<br>
+MAE: {{ data["mae"] }}<br>
+RMSE: {{ data["rmse"] }}
+
+</div>
+
+{% endfor %}
+
+</div>
+
+{% else %}
+
+<p style="color:#f87171;">No analytics available</p>
+
+{% endif %}
+
+</div>
+
+
+<!-- ================= FORECAST ================= -->
+
+<h4 style="margin-top:20px;">📅 7-Day Forecast</h4>
+
+<table>
+
+<tr>
+<th>Day</th>
+<th>Value</th>
+</tr>
+
+{% for val in predictions[col] %}
+
+<tr>
+<td>Day {{ loop.index }}</td>
+<td>{{ "%.2f"|format(val) }}</td>
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+
+{% endfor %}
+
+
+<!-- ================= ACTIONS ================= -->
+
+<div class="actions">
+
+<a href="/download_report" class="btn btn-blue">
+<i class="fa-solid fa-file-pdf"></i> Download PDF
+</a>
+
+<a href="/upload" class="btn btn-green">
+<i class="fa-solid fa-upload"></i> New Upload
+</a>
+
+<a href="/logout" class="btn btn-red">
+<i class="fa-solid fa-right-from-bracket"></i> Logout
+</a>
+
+</div>
+
+
+<!-- FOOTER -->
+
+<div class="footer">
+
+<a href="/dashboard">Dashboard</a> |
+<a href="/live">Live</a> |
+<a href="/profile">Profile</a>
+
+</div>
+
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+
+<title>Analytics | Stock AI</title>
+
+<!-- Plotly -->
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+<!-- Font Awesome -->
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+/* ================= GLOBAL ================= */
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Inter',sans-serif;
+}
+
+body{
+min-height:100vh;
+background:linear-gradient(-45deg,#020617,#0f172a,#1e293b,#020617);
+background-size:400% 400%;
+animation:bgFlow 15s ease infinite;
+color:#e5e7eb;
+}
+
+@keyframes bgFlow{
+0%{background-position:0% 50%}
+50%{background-position:100% 50%}
+100%{background-position:0% 50%}
+}
+
+/* ================= CONTAINER ================= */
+
+.container{
+width:90%;
+max-width:1200px;
+margin:50px auto;
+animation:fadeUp 1s ease;
+}
+
+@keyframes fadeUp{
+from{opacity:0;transform:translateY(40px)}
+to{opacity:1;transform:translateY(0)}
+}
+
+/* ================= HEADER ================= */
+
+.header{
+text-align:center;
+margin-bottom:25px;
+}
+
+.header h2{
+font-size:30px;
+font-weight:600;
+background:linear-gradient(90deg,#38bdf8,#22d3ee,#7dd3fc);
+-webkit-background-clip:text;
+color:transparent;
+}
+
+/* ================= PANEL ================= */
+
+.panel{
+background:rgba(255,255,255,0.05);
+backdrop-filter:blur(20px);
+border-radius:22px;
+padding:30px;
+border:1px solid rgba(255,255,255,.1);
+box-shadow:0 30px 80px rgba(0,0,0,.6);
+}
+
+/* ================= CHART ================= */
+
+#chart{
+width:100%;
+height:520px;
+border-radius:16px;
+}
+
+/* ================= CONTROL PANEL ================= */
+
+.control-panel{
+margin-top:35px;
+padding:20px 30px;
+background:rgba(255,255,255,0.04);
+backdrop-filter:blur(15px);
+border-radius:18px;
+border:1px solid rgba(255,255,255,.1);
+box-shadow:0 15px 40px rgba(0,0,0,.5);
+}
+
+.control-panel form{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:30px;          /* MAIN GAP */
+flex-wrap:wrap;
+}
+
+/* LEFT SIDE */
+
+.control-left{
+display:flex;
+align-items:center;
+gap:20px;          /* GAP BETWEEN LABEL & SELECT */
+}
+
+.control-item{
+display:flex;
+flex-direction:column;
+gap:6px;
+font-size:13px;
+color:#7dd3fc;
+}
+
+.control-item select{
+min-width:150px;
+padding:9px 12px;
+border-radius:10px;
+background:rgba(255,255,255,.05);
+border:1px solid rgba(255,255,255,.2);
+color:#e5e7eb;
+cursor:pointer;
+}
+
+/* RIGHT SIDE (BUTTONS) */
+
+.control-right{
+display:flex;
+align-items:center;
+gap:25px;          /* GAP BETWEEN BUTTONS */
+}
+
+/* ================= BUTTONS ================= */
+
+.btn{
+padding:11px 26px;
+border-radius:22px;
+border:none;
+font-weight:600;
+cursor:pointer;
+text-decoration:none;
+transition:.3s;
+display:flex;
+align-items:center;
+gap:6px;
+font-size:14px;
+}
+
+.btn-blue{
+background:linear-gradient(45deg,#38bdf8,#22d3ee);
+color:#020617;
+}
+
+.btn-green{
+background:linear-gradient(45deg,#22c55e,#4ade80);
+color:#020617;
+}
+
+.btn-dark{
+background:linear-gradient(45deg,#6366f1,#818cf8);
+color:#020617;
+}
+
+.btn:hover{
+transform:translateY(-3px) scale(1.05);
+box-shadow:0 0 25px rgba(56,189,248,.7);
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:900px){
+
+.control-panel form{
+flex-direction:column;
+align-items:stretch;
+}
+
+.control-left,
+.control-right{
+justify-content:center;
+}
+
+}
+/* AI LOADER */
+
+.ai-loader{
+position:fixed;
+inset:0;
+background:rgba(2,6,23,.97);
+display:flex;
+justify-content:center;
+align-items:center;
+z-index:99999;
+opacity:0;
+pointer-events:none;
+transition:.4s ease;
+}
+
+.ai-loader.active{
+opacity:1;
+pointer-events:all;
+}
+
+.ai-core{
+text-align:center;
+color:#38bdf8;
+}
+
+.ring{
+width:120px;
+height:120px;
+border:4px solid rgba(56,189,248,.2);
+border-top:4px solid #38bdf8;
+border-radius:50%;
+animation:spin 1s linear infinite;
+margin:auto;
+}
+
+@keyframes spin{
+to{transform:rotate(360deg)}
+}
+
+.scan{
+width:140px;
+height:4px;
+background:linear-gradient(90deg,transparent,#38bdf8,transparent);
+margin:15px auto;
+animation:scanMove 1.2s linear infinite;
+}
+
+@keyframes scanMove{
+to{transform:translateX(120px)}
+}
+
+.ai-core h3{
+margin-top:15px;
+font-size:22px;
+}
+
+.ai-core p{
+font-size:14px;
+color:#7dd3fc;
+}
+</style>
+</head>
+
+
+<body>
+
+<div class="container">
+
+<!-- HEADER -->
+<div class="header">
+<h2>📊 AI Data Visualization</h2>
+</div>
+
+
+<!-- PANEL -->
+<div class="panel">
+
+<!-- CHART -->
+<div id="chart"></div>
+
+</div>
+
+
+<!-- CONTROL PANEL -->
+
+<div class="control-panel">
+
+<form method="POST" action="/charts" id="chartForm">
+
+<!-- LEFT -->
+
+<div class="control-left">
+
+<div class="control-item">
+
+<span>Chart Type</span>
+
+<select name="chart_type" id="chartType">
+
+<option value="line"
+{% if chart_type=="line" %}selected{% endif %}>
+Line
+</option>
+
+<option value="bar"
+{% if chart_type=="bar" %}selected{% endif %}>
+Bar
+</option>
+
+<option value="area"
+{% if chart_type=="area" %}selected{% endif %}>
+Area
+</option>
+
+</select>
+
+</div>
+
+</div>
+
+
+<!-- RIGHT -->
+
+<div class="control-right">
+
+<button type="submit" class="btn btn-blue">
+<i class="fa-solid fa-rotate"></i>
+Update
+</button>
+
+<a href="{{ url_for('predict') }}" class="btn btn-green">
+<i class="fa-solid fa-brain"></i>
+Predict
+</a>
+
+<a href="/dashboard" class="btn btn-dark">
+<i class="fa-solid fa-house"></i>
+Dashboard
+</a>
+
+</div>
+
+</form>
+
+</div>
+
+
+</div>
+
+
+<!-- ================= SCRIPT ================= -->
+
+<script>
+
+/* DATA FROM FLASK */
+
+const chartData = {{ data | tojson }};
+const columns = {{ columns | tojson }};
+const chartType = "{{ chart_type }}";
+
+let traces=[];
+
+
+/* BUILD TRACES */
+
+columns.forEach(col=>{
+
+const x = [...Array(chartData[col].length).keys()].map(i=>i+1);
+
+let trace={
+x:x,
+y:chartData[col],
+name:col,
+line:{width:3},
+marker:{size:6}
+};
+
+
+if(chartType==="bar"){
+
+trace.type="bar";
+
+}else if(chartType==="area"){
+
+trace.type="scatter";
+trace.mode="lines";
+trace.fill="tozeroy";
+
+}else{
+
+trace.type="scatter";
+trace.mode="lines+markers";
+
+}
+
+traces.push(trace);
+
+});
+
+
+/* LAYOUT */
+
+const layout={
+
+title:{
+text:"Stock Data Analytics",
+font:{color:"#7dd3fc"}
+},
+
+paper_bgcolor:"rgba(0,0,0,0)",
+plot_bgcolor:"rgba(0,0,0,0)",
+
+xaxis:{
+title:"Time Index",
+color:"#c7d2fe",
+gridcolor:"rgba(255,255,255,.05)"
+},
+
+yaxis:{
+title:"Value",
+color:"#c7d2fe",
+gridcolor:"rgba(255,255,255,.05)"
+},
+
+legend:{
+orientation:"h",
+font:{color:"#c7d2fe"}
+},
+
+margin:{t:60}
+
+};
+
+
+/* CONFIG */
+
+const config={
+responsive:true,
+displaylogo:false,
+modeBarButtonsToAdd:["toImage","zoom2d","pan2d","resetScale2d"]
+};
+
+
+/* RENDER */
+
+Plotly.newPlot("chart",traces,layout,config);
+/* AI LOADER */
+
+const loader = document.getElementById("aiLoader");
+
+document.querySelectorAll("form").forEach(form=>{
+
+  form.addEventListener("submit",()=>{
+
+    loader.classList.add("active");
+
+  });
+
+});
+</script>
+
+<!-- AI LOADER -->
+
+<div class="ai-loader" id="aiLoader">
+
+  <div class="ai-core">
+
+    <div class="ring"></div>
+
+    <div class="scan"></div>
+
+    <h3>AI Processing</h3>
+
+    <p id="aiText">Analyzing Market Data...</p>
+
+  </div>
+
+</div>
+</body>
+</html>

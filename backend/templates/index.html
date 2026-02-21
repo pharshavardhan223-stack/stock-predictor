@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Login | Stock AI</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+/* ================= RESET ================= */
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+/* ================= BODY ================= */
+
+body{
+min-height:100vh;
+background:linear-gradient(135deg,#dbeafe,#eff6ff);
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+/* ================= MAIN ================= */
+
+.login-container{
+width:950px;
+height:520px;
+background:white;
+border-radius:20px;
+display:flex;
+overflow:hidden;
+box-shadow:0 30px 60px rgba(0,0,0,0.25);
+animation:pageIn 1s ease;
+}
+
+@keyframes pageIn{
+from{opacity:0;transform:scale(.9)}
+to{opacity:1;transform:scale(1)}
+}
+
+/* ================= LEFT ================= */
+
+.login-box{
+width:50%;
+padding:60px 50px;
+}
+
+.login-box h2{
+color:#2563eb;
+margin-bottom:10px;
+}
+
+.subtitle{
+color:#555;
+margin-bottom:35px;
+}
+
+.input-box{
+position:relative;
+margin-bottom:25px;
+}
+
+.input-box i{
+position:absolute;
+top:14px;
+left:14px;
+color:#2563eb;
+}
+
+.input-box input{
+width:100%;
+padding:12px 15px 12px 42px;
+border-radius:10px;
+border:1px solid #ddd;
+font-size:15px;
+outline:none;
+transition:.3s;
+}
+
+.input-box input:focus{
+border-color:#2563eb;
+box-shadow:0 0 0 3px rgba(37,99,235,.2);
+}
+
+/* ================= BUTTON ================= */
+
+button{
+width:100%;
+padding:13px;
+background:#2563eb;
+border:none;
+border-radius:10px;
+color:white;
+font-size:16px;
+cursor:pointer;
+transition:0.3s;
+}
+
+button:hover{
+background:#1d4ed8;
+transform:scale(1.05);
+box-shadow:0 0 20px rgba(37,99,235,.5);
+}
+
+.error{
+margin-top:15px;
+color:red;
+}
+
+/* ================= RIGHT ================= */
+
+.image-box{
+width:50%;
+background:#020617;
+position:relative;
+overflow:hidden;
+}
+
+/* ================= LOGO CIRCLE ================= */
+
+.logo-circle{
+position:absolute;
+width:240px;
+height:240px;
+border-radius:50%;
+overflow:hidden;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+z-index:5;
+
+background:#020617;
+box-shadow:
+0 0 40px rgba(59,130,246,.7),
+0 0 80px rgba(59,130,246,.4);
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+animation:logoFloat 6s infinite ease-in-out;
+}
+
+/* Logo Image */
+
+.logo-circle img{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+/* Floating */
+
+@keyframes logoFloat{
+0%,100%{
+transform:translate(-50%,-50%) translateY(0);
+}
+50%{
+transform:translate(-50%,-50%) translateY(-15px);
+}
+}
+
+/* Neon Ring */
+
+.logo-circle::after{
+content:"";
+position:absolute;
+inset:-4px;
+border-radius:50%;
+border:2px solid #3b82f6;
+filter:blur(4px);
+opacity:.7;
+}
+
+/* ================= CANVAS ================= */
+
+canvas{
+position:absolute;
+inset:0;
+}
+
+/* ================= SCANNER ================= */
+
+.scan{
+position:absolute;
+inset:0;
+background:linear-gradient(
+to bottom,
+transparent,
+rgba(59,130,246,0.15),
+transparent
+);
+animation:scan 4s linear infinite;
+z-index:4;
+}
+
+@keyframes scan{
+0%{transform:translateY(-100%);}
+100%{transform:translateY(100%);}
+}
+
+/* ================= AI LOADER ================= */
+
+.ai-loader{
+position:fixed;
+inset:0;
+background:rgba(2,6,23,.97);
+display:flex;
+justify-content:center;
+align-items:center;
+z-index:99999;
+opacity:0;
+pointer-events:none;
+transition:.4s ease;
+}
+
+.ai-loader.active{
+opacity:1;
+pointer-events:all;
+}
+
+.ai-core{
+text-align:center;
+color:#38bdf8;
+}
+
+.ring{
+width:120px;
+height:120px;
+border:4px solid rgba(56,189,248,.2);
+border-top:4px solid #38bdf8;
+border-radius:50%;
+animation:spin 1s linear infinite;
+margin:auto;
+}
+
+@keyframes spin{
+to{transform:rotate(360deg)}
+}
+
+.scan-line{
+width:140px;
+height:4px;
+background:linear-gradient(90deg,transparent,#38bdf8,transparent);
+margin:15px auto;
+animation:scanMove 1.2s linear infinite;
+}
+
+@keyframes scanMove{
+to{transform:translateX(120px)}
+}
+
+.ai-core h3{
+margin-top:15px;
+font-size:22px;
+}
+
+.ai-core p{
+font-size:14px;
+color:#7dd3fc;
+}
+/* ===== LOGO LOADER ===== */
+
+.logo-loader{
+  position:relative;
+  width:130px;
+  height:130px;
+  margin:auto;
+}
+
+/* Rotating Ring */
+
+.logo-loader .ring{
+  position:absolute;
+  inset:0;
+  border:4px solid rgba(56,189,248,.2);
+  border-top:4px solid #38bdf8;
+  border-radius:50%;
+  animation:spin 1s linear infinite;
+}
+
+/* Center Logo */
+
+.loader-logo{
+  position:absolute;
+  width:70px;
+  height:70px;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  object-fit:cover;
+
+  background:#020617;
+  padding:6px;
+
+  box-shadow:
+    0 0 15px rgba(56,189,248,.6),
+    0 0 30px rgba(56,189,248,.4);
+
+  animation:pulseLogo 2s infinite;
+}
+
+/* Pulse Effect */
+
+@keyframes pulseLogo{
+  0%,100%{
+    transform:translate(-50%,-50%) scale(1);
+  }
+  50%{
+    transform:translate(-50%,-50%) scale(1.1);
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="login-container">
+
+<!-- ================= LEFT ================= -->
+
+<div class="login-box">
+
+<h2>
+<i class="fa-solid fa-chart-line"></i>
+Stock AI Analytics
+</h2>
+
+<p class="subtitle">
+Welcome Back! Login to continue
+</p>
+
+<form method="POST">
+
+<div class="input-box">
+<i class="fa-solid fa-user"></i>
+<input type="text" name="username" placeholder="Username" required>
+</div>
+
+<div class="input-box">
+<i class="fa-solid fa-lock"></i>
+<input type="password" name="password" placeholder="Password" required>
+</div>
+
+<button type="submit">
+<i class="fa-solid fa-right-to-bracket"></i>
+Sign In
+</button>
+
+</form>
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div class="error">{{ messages[0] }}</div>
+{% endif %}
+{% endwith %}
+
+</div>
+
+
+<!-- ================= RIGHT ================= -->
+
+<div class="image-box" id="coreBox">
+
+<canvas id="netCanvas"></canvas>
+<canvas id="waveCanvas"></canvas>
+
+<!-- LOGO CIRCLE -->
+<div class="logo-circle">
+<img src="{{ url_for('static', filename='images/logo.png') }}">
+</div>
+
+<div class="scan"></div>
+
+</div>
+
+</div>
+
+
+<!-- ================= AI LOADER ================= -->
+
+<div class="ai-loader" id="aiLoader">
+
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Login | Stock AI</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+/* ================= RESET ================= */
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+/* ================= BODY ================= */
+
+body{
+min-height:100vh;
+background:linear-gradient(135deg,#dbeafe,#eff6ff);
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+/* ================= MAIN ================= */
+
+.login-container{
+width:950px;
+height:520px;
+background:white;
+border-radius:20px;
+display:flex;
+overflow:hidden;
+box-shadow:0 30px 60px rgba(0,0,0,0.25);
+animation:pageIn 1s ease;
+}
+
+@keyframes pageIn{
+from{opacity:0;transform:scale(.9)}
+to{opacity:1;transform:scale(1)}
+}
+
+/* ================= LEFT ================= */
+
+.login-box{
+width:50%;
+padding:60px 50px;
+}
+
+.login-box h2{
+color:#2563eb;
+margin-bottom:10px;
+}
+
+.subtitle{
+color:#555;
+margin-bottom:35px;
+}
+
+.input-box{
+position:relative;
+margin-bottom:25px;
+}
+
+.input-box i{
+position:absolute;
+top:14px;
+left:14px;
+color:#2563eb;
+}
+
+.input-box input{
+width:100%;
+padding:12px 15px 12px 42px;
+border-radius:10px;
+border:1px solid #ddd;
+font-size:15px;
+outline:none;
+transition:.3s;
+}
+
+.input-box input:focus{
+border-color:#2563eb;
+box-shadow:0 0 0 3px rgba(37,99,235,.2);
+}
+
+/* ================= BUTTON ================= */
+
+button{
+width:100%;
+padding:13px;
+background:#2563eb;
+border:none;
+border-radius:10px;
+color:white;
+font-size:16px;
+cursor:pointer;
+transition:0.3s;
+}
+
+button:hover{
+background:#1d4ed8;
+transform:scale(1.05);
+box-shadow:0 0 20px rgba(37,99,235,.5);
+}
+
+.error{
+margin-top:15px;
+color:red;
+}
+
+/* ================= RIGHT ================= */
+
+.image-box{
+width:50%;
+background:#020617;
+position:relative;
+overflow:hidden;
+}
+
+/* ================= LOGO CIRCLE ================= */
+
+.logo-circle{
+position:absolute;
+width:240px;
+height:240px;
+border-radius:50%;
+overflow:hidden;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+z-index:5;
+
+background:#020617;
+box-shadow:
+0 0 40px rgba(59,130,246,.7),
+0 0 80px rgba(59,130,246,.4);
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+animation:logoFloat 6s infinite ease-in-out;
+}
+
+/* Logo Image */
+
+.logo-circle img{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+/* Floating */
+
+@keyframes logoFloat{
+0%,100%{
+transform:translate(-50%,-50%) translateY(0);
+}
+50%{
+transform:translate(-50%,-50%) translateY(-15px);
+}
+}
+
+/* Neon Ring */
+
+.logo-circle::after{
+content:"";
+position:absolute;
+inset:-4px;
+border-radius:50%;
+border:2px solid #3b82f6;
+filter:blur(4px);
+opacity:.7;
+}
+
+/* ================= CANVAS ================= */
+
+canvas{
+position:absolute;
+inset:0;
+}
+
+/* ================= SCANNER ================= */
+
+.scan{
+position:absolute;
+inset:0;
+background:linear-gradient(
+to bottom,
+transparent,
+rgba(59,130,246,0.15),
+transparent
+);
+animation:scan 4s linear infinite;
+z-index:4;
+}
+
+@keyframes scan{
+0%{transform:translateY(-100%);}
+100%{transform:translateY(100%);}
+}
+
+/* ================= AI LOADER ================= */
+
+.ai-loader{
+position:fixed;
+inset:0;
+background:rgba(2,6,23,.97);
+display:flex;
+justify-content:center;
+align-items:center;
+z-index:99999;
+opacity:0;
+pointer-events:none;
+transition:.4s ease;
+}
+
+.ai-loader.active{
+opacity:1;
+pointer-events:all;
+}
+
+.ai-core{
+text-align:center;
+color:#38bdf8;
+}
+
+.ring{
+width:120px;
+height:120px;
+border:4px solid rgba(56,189,248,.2);
+border-top:4px solid #38bdf8;
+border-radius:50%;
+animation:spin 1s linear infinite;
+margin:auto;
+}
+
+@keyframes spin{
+to{transform:rotate(360deg)}
+}
+
+.scan-line{
+width:140px;
+height:4px;
+background:linear-gradient(90deg,transparent,#38bdf8,transparent);
+margin:15px auto;
+animation:scanMove 1.2s linear infinite;
+}
+
+@keyframes scanMove{
+to{transform:translateX(120px)}
+}
+
+.ai-core h3{
+margin-top:15px;
+font-size:22px;
+}
+
+.ai-core p{
+font-size:14px;
+color:#7dd3fc;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="login-container">
+
+<!-- ================= LEFT ================= -->
+
+<div class="login-box">
+
+<h2>
+<i class="fa-solid fa-chart-line"></i>
+Stock AI Analytics
+</h2>
+
+<p class="subtitle">
+Welcome Back! Login to continue
+</p>
+
+<form method="POST">
+
+<div class="input-box">
+<i class="fa-solid fa-user"></i>
+<input type="text" name="username" placeholder="Username" required>
+</div>
+
+<div class="input-box">
+<i class="fa-solid fa-lock"></i>
+<input type="password" name="password" placeholder="Password" required>
+</div>
+
+<button type="submit">
+<i class="fa-solid fa-right-to-bracket"></i>
+Sign In
+</button>
+
+</form>
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div class="error">{{ messages[0] }}</div>
+{% endif %}
+{% endwith %}
+
+</div>
+
+
+<!-- ================= RIGHT ================= -->
+
+<div class="image-box" id="coreBox">
+
+<canvas id="netCanvas"></canvas>
+<canvas id="waveCanvas"></canvas>
+
+<!-- LOGO CIRCLE -->
+<div class="logo-circle">
+<img src="{{ url_for('static', filename='images/logo.png') }}">
+</div>
+
+<div class="scan"></div>
+
+</div>
+
+</div>
+
+
+<!-- ================= AI LOADER ================= -->
+
+<div class="ai-loader" id="aiLoader">
+
+  <div class="ai-core">
+
+    <div class="ring"></div>
+
+    <div class="scan-line"></div>
+
+    <h3>AI Processing</h3>
+
+    <p>Analyzing Market Data...</p>
+
+  </div>
+
+</div>
+
+
+<!-- ================= SCRIPT ================= -->
+
+<script>
+
+/* CANVAS */
+
+const net = document.getElementById("netCanvas");
+const wave = document.getElementById("waveCanvas");
+const box = document.getElementById("coreBox");
+
+const nctx = net.getContext("2d");
+const wctx = wave.getContext("2d");
+
+function resize(){
+net.width = wave.width = box.clientWidth;
+net.height = wave.height = box.clientHeight;
+}
+resize();
+window.addEventListener("resize",resize);
+
+
+/* Nodes */
+
+let nodes=[];
+const COUNT=60;
+
+for(let i=0;i<COUNT;i++){
+nodes.push({
+x:Math.random()*net.width,
+y:Math.random()*net.height,
+vx:(Math.random()-.5)*.6,
+vy:(Math.random()-.5)*.6
+});
+}
+
+
+/* Animate */
+
+let t=0;
+
+function animate(){
+
+t+=0.01;
+
+nctx.clearRect(0,0,net.width,net.height);
+wctx.clearRect(0,0,wave.width,wave.height);
+
+
+/* Network */
+
+nodes.forEach(n=>{
+
+n.x+=n.vx;
+n.y+=n.vy;
+
+if(n.x<0||n.x>net.width) n.vx*=-1;
+if(n.y<0||n.y>net.height) n.vy*=-1;
+
+nctx.fillStyle="#3b82f6";
+nctx.beginPath();
+nctx.arc(n.x,n.y,2,0,Math.PI*2);
+nctx.fill();
+
+nodes.forEach(m=>{
+
+const dx=n.x-m.x;
+const dy=n.y-m.y;
+const d=Math.sqrt(dx*dx+dy*dy);
+
+if(d<120){
+
+nctx.strokeStyle=`rgba(59,130,246,${1-d/120})`;
+nctx.beginPath();
+nctx.moveTo(n.x,n.y);
+nctx.lineTo(m.x,m.y);
+nctx.stroke();
+
+}
+
+});
+
+});
+
+
+/* Waves */
+
+for(let x=0;x<wave.width;x+=12){
+
+const y =
+Math.sin(x*0.02 + t)*15 +
+Math.sin(x*0.01 + t*2)*10 +
+wave.height/2;
+
+wctx.fillStyle="rgba(59,130,246,0.05)";
+wctx.fillRect(x,y,12,wave.height);
+
+}
+
+requestAnimationFrame(animate);
+}
+
+animate();
+
+
+/* LOADER */
+
+const loader=document.getElementById("aiLoader");
+
+document.querySelector("form").addEventListener("submit",()=>{
+
+loader.classList.add("active");
+
+});
+
+</script>
+
+</body>
+</html>
+
+</div>
+
+
+<!-- ================= SCRIPT ================= -->
+
+<script>
+
+/* CANVAS */
+
+const net = document.getElementById("netCanvas");
+const wave = document.getElementById("waveCanvas");
+const box = document.getElementById("coreBox");
+
+const nctx = net.getContext("2d");
+const wctx = wave.getContext("2d");
+
+function resize(){
+net.width = wave.width = box.clientWidth;
+net.height = wave.height = box.clientHeight;
+}
+resize();
+window.addEventListener("resize",resize);
+
+
+/* Nodes */
+
+let nodes=[];
+const COUNT=60;
+
+for(let i=0;i<COUNT;i++){
+nodes.push({
+x:Math.random()*net.width,
+y:Math.random()*net.height,
+vx:(Math.random()-.5)*.6,
+vy:(Math.random()-.5)*.6
+});
+}
+
+
+/* Animate */
+
+let t=0;
+
+function animate(){
+
+t+=0.01;
+
+nctx.clearRect(0,0,net.width,net.height);
+wctx.clearRect(0,0,wave.width,wave.height);
+
+
+/* Network */
+
+nodes.forEach(n=>{
+
+n.x+=n.vx;
+n.y+=n.vy;
+
+if(n.x<0||n.x>net.width) n.vx*=-1;
+if(n.y<0||n.y>net.height) n.vy*=-1;
+
+nctx.fillStyle="#3b82f6";
+nctx.beginPath();
+nctx.arc(n.x,n.y,2,0,Math.PI*2);
+nctx.fill();
+
+nodes.forEach(m=>{
+
+const dx=n.x-m.x;
+const dy=n.y-m.y;
+const d=Math.sqrt(dx*dx+dy*dy);
+
+if(d<120){
+
+nctx.strokeStyle=`rgba(59,130,246,${1-d/120})`;
+nctx.beginPath();
+nctx.moveTo(n.x,n.y);
+nctx.lineTo(m.x,m.y);
+nctx.stroke();
+
+}
+
+});
+
+});
+
+
+/* Waves */
+
+for(let x=0;x<wave.width;x+=12){
+
+const y =
+Math.sin(x*0.02 + t)*15 +
+Math.sin(x*0.01 + t*2)*10 +
+wave.height/2;
+
+wctx.fillStyle="rgba(59,130,246,0.05)";
+wctx.fillRect(x,y,12,wave.height);
+
+}
+
+requestAnimationFrame(animate);
+}
+
+animate();
+
+
+/* LOADER */
+
+const loader=document.getElementById("aiLoader");
+
+document.querySelector("form").addEventListener("submit",()=>{
+
+loader.classList.add("active");
+
+});
+
+</script>
+
+</body>
+</html>

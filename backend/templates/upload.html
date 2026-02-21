@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Upload Dataset | Stock AI</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+/* ================= GLOBAL ================= */
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Inter',sans-serif;
+}
+
+body{
+min-height:100vh;
+background:#0f172a;
+display:flex;
+justify-content:center;
+align-items:center;
+color:#fff;
+overflow:hidden;
+}
+
+/* Floating dots background */
+
+body::before{
+content:"";
+position:absolute;
+inset:0;
+background:
+radial-gradient(circle,#38bdf8 1px,transparent 1px);
+background-size:45px 45px;
+opacity:.05;
+animation:bgFloat 40s linear infinite;
+}
+
+@keyframes bgFloat{
+from{background-position:0 0}
+to{background-position:600px 600px}
+}
+
+/* ================= CONTAINER ================= */
+
+.container{
+width:95%;
+max-width:820px;
+height:560px;
+position:relative;
+perspective:1200px;
+animation:pageIn 1.2s ease;
+}
+
+@keyframes pageIn{
+from{opacity:0;transform:scale(.9) translateY(40px)}
+to{opacity:1;transform:scale(1) translateY(0)}
+}
+
+/* ================= CARD ================= */
+
+.card{
+height:100%;
+background:#1e293b;
+border-radius:30px;
+padding:60px;
+position:relative;
+overflow:hidden;
+transition:.4s ease;
+box-shadow:0 30px 80px rgba(0,0,0,.6);
+}
+
+/* Moving light sweep */
+
+.card::before{
+content:"";
+position:absolute;
+top:0;
+left:-150%;
+width:150%;
+height:100%;
+background:linear-gradient(
+120deg,
+transparent,
+rgba(255,255,255,.08),
+transparent
+);
+animation:lightMove 6s linear infinite;
+}
+
+@keyframes lightMove{
+from{left:-150%}
+to{left:150%}
+}
+
+/* Mouse glow */
+
+.card::after{
+content:"";
+position:absolute;
+width:200px;
+height:200px;
+background:radial-gradient(circle,
+rgba(56,189,248,.25),
+transparent 70%);
+top:var(--y);
+left:var(--x);
+transform:translate(-50%,-50%);
+pointer-events:none;
+opacity:0;
+transition:.2s;
+}
+
+.card:hover::after{
+opacity:1;
+}
+
+/* 3D tilt */
+
+.container:hover .card{
+transform:rotateY(6deg) rotateX(5deg);
+}
+
+/* ================= HEADER ================= */
+
+.header{
+text-align:center;
+margin-bottom:45px;
+}
+
+.header h2{
+font-size:36px;
+font-weight:700;
+letter-spacing:1px;
+}
+
+.header p{
+margin-top:10px;
+color:#94a3b8;
+font-size:15px;
+}
+
+/* ================= DROP ZONE ================= */
+
+.drop-zone{
+border:2px dashed rgba(255,255,255,.3);
+border-radius:25px;
+padding:65px 40px;
+text-align:center;
+cursor:pointer;
+transition:.4s;
+position:relative;
+overflow:hidden;
+}
+
+/* Ripple animation */
+
+.drop-zone::before{
+content:"";
+position:absolute;
+width:0;
+height:0;
+border-radius:50%;
+background:rgba(56,189,248,.15);
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+transition:.6s;
+}
+
+.drop-zone:hover::before{
+width:500px;
+height:500px;
+}
+
+/* Glow hover */
+
+.drop-zone:hover{
+transform:translateY(-10px) scale(1.03);
+border-color:#38bdf8;
+box-shadow:0 0 40px rgba(56,189,248,.7);
+}
+
+.drop-zone.dragover{
+background:rgba(56,189,248,.15);
+}
+
+.drop-zone i{
+font-size:60px;
+margin-bottom:15px;
+color:#38bdf8;
+transition:.4s;
+}
+
+.drop-zone:hover i{
+transform:translateY(-12px) scale(1.15);
+color:#7dd3fc;
+}
+
+.drop-zone p{
+font-size:16px;
+line-height:1.6;
+}
+
+.drop-zone input{
+display:none;
+}
+
+/* ================= FILE STATUS ================= */
+
+.file-info{
+text-align:center;
+margin-top:18px;
+font-size:14px;
+color:#7dd3fc;
+display:none;
+animation:pop .4s ease;
+}
+
+@keyframes pop{
+from{transform:scale(.7);opacity:0}
+to{transform:scale(1);opacity:1}
+}
+
+/* ================= BUTTON ================= */
+
+button{
+margin-top:45px;
+width:100%;
+padding:18px;
+border:none;
+border-radius:30px;
+font-size:18px;
+font-weight:600;
+cursor:pointer;
+background:#38bdf8;
+color:#0f172a;
+transition:.3s;
+position:relative;
+overflow:hidden;
+}
+
+/* Wave effect */
+
+button::after{
+content:"";
+position:absolute;
+top:0;
+left:-100%;
+width:100%;
+height:100%;
+background:linear-gradient(
+120deg,
+transparent,
+rgba(255,255,255,.6),
+transparent
+);
+transition:.5s;
+}
+
+button:hover::after{
+left:100%;
+}
+
+button:hover{
+transform:translateY(-4px);
+box-shadow:0 0 35px rgba(56,189,248,.9);
+}
+
+/* Loading state */
+
+button.loading{
+pointer-events:none;
+background:#22d3ee;
+}
+
+button.loading span{
+animation:dots 1.5s infinite;
+}
+
+@keyframes dots{
+0%{content:"."}
+33%{content:".."}
+66%{content:"..."}
+}
+
+/* ================= FOOTER ================= */
+
+.footer{
+margin-top:45px;
+display:flex;
+justify-content:center;
+gap:90px;
+font-size:16px;
+}
+
+.footer a{
+color:#7dd3fc;
+text-decoration:none;
+transition:.3s;
+display:flex;
+align-items:center;
+gap:8px;
+}
+
+.footer a:hover{
+color:#38bdf8;
+text-shadow:0 0 12px #38bdf8;
+}
+/* AI LOADER */
+
+.ai-loader{
+position:fixed;
+inset:0;
+background:rgba(2,6,23,.97);
+display:flex;
+justify-content:center;
+align-items:center;
+z-index:99999;
+opacity:0;
+pointer-events:none;
+transition:.4s ease;
+}
+
+.ai-loader.active{
+opacity:1;
+pointer-events:all;
+}
+
+.ai-core{
+text-align:center;
+color:#38bdf8;
+}
+
+.ring{
+width:120px;
+height:120px;
+border:4px solid rgba(56,189,248,.2);
+border-top:4px solid #38bdf8;
+border-radius:50%;
+animation:spin 1s linear infinite;
+margin:auto;
+}
+
+@keyframes spin{
+to{transform:rotate(360deg)}
+}
+
+.scan{
+width:140px;
+height:4px;
+background:linear-gradient(90deg,transparent,#38bdf8,transparent);
+margin:15px auto;
+animation:scanMove 1.2s linear infinite;
+}
+
+@keyframes scanMove{
+to{transform:translateX(120px)}
+}
+
+.ai-core h3{
+margin-top:15px;
+font-size:22px;
+}
+
+.ai-core p{
+font-size:14px;
+color:#7dd3fc;
+}
+</style>
+</head>
+
+
+<body>
+
+<div class="container">
+
+<div class="card" id="card">
+
+<!-- HEADER -->
+
+<div class="header">
+<h2><i class="fa-solid fa-file-csv"></i> Upload Dataset</h2>
+<p>Upload your stock CSV file for AI analysis</p>
+</div>
+
+
+<!-- FORM -->
+
+<form method="POST" enctype="multipart/form-data" id="uploadForm">
+
+<!-- DROP -->
+
+<label class="drop-zone" id="dropZone">
+
+<i class="fa-solid fa-cloud-arrow-up"></i>
+
+<p>
+Drag & Drop CSV here<br>
+or <b>Click to Browse</b>
+</p>
+
+<input type="file" name="file" id="fileInput" accept=".csv" required>
+
+</label>
+
+
+<div class="file-info" id="fileInfo"></div>
+
+
+<button type="submit" id="uploadBtn">
+<i class="fa-solid fa-rocket"></i>
+<span> Upload & Analyze</span>
+</button>
+
+</form>
+
+
+<!-- FOOTER -->
+
+<div class="footer">
+
+<a href="/stock">
+<i class="fa-solid fa-satellite-dish"></i>
+Live Data
+</a>
+
+<a href="/logout">
+<i class="fa-solid fa-right-from-bracket"></i>
+Logout
+</a>
+
+</div>
+
+
+</div>
+</div>
+
+
+<!-- ================= SCRIPT ================= -->
+
+<script>
+
+const card = document.getElementById("card");
+const dropZone = document.getElementById("dropZone");
+const fileInput = document.getElementById("fileInput");
+const fileInfo = document.getElementById("fileInfo");
+const btn = document.getElementById("uploadBtn");
+const form = document.getElementById("uploadForm");
+
+
+/* Mouse light follow */
+
+card.addEventListener("mousemove",e=>{
+
+const rect = card.getBoundingClientRect();
+
+const x = e.clientX - rect.left;
+const y = e.clientY - rect.top;
+
+card.style.setProperty("--x",x+"px");
+card.style.setProperty("--y",y+"px");
+
+});
+
+
+/* Drag effect */
+
+["dragenter","dragover"].forEach(ev=>{
+
+dropZone.addEventListener(ev,e=>{
+e.preventDefault();
+dropZone.classList.add("dragover");
+});
+
+});
+
+["dragleave","drop"].forEach(ev=>{
+
+dropZone.addEventListener(ev,e=>{
+e.preventDefault();
+dropZone.classList.remove("dragover");
+});
+
+});
+
+
+/* Drop */
+
+dropZone.addEventListener("drop",e=>{
+
+fileInput.files = e.dataTransfer.files;
+showFile(e.dataTransfer.files[0]);
+
+});
+
+
+/* Select */
+
+fileInput.addEventListener("change",()=>{
+
+showFile(fileInput.files[0]);
+
+});
+
+
+/* Show file */
+
+function showFile(file){
+
+fileInfo.style.display="block";
+
+fileInfo.innerHTML=
+`<i class="fa-solid fa-circle-check"></i>
+ ${file.name} (${(file.size/1024).toFixed(1)} KB)`;
+
+}
+
+
+/* Submit animation */
+
+form.addEventListener("submit",()=>{
+
+btn.classList.add("loading");
+btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Uploading...';
+
+});
+/* AI LOADER */
+
+const loader = document.getElementById("aiLoader");
+
+document.querySelectorAll("form").forEach(form=>{
+
+  form.addEventListener("submit",()=>{
+
+    loader.classList.add("active");
+
+  });
+
+});
+</script>
+<!-- AI LOADER -->
+
+<div class="ai-loader" id="aiLoader">
+
+  <div class="ai-core">
+
+    <div class="ring"></div>
+
+    <div class="scan"></div>
+
+    <h3>AI Processing</h3>
+
+    <p id="aiText">Analyzing Market Data...</p>
+
+  </div>
+
+</div>
+
+</body>
+</html>

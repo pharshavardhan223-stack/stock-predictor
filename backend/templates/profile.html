@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>User Profile | Stock AI</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+/* ================= GLOBAL ================= */
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Inter',sans-serif;
+}
+
+body{
+min-height:100vh;
+background:
+linear-gradient(-45deg,#0f172a,#1e293b,#020617,#0f172a);
+background-size:400% 400%;
+animation:bgMove 15s ease infinite;
+color:#e5e7eb;
+overflow-x:hidden;
+}
+
+/* Gradient Motion */
+
+@keyframes bgMove{
+0%{background-position:0% 50%}
+50%{background-position:100% 50%}
+100%{background-position:0% 50%}
+}
+
+/* Particles */
+
+#bgCanvas{
+position:fixed;
+inset:0;
+z-index:-1;
+}
+
+/* ================= CONTAINER ================= */
+
+.container{
+width:88%;
+margin:40px auto;
+animation:fadeUp 1.2s ease;
+}
+
+@keyframes fadeUp{
+from{opacity:0;transform:translateY(40px)}
+to{opacity:1;transform:translateY(0)}
+}
+
+/* ================= PROFILE CARD ================= */
+
+.profile-card{
+background:rgba(255,255,255,0.05);
+backdrop-filter:blur(20px);
+border-radius:22px;
+padding:30px 35px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+border:1px solid rgba(255,255,255,0.1);
+box-shadow:0 30px 70px rgba(0,0,0,.6);
+position:relative;
+overflow:hidden;
+}
+
+/* Shine */
+
+.profile-card::after{
+content:"";
+position:absolute;
+inset:0;
+background:linear-gradient(
+120deg,
+transparent,
+rgba(255,255,255,.08),
+transparent
+);
+animation:shine 6s infinite;
+}
+
+@keyframes shine{
+to{transform:translateX(100%)}
+}
+
+/* LEFT */
+
+.profile-left{
+display:flex;
+align-items:center;
+gap:25px;
+z-index:2;
+}
+
+/* Avatar */
+
+.avatar{
+width:120px;
+height:120px;
+border-radius:50%;
+background:linear-gradient(45deg,#38bdf8,#22d3ee,#7dd3fc);
+padding:4px;
+animation:ring 6s linear infinite;
+}
+
+@keyframes ring{
+to{transform:rotate(360deg)}
+}
+
+.avatar-inner{
+width:100%;
+height:100%;
+border-radius:50%;
+background:#020617;
+display:flex;
+align-items:center;
+justify-content:center;
+overflow:hidden;
+}
+
+.avatar-inner img{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+.avatar-inner i{
+font-size:42px;
+color:#38bdf8;
+}
+
+/* Info */
+
+.profile-info h2{
+color:#7dd3fc;
+margin-bottom:6px;
+}
+
+.profile-info p{
+color:#c7d2fe;
+font-size:14px;
+}
+
+/* Edit Button */
+
+.edit-btn{
+background:linear-gradient(45deg,#38bdf8,#22d3ee);
+padding:10px 22px;
+border-radius:20px;
+color:#020617;
+font-weight:600;
+text-decoration:none;
+transition:.3s;
+z-index:2;
+}
+
+.edit-btn:hover{
+transform:scale(1.1);
+box-shadow:0 0 20px #38bdf8;
+}
+
+/* ================= STATS ================= */
+
+.stats{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:25px;
+margin-top:35px;
+}
+
+/* Stat Card */
+
+.stat-card{
+background:rgba(255,255,255,.05);
+backdrop-filter:blur(15px);
+border-radius:18px;
+padding:25px;
+text-align:center;
+border:1px solid rgba(255,255,255,.08);
+position:relative;
+overflow:hidden;
+transition:.4s;
+}
+
+.stat-card::before{
+content:"";
+position:absolute;
+inset:-2px;
+background:linear-gradient(45deg,#3b82f6,#22d3ee,#3b82f6);
+opacity:0;
+transition:.4s;
+}
+
+.stat-card:hover::before{opacity:1}
+
+.stat-card:hover{
+transform:translateY(-8px) scale(1.03);
+box-shadow:0 20px 40px rgba(56,189,248,.3);
+}
+
+.stat-card *{
+position:relative;
+z-index:2;
+}
+
+.stat-card i{
+font-size:26px;
+color:#38bdf8;
+}
+
+.stat-card h3{
+margin:8px 0;
+font-size:28px;
+}
+
+/* ================= ACTIVITY ================= */
+
+.activity-box{
+margin-top:30px;
+background:rgba(255,255,255,.05);
+backdrop-filter:blur(15px);
+border-radius:18px;
+padding:25px;
+border:1px solid rgba(255,255,255,.08);
+box-shadow:0 20px 40px rgba(0,0,0,.5);
+}
+
+.activity-box h4{
+color:#7dd3fc;
+margin-bottom:15px;
+}
+
+.activity-item{
+padding:8px 0;
+border-bottom:1px solid rgba(255,255,255,.08);
+font-size:14px;
+transition:.3s;
+}
+
+.activity-item:hover{
+color:#22d3ee;
+transform:translateX(6px);
+}
+
+/* ================= PROGRESS ================= */
+
+.progress-wrap{
+margin-top:15px;
+}
+
+.progress{
+width:100%;
+height:10px;
+background:rgba(255,255,255,.15);
+border-radius:10px;
+overflow:hidden;
+}
+
+.progress-fill{
+width:0;
+height:100%;
+background:linear-gradient(90deg,#22d3ee,#38bdf8,#7dd3fc);
+border-radius:10px;
+animation:fill 2.5s ease forwards;
+}
+
+@keyframes fill{
+to{width:92%;}
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:900px){
+
+.profile-card{
+flex-direction:column;
+text-align:center;
+gap:20px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- Particle Background -->
+<canvas id="bgCanvas"></canvas>
+
+<div class="container">
+
+<!-- PROFILE HEADER -->
+
+<div class="profile-card">
+
+<div class="profile-left">
+
+<!-- Avatar -->
+<div class="avatar">
+
+<div class="avatar-inner">
+
+{% if session.get("profile_photo") %}
+<img src="{{ url_for('static', filename='profile_pics/' + session.get('profile_photo')) }}">
+{% else %}
+<i class="fa-solid fa-user"></i>
+{% endif %}
+
+</div>
+
+</div>
+
+<!-- Info -->
+
+<div class="profile-info">
+
+<h2>{{ username }}</h2>
+
+<p>Email: {{ email }}</p>
+<p>Member Since: Jan 2026</p>
+<p>Last Activity: N/A</p>
+
+</div>
+
+</div>
+
+<!-- Edit -->
+
+<a href="/edit-profile" class="edit-btn">
+<i class="fa-solid fa-pen"></i> Edit Profile
+</a>
+
+</div>
+
+
+<!-- STATS -->
+
+<div class="stats">
+
+<div class="stat-card">
+<i class="fa-solid fa-database"></i>
+<h3 data-count="0">0</h3>
+<p>Total Predictions</p>
+</div>
+
+<div class="stat-card">
+<i class="fa-solid fa-arrow-up"></i>
+<h3 data-count="12">0</h3>
+<p>BUY Signals</p>
+</div>
+
+<div class="stat-card">
+<i class="fa-solid fa-arrow-down"></i>
+<h3 data-count="1">0</h3>
+<p>SELL Signals</p>
+</div>
+
+<div class="stat-card">
+<i class="fa-solid fa-bullseye"></i>
+<h3 data-count="92">0</h3>
+<p>Accuracy (%)</p>
+</div>
+
+</div>
+
+
+<!-- ACTIVITY -->
+
+<div class="activity-box">
+
+<h4>Recent Activity</h4>
+
+{% if activities %}
+
+{% for act in activities %}
+
+<div class="activity-item">
+<strong>{{ act.action }}</strong> - {{ act.stock }}
+| Confidence: {{ act.confidence }}%
+| {{ act.date }}
+</div>
+
+{% endfor %}
+
+{% else %}
+
+<p>No recent activity</p>
+
+{% endif %}
+
+
+<div class="progress-wrap">
+
+<p style="margin:10px 0;">Model Accuracy</p>
+
+<div class="progress">
+<div class="progress-fill"></div>
+</div>
+
+</div>
+
+</div>
+
+
+</div>
+
+
+<!-- ================= SCRIPTS ================= -->
+
+<script>
+
+/* Background Particles */
+
+const canvas=document.getElementById("bgCanvas");
+const ctx=canvas.getContext("2d");
+
+function resize(){
+canvas.width=innerWidth;
+canvas.height=innerHeight;
+}
+resize();
+addEventListener("resize",resize);
+
+let dots=[];
+
+for(let i=0;i<90;i++){
+dots.push({
+x:Math.random()*canvas.width,
+y:Math.random()*canvas.height,
+dx:(Math.random()-.5)*.6,
+dy:(Math.random()-.5)*.6
+});
+}
+
+function animateBG(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height);
+
+dots.forEach(d=>{
+
+d.x+=d.dx;
+d.y+=d.dy;
+
+if(d.x<0||d.x>canvas.width) d.dx*=-1;
+if(d.y<0||d.y>canvas.height) d.dy*=-1;
+
+ctx.fillStyle="rgba(56,189,248,.6)";
+ctx.beginPath();
+ctx.arc(d.x,d.y,2,0,Math.PI*2);
+ctx.fill();
+
+dots.forEach(o=>{
+
+const dx=d.x-o.x;
+const dy=d.y-o.y;
+const dist=Math.sqrt(dx*dx+dy*dy);
+
+if(dist<130){
+
+ctx.strokeStyle=`rgba(56,189,248,${1-dist/130})`;
+ctx.beginPath();
+ctx.moveTo(d.x,d.y);
+ctx.lineTo(o.x,o.y);
+ctx.stroke();
+
+}
+
+});
+
+});
+
+requestAnimationFrame(animateBG);
+}
+
+animateBG();
+
+
+/* Counter Animation */
+
+const counters=document.querySelectorAll("[data-count]");
+
+counters.forEach(c=>{
+
+let start=0;
+const end=+c.dataset.count;
+const speed=40;
+
+const timer=setInterval(()=>{
+
+start++;
+c.innerText=start;
+
+if(start>=end) clearInterval(timer);
+
+},speed);
+
+});
+
+</script>
+
+</body>
+</html>
