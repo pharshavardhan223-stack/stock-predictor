@@ -11,7 +11,7 @@ from backend.utils.stock_api import fetch_stock_data
 from backend.utils.email_utils import send_report
 
 from backend.utils.live_stock import get_live_stock
-from config import *
+from backend.config import *
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Table, TableStyle, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
