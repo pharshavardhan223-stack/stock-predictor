@@ -5,18 +5,18 @@ import pandas as pd
 import numpy as np
 from flask import Flask, render_template, request, redirect, url_for, session, flash, send_file
 from werkzeug.utils import secure_filename
-from utils.data_handler import load_csv, clean_data, preview_table
-from utils.predictor import predict_series
-from utils.stock_api import fetch_stock_data
-from utils.email_utils import send_report
+from backend.utils.data_handler import load_csv, clean_data, preview_table
+from backend.utils.predictor import predict_series
+from backend.utils.stock_api import fetch_stock_data
+from backend.utils.email_utils import send_report
 
-from utils.live_stock import get_live_stock
+from backend.utils.live_stock import get_live_stock
 from config import *
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Table, TableStyle, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.colors import black, lightgrey
-from utils.email_sender import send_report
+from backend.utils.email_sender import send_report
 
 from flask import jsonify
 import yfinance as yf
