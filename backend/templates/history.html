@@ -2,376 +2,730 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-
 <title>AI Prediction History | Stock AI</title>
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 
 <style>
 
-/* ================= GLOBAL ================= */
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Inter',sans-serif; }
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Inter',sans-serif;
+body {
+  min-height:100vh;
+  background: radial-gradient(circle at top,#0f172a,#020617),
+              linear-gradient(-45deg,#020617,#0f172a,#020617);
+  background-size:200% 200%;
+  animation:bgFlow 15s ease infinite;
+  color:#e5e7eb;
+  overflow-x:hidden;
 }
 
-body{
-min-height:100vh;
-background:
-linear-gradient(-45deg,#020617,#0f172a,#1e293b,#020617);
-background-size:400% 400%;
-animation:bgFlow 15s ease infinite;
-color:#e5e7eb;
+body::before {
+  content:"";
+  position:fixed; inset:0;
+  background:
+    linear-gradient(rgba(255,255,255,0.018) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,0.018) 1px,transparent 1px);
+  background-size:45px 45px;
+  z-index:0; pointer-events:none;
+  animation:gridMove 25s linear infinite;
 }
 
-@keyframes bgFlow{
-0%{background-position:0% 50%}
-50%{background-position:100% 50%}
-100%{background-position:0% 50%}
+@keyframes bgFlow   { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+@keyframes gridMove { to{transform:translate(45px,45px)} }
+@keyframes fadeUp   { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
+@keyframes pulse    { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(1.5)} }
+@keyframes cardIn   { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+@keyframes shine    { 0%{transform:translateX(-100%)} 100%{transform:translateX(200%)} }
+
+#bgCanvas { position:fixed; inset:0; z-index:0; pointer-events:none; }
+
+/* ── TOPBAR ── */
+.topbar {
+  position:sticky; top:0; z-index:100;
+  background:rgba(2,6,23,0.93);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(56,189,248,0.1);
+  padding:0 28px;
+  display:flex; align-items:center;
+  justify-content:space-between;
+  height:62px; gap:12px;
+}
+.topbar-brand { display:flex; align-items:center; gap:10px; text-decoration:none; flex-shrink:0; }
+.topbar-brand i    { color:#38bdf8; font-size:20px; }
+.topbar-brand span { font-size:18px; font-weight:800; background:linear-gradient(90deg,#38bdf8,#22d3ee); -webkit-background-clip:text; color:transparent; }
+
+.topbar-nav { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+.nav-btn {
+  display:flex; align-items:center; gap:6px;
+  padding:7px 14px; border-radius:9px;
+  border:1px solid rgba(255,255,255,0.07);
+  background:rgba(255,255,255,0.04);
+  color:#94a3b8; font-size:13px; font-weight:600;
+  text-decoration:none; transition:.25s; white-space:nowrap;
+}
+.nav-btn:hover  { background:rgba(56,189,248,0.1); border-color:rgba(56,189,248,0.3); color:#38bdf8; }
+.nav-btn.active { background:rgba(56,189,248,0.13); border-color:rgba(56,189,248,0.4); color:#38bdf8; }
+.nav-btn.danger { color:#fb7185; border-color:rgba(251,113,133,0.15); }
+.nav-btn.danger:hover { background:rgba(251,113,133,0.1); border-color:rgba(251,113,133,0.3); }
+
+.user-badge {
+  display:flex; align-items:center; gap:8px;
+  padding:6px 14px; border-radius:50px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.07);
+  font-size:13px; color:#94a3b8; flex-shrink:0;
+}
+.user-badge .udot { width:7px; height:7px; background:#22c55e; border-radius:50%; animation:pulse 2s infinite; }
+
+/* ── CONTAINER ── */
+.container {
+  max-width:1140px;
+  margin:0 auto;
+  padding:30px 22px 70px;
+  position:relative; z-index:1;
 }
 
-/* ================= CONTAINER ================= */
+/* ── HERO ── */
+.hero {
+  background:rgba(2,6,23,0.9); border-radius:22px;
+  padding:28px 34px; margin-bottom:22px;
+  position:relative; overflow:hidden;
+  border:1px solid rgba(56,189,248,0.15);
+  box-shadow:0 30px 80px rgba(0,0,0,.7);
+  backdrop-filter:blur(20px);
+  animation:fadeUp .6s ease;
+}
+.hero::before {
+  content:""; position:absolute;
+  width:360px; height:360px;
+  background:radial-gradient(circle,rgba(56,189,248,.08) 0%,transparent 70%);
+  top:-120px; right:-100px; border-radius:50%;
+  animation:pulse 8s ease infinite;
+}
+.hero-content { position:relative; z-index:1; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; }
+.hero h2 {
+  font-size:1.9rem; font-weight:800;
+  background:linear-gradient(90deg,#38bdf8,#22d3ee,#7dd3fc);
+  -webkit-background-clip:text; color:transparent; margin-bottom:5px;
+}
+.hero p { color:#64748b; font-size:.88rem; }
 
-.container{
-width:90%;
-max-width:1100px;
-margin:50px auto;
-animation:fadeUp 1s ease;
+.hero-stats { display:flex; gap:12px; flex-wrap:wrap; }
+.hs {
+  text-align:center;
+  background:rgba(56,189,248,.06);
+  border:1px solid rgba(56,189,248,.18);
+  border-radius:14px; padding:11px 20px; min-width:80px; transition:.3s;
+}
+.hs:hover { background:rgba(56,189,248,.12); transform:translateY(-3px); }
+.hs .val  { font-size:1.5rem; font-weight:800; color:#38bdf8; font-family:monospace; }
+.hs .lbl  { font-size:.62rem; color:#64748b; text-transform:uppercase; letter-spacing:1.5px; margin-top:2px; }
+
+/* ── STAT CARDS ── */
+.stats-row {
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+  gap:14px; margin-bottom:22px;
+}
+.stat-card {
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:16px; padding:17px 20px;
+  display:flex; align-items:center; gap:14px; transition:.3s;
+  animation:cardIn .5s ease both;
+}
+.stat-card:nth-child(1){animation-delay:.05s}
+.stat-card:nth-child(2){animation-delay:.10s}
+.stat-card:nth-child(3){animation-delay:.15s}
+.stat-card:nth-child(4){animation-delay:.20s}
+.stat-card:hover { background:rgba(56,189,248,.07); border-color:rgba(56,189,248,.25); transform:translateY(-3px); }
+.stat-icon { width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+.stat-icon.blue   { background:rgba(59,130,246,.15); color:#3b82f6; }
+.stat-icon.green  { background:rgba(34,197,94,.15);  color:#22c55e; }
+.stat-icon.red    { background:rgba(248,113,113,.15);color:#f87171; }
+.stat-icon.yellow { background:rgba(251,191,36,.15); color:#fbbf24; }
+.stat-icon.cyan   { background:rgba(34,211,238,.15); color:#22d3ee; }
+.stat-info p  { font-size:11px; color:#64748b; text-transform:uppercase; letter-spacing:.5px; }
+.stat-info h3 { font-size:20px; font-weight:700; color:#f1f5f9; margin-top:2px; font-family:monospace; }
+
+/* ── CONTROLS ── */
+.controls {
+  background:rgba(2,6,23,.85);
+  border:1px solid rgba(56,189,248,.12);
+  border-radius:16px; padding:18px 22px;
+  margin-bottom:20px;
+  display:flex; gap:12px; align-items:center; flex-wrap:wrap;
+  position:relative; overflow:hidden;
+  backdrop-filter:blur(15px);
+  animation:fadeUp .7s ease;
+}
+.controls::after {
+  content:""; position:absolute; top:0; left:-100%; width:60%; height:100%;
+  background:linear-gradient(120deg,transparent,rgba(56,189,248,.04),transparent);
+  animation:shine 5s infinite; pointer-events:none;
 }
 
-@keyframes fadeUp{
-from{opacity:0;transform:translateY(40px)}
-to{opacity:1;transform:translateY(0)}
+.search-wrap { position:relative; flex:1; min-width:200px; }
+.search-wrap i { position:absolute; left:13px; top:50%; transform:translateY(-50%); color:#475569; font-size:13px; }
+.search-wrap input {
+  width:100%; background:rgba(255,255,255,.05);
+  border:1px solid rgba(56,189,248,.2); border-radius:10px;
+  color:#fff; padding:10px 14px 10px 36px; font-size:.88rem;
+  font-family:'Inter',sans-serif; outline:none;
+  transition:border-color .2s, box-shadow .2s;
+}
+.search-wrap input:focus { border-color:#38bdf8; box-shadow:0 0 0 3px rgba(56,189,248,.1); }
+.search-wrap input::placeholder { color:#334155; }
+
+.filter-select {
+  background:rgba(255,255,255,.05); border:1px solid rgba(56,189,248,.2);
+  color:#7dd3fc; border-radius:10px; padding:10px 14px;
+  font-size:.82rem; font-family:monospace; outline:none; cursor:pointer;
+}
+.filter-select option { background:#0d1b2a; color:#fff; }
+
+.btn-export {
+  background:linear-gradient(135deg,#0288d1,#0097a7);
+  color:#fff; border:none; border-radius:10px;
+  padding:10px 20px; font-weight:700; font-size:.82rem; cursor:pointer;
+  transition:opacity .2s, transform .15s;
+  display:flex; align-items:center; gap:7px; white-space:nowrap;
+}
+.btn-export:hover { opacity:.9; transform:translateY(-2px); }
+
+.btn-clear {
+  background:rgba(248,113,113,.08); border:1px solid rgba(248,113,113,.2);
+  color:#f87171; border-radius:10px; padding:10px 16px;
+  font-size:.82rem; font-weight:700; cursor:pointer;
+  transition:background .2s; display:flex; align-items:center; gap:6px;
+}
+.btn-clear:hover { background:rgba(248,113,113,.18); }
+
+/* ── TABLE CARD ── */
+.table-card {
+  background:rgba(2,6,23,.9);
+  backdrop-filter:blur(20px);
+  border-radius:20px; padding:0;
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 30px 80px rgba(0,0,0,.7);
+  overflow:hidden;
+  animation:fadeUp .8s ease;
 }
 
-/* ================= HEADER ================= */
+.table-scroll { overflow-x:auto; }
 
-.header{
-text-align:center;
-margin-bottom:30px;
+table { width:100%; border-collapse:collapse; font-size:14px; }
+
+thead { background:rgba(2,6,23,.98); position:sticky; top:0; z-index:10; }
+
+th {
+  padding:16px 14px; text-align:center;
+  color:#38bdf8; font-weight:700; font-size:.75rem;
+  text-transform:uppercase; letter-spacing:1px;
+  border-bottom:1px solid rgba(56,189,248,.15);
+  cursor:pointer; user-select:none; white-space:nowrap;
+}
+th:hover { color:#7dd3fc; }
+th .sort-icon { margin-left:5px; opacity:.4; font-size:.65rem; }
+th.sorted .sort-icon { opacity:1; color:#38bdf8; }
+
+td {
+  padding:14px 14px; text-align:center;
+  border-bottom:1px solid rgba(255,255,255,.05);
+  color:#cbd5e1; font-size:.88rem;
 }
 
-.header h2{
-font-size:32px;
-font-weight:600;
-background:linear-gradient(90deg,#38bdf8,#22d3ee,#7dd3fc);
--webkit-background-clip:text;
-color:transparent;
+tbody tr { transition:.25s; }
+tbody tr:hover { background:rgba(56,189,248,.07); }
+tbody tr:last-child td { border-bottom:none; }
+
+/* Row number */
+td.row-num { color:#334155; font-family:monospace; font-size:.75rem; width:40px; }
+
+/* Stock symbol */
+td.sym { font-weight:800; color:#38bdf8; font-family:monospace; letter-spacing:1px; font-size:.95rem; }
+
+/* Confidence bar */
+.conf-wrap { display:flex; align-items:center; gap:8px; justify-content:center; }
+.conf-bar  { flex:1; max-width:80px; height:6px; background:rgba(255,255,255,.07); border-radius:3px; overflow:hidden; }
+.conf-fill { height:100%; border-radius:3px; transition:width .6s ease; }
+.conf-fill.high   { background:linear-gradient(90deg,#22c55e,#4ade80); }
+.conf-fill.medium { background:linear-gradient(90deg,#f59e0b,#fbbf24); }
+.conf-fill.low    { background:linear-gradient(90deg,#ef4444,#f87171); }
+.conf-val  { font-family:monospace; font-size:.78rem; color:#94a3b8; white-space:nowrap; }
+
+/* Action tags */
+.tag {
+  padding:5px 14px; border-radius:20px;
+  font-size:.75rem; font-weight:700; display:inline-block;
+  letter-spacing:.5px;
 }
+.buy  { background:rgba(34,197,94,.15);  color:#4ade80; border:1px solid rgba(74,222,128,.3);  box-shadow:0 0 8px rgba(34,197,94,.2); }
+.sell { background:rgba(239,68,68,.15);  color:#f87171; border:1px solid rgba(248,113,113,.3); box-shadow:0 0 8px rgba(239,68,68,.2); }
+.hold { background:rgba(250,204,21,.15); color:#fde047; border:1px solid rgba(253,224,71,.3);  box-shadow:0 0 8px rgba(250,204,21,.2); }
 
-/* ================= SEARCH ================= */
+/* Risk badge */
+.risk-badge { padding:3px 10px; border-radius:8px; font-size:.7rem; font-weight:700; font-family:monospace; }
+.risk-low    { background:rgba(34,197,94,.1);  color:#22c55e; border:1px solid rgba(34,197,94,.2); }
+.risk-medium { background:rgba(251,191,36,.1); color:#fbbf24; border:1px solid rgba(251,191,36,.2); }
+.risk-high   { background:rgba(248,113,113,.1);color:#f87171; border:1px solid rgba(248,113,113,.2); }
 
-.search-box{
-display:flex;
-justify-content:center;
-margin-bottom:25px;
+/* Date */
+td.date-col { color:#475569; font-family:monospace; font-size:.78rem; }
+
+/* ── PAGINATION ── */
+.pagination {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:16px 22px; border-top:1px solid rgba(255,255,255,.06);
+  flex-wrap:wrap; gap:10px;
 }
-
-.search-box input{
-width:300px;
-padding:10px 15px;
-border-radius:20px;
-border:1px solid rgba(255,255,255,.2);
-background:rgba(255,255,255,.05);
-color:#e5e7eb;
-outline:none;
-transition:.3s;
+.page-info { font-size:.75rem; color:#475569; font-family:monospace; }
+.page-btns { display:flex; gap:6px; }
+.page-btn {
+  background:rgba(56,189,248,.07); border:1px solid rgba(56,189,248,.18);
+  color:#38bdf8; border-radius:8px; padding:6px 14px;
+  font-size:.75rem; font-weight:700; cursor:pointer;
+  transition:background .2s; font-family:monospace;
 }
+.page-btn:hover   { background:rgba(56,189,248,.18); }
+.page-btn.active  { background:rgba(56,189,248,.22); border-color:#38bdf8; }
+.page-btn:disabled{ opacity:.3; cursor:not-allowed; }
 
-.search-box input:focus{
-border-color:#38bdf8;
-box-shadow:0 0 15px #38bdf8;
+/* ── EMPTY ── */
+.empty-state {
+  text-align:center; padding:60px 20px;
+  border:1px dashed rgba(56,189,248,.12); border-radius:18px;
+  background:rgba(2,6,23,.5);
 }
+.empty-state .ei  { font-size:3.5rem; margin-bottom:16px; }
+.empty-state p    { color:#475569; font-size:.92rem; line-height:1.7; }
+.empty-state a    { color:#38bdf8; text-decoration:none; font-weight:700; }
 
-/* ================= TABLE CARD ================= */
-
-.table-card{
-background:rgba(255,255,255,0.05);
-backdrop-filter:blur(20px);
-border-radius:22px;
-padding:25px;
-border:1px solid rgba(255,255,255,.1);
-box-shadow:0 30px 80px rgba(0,0,0,.7);
-overflow:hidden;
-}
-
-/* ================= TABLE ================= */
-
-table{
-width:100%;
-border-collapse:collapse;
-font-size:14px;
-}
-
-thead{
-position:sticky;
-top:0;
-background:rgba(2,6,23,.95);
-z-index:10;
-}
-
-th,td{
-padding:14px 10px;
-text-align:center;
-border-bottom:1px solid rgba(255,255,255,.08);
-}
-
-th{
-color:#7dd3fc;
-font-weight:600;
-}
-
-tbody tr{
-transition:.3s;
-}
-
-tbody tr:hover{
-background:rgba(56,189,248,.12);
-transform:scale(1.01);
-}
-
-/* ================= TAGS ================= */
-
-.tag{
-padding:4px 12px;
-border-radius:14px;
-font-size:12px;
-font-weight:600;
-display:inline-block;
-}
-
-.buy{
-background:rgba(34,197,94,.2);
-color:#4ade80;
-box-shadow:0 0 8px #22c55e;
-}
-
-.sell{
-background:rgba(239,68,68,.2);
-color:#f87171;
-box-shadow:0 0 8px #ef4444;
-}
-
-.hold{
-background:rgba(250,204,21,.2);
-color:#fde047;
-box-shadow:0 0 8px #facc15;
-}
-
-/* ================= EMPTY ================= */
-
-.empty{
-text-align:center;
-color:#94a3b8;
-padding:40px;
-font-size:16px;
-}
-
-/* ================= FOOTER ================= */
-
-.footer{
-text-align:center;
-margin-top:30px;
-display:flex;
-justify-content:center;
-gap:25px;
-flex-wrap:wrap;
-}
-
-.footer a{
-padding:10px 22px;
-border-radius:20px;
-text-decoration:none;
-font-weight:600;
-transition:.3s;
-display:inline-flex;
-align-items:center;
-gap:6px;
-}
-
-.btn-blue{
-background:linear-gradient(45deg,#38bdf8,#22d3ee);
-color:#020617;
-}
-
-.btn-red{
-background:linear-gradient(45deg,#ef4444,#f87171);
-color:#020617;
-}
-
-.footer a:hover{
-transform:translateY(-3px) scale(1.05);
-box-shadow:0 0 25px rgba(56,189,248,.7);
-}
-
-/* ================= RESPONSIVE ================= */
-
+/* ── RESPONSIVE ── */
 @media(max-width:768px){
-
-.search-box input{
-width:90%;
+  .topbar-nav .nav-btn span { display:none; }
+  .hero h2 { font-size:1.4rem; }
+  .hero { padding:20px 18px; }
+  table { font-size:.78rem; }
+  th,td { padding:10px 8px; }
 }
-
-table{
-font-size:12px;
-}
-
-th,td{
-padding:10px 6px;
-}
-
+@media(max-width:480px){
+  .topbar { padding:0 14px; }
+  .stats-row { grid-template-columns:1fr 1fr; }
 }
 
 </style>
 </head>
-
-
 <body>
 
+<canvas id="bgCanvas"></canvas>
+
+<!-- ═══════ TOPBAR ═══════ -->
+<div class="topbar">
+  <a href="/dashboard" class="topbar-brand">
+    <i class="fa-solid fa-chart-line"></i>
+    <span>Stock AI</span>
+  </a>
+
+  <div class="topbar-nav">
+    <a href="/dashboard"         class="nav-btn"><i class="fa-solid fa-house"></i><span>Dashboard</span></a>
+    <a href="/stock"             class="nav-btn"><i class="fa-solid fa-magnifying-glass-chart"></i><span>Predict</span></a>
+    <a href="/live"              class="nav-btn"><i class="fa-solid fa-bolt"></i><span>Live</span></a>
+    <a href="/watchlist"         class="nav-btn"><i class="fa-solid fa-star"></i><span>Watchlist</span></a>
+    <a href="/news"              class="nav-btn"><i class="fa-solid fa-newspaper"></i><span>News</span></a>
+    <a href="/compare"           class="nav-btn"><i class="fa-solid fa-chart-line"></i><span>Compare</span></a>
+    <a href="/portfolio-advisor" class="nav-btn"><i class="fa-solid fa-chart-pie"></i><span>Advisor</span></a>
+    <a href="/history"           class="nav-btn active"><i class="fa-solid fa-clock-rotate-left"></i><span>History</span></a>
+    <a href="/stock-analysis"    class="nav-btn"><i class="fa-solid fa-rocket"></i><span>Advanced AI</span></a>
+    <a href="/profile"           class="nav-btn"><i class="fa-solid fa-user"></i><span>Profile</span></a>
+    <a href="/logout"            class="nav-btn danger"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a>
+  </div>
+
+  <div class="user-badge">
+    <span class="udot"></span>
+    <span>{{ session.get('user','User') | title }}</span>
+  </div>
+</div>
+
+<!-- ═══════ MAIN ═══════ -->
 <div class="container">
 
-<!-- HEADER -->
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-content">
+      <div>
+        <h2><i class="fa-solid fa-clock-rotate-left" style="font-size:1.5rem;margin-right:8px;color:#38bdf8;"></i>AI Prediction History</h2>
+        <p>All your stock predictions &nbsp;·&nbsp; Confidence scores &nbsp;·&nbsp; Export to CSV</p>
+      </div>
+      <div class="hero-stats">
+        <div class="hs"><div class="val">{{ records|length }}</div><div class="lbl">Total</div></div>
+        <div class="hs"><div class="val" style="color:#4ade80;" id="herobuys">—</div><div class="lbl">BUY</div></div>
+        <div class="hs"><div class="val" style="color:#f87171;" id="herosells">—</div><div class="lbl">SELL</div></div>
+        <div class="hs"><div class="val" style="color:#fde047;" id="heroholds">—</div><div class="lbl">HOLD</div></div>
+      </div>
+    </div>
+  </div>
 
-<div class="header">
+  <!-- STATS ROW -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-icon blue"><i class="fa-solid fa-layer-group"></i></div>
+      <div class="stat-info"><p>Total Predictions</p><h3>{{ records|length }}</h3></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon green"><i class="fa-solid fa-arrow-trend-up"></i></div>
+      <div class="stat-info"><p>BUY Signals</p><h3 id="statBuy">—</h3></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon red"><i class="fa-solid fa-arrow-trend-down"></i></div>
+      <div class="stat-info"><p>SELL Signals</p><h3 id="statSell">—</h3></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon yellow"><i class="fa-solid fa-pause"></i></div>
+      <div class="stat-info"><p>HOLD Signals</p><h3 id="statHold">—</h3></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon cyan"><i class="fa-solid fa-percent"></i></div>
+      <div class="stat-info"><p>Avg Confidence</p><h3 id="statConf">—</h3></div>
+    </div>
+  </div>
 
-<h2>
-<i class="fa-solid fa-clock-rotate-left"></i>
-AI Prediction History
-</h2>
+  {% if records %}
+
+  <!-- CONTROLS -->
+  <div class="controls">
+    <div class="search-wrap">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input type="text" id="searchInput" placeholder="Search by stock, action…">
+    </div>
+
+    <select class="filter-select" id="filterAction" onchange="applyFilters()">
+      <option value="all">All Actions</option>
+      <option value="BUY">▲ BUY</option>
+      <option value="SELL">▼ SELL</option>
+      <option value="HOLD">■ HOLD</option>
+    </select>
+
+    <select class="filter-select" id="filterRisk" onchange="applyFilters()">
+      <option value="all">All Risk</option>
+      <option value="Low Risk">Low Risk</option>
+      <option value="Medium Risk">Medium Risk</option>
+      <option value="High Risk">High Risk</option>
+    </select>
+
+    <select class="filter-select" id="sortBy" onchange="applyFilters()">
+      <option value="date_desc">Newest First</option>
+      <option value="date_asc">Oldest First</option>
+      <option value="conf_desc">Confidence ↓</option>
+      <option value="conf_asc">Confidence ↑</option>
+      <option value="stock_asc">Stock A→Z</option>
+    </select>
+
+    <button class="btn-export" onclick="exportCSV()">
+      <i class="fa-solid fa-file-arrow-down"></i> Export CSV
+    </button>
+
+    <a href="/download_report" class="btn-export" style="background:linear-gradient(135deg,#7c3aed,#a855f7);text-decoration:none;">
+      <i class="fa-solid fa-file-pdf"></i> Download PDF Report
+    </a>
+
+    <button class="btn-clear" onclick="clearFilters()">
+      <i class="fa-solid fa-xmark"></i> Clear
+    </button>
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-card">
+    <div class="table-scroll">
+      <table id="historyTable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th onclick="sortTable('stock')">Stock <span class="sort-icon">⇅</span></th>
+            <th onclick="sortTable('action')">Action <span class="sort-icon">⇅</span></th>
+            <th onclick="sortTable('confidence')">Confidence <span class="sort-icon">⇅</span></th>
+            <th>Risk</th>
+            <th onclick="sortTable('date')">Date <span class="sort-icon">⇅</span></th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          {% for row in records %}
+          <tr
+            data-stock="{{ row.stock if row.stock else row.get('column','—') }}"
+            data-action="{{ row.action }}"
+            data-confidence="{{ row.confidence if row.confidence else 0 }}"
+            data-date="{{ row.date if row.date else '' }}"
+            data-risk="{% if row.confidence and row.confidence|float >= 80 %}Low Risk{% elif row.confidence and row.confidence|float >= 60 %}Medium Risk{% else %}High Risk{% endif %}">
+
+            <td class="row-num">{{ loop.index }}</td>
+
+            <td class="sym">
+              {{ row.stock if row.stock else row.get('column','—') }}
+            </td>
+
+            <td>
+              <span class="tag
+                {% if row.action == 'BUY' %}buy
+                {% elif row.action == 'SELL' %}sell
+                {% else %}hold{% endif %}">
+                {% if row.action == 'BUY' %}▲{% elif row.action == 'SELL' %}▼{% else %}■{% endif %}
+                {{ row.action }}
+              </span>
+            </td>
+
+            <td>
+              {% set conf = row.confidence|float if row.confidence else 0 %}
+              <div class="conf-wrap">
+                <div class="conf-bar">
+                  <div class="conf-fill
+                    {% if conf >= 80 %}high{% elif conf >= 60 %}medium{% else %}low{% endif %}"
+                    style="width:{{ [conf, 100]|min }}%"></div>
+                </div>
+                <span class="conf-val">{{ "%.1f"|format(conf) }}%</span>
+              </div>
+            </td>
+
+            <td>
+              {% set conf = row.confidence|float if row.confidence else 0 %}
+              {% if conf >= 80 %}
+                <span class="risk-badge risk-low">Low Risk</span>
+              {% elif conf >= 60 %}
+                <span class="risk-badge risk-medium">Med Risk</span>
+              {% else %}
+                <span class="risk-badge risk-high">High Risk</span>
+              {% endif %}
+            </td>
+
+            <td class="date-col">
+              {{ row.date if row.date else '—' }}
+            </td>
+
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- PAGINATION -->
+    <div class="pagination">
+      <span class="page-info" id="pageInfo">Showing all records</span>
+      <div class="page-btns" id="pageBtns"></div>
+    </div>
+  </div>
+
+  {% else %}
+
+  <div class="empty-state">
+    <div class="ei">📊</div>
+    <p>No prediction history yet.<br>
+       <a href="/stock">Make your first prediction →</a>
+    </p>
+  </div>
+
+  {% endif %}
 
 </div>
-
-
-<!-- SEARCH -->
-
-{% if records %}
-
-<div class="search-box">
-
-<input type="text" id="search"
-placeholder="Search history...">
-
-</div>
-
-{% endif %}
-
-
-<!-- TABLE -->
-
-<div class="table-card">
-
-{% if records %}
-
-<table id="historyTable">
-
-<thead>
-<tr>
-<th>Date</th>
-<th>Column</th>
-<th>Last Value</th>
-<th>Predicted Avg</th>
-<th>Action</th>
-</tr>
-</thead>
-
-<tbody>
-
-{% for row in records %}
-
-<tr>
-
-<td>{{ row.date }}</td>
-<td>{{ row.column }}</td>
-<td>{{ row.last }}</td>
-<td>{{ row.avg }}</td>
-
-<td>
-
-<span class="tag
-{% if row.action=='BUY' %}buy
-{% elif row.action=='SELL' %}sell
-{% else %}hold{% endif %}">
-
-{{ row.action }}
-
-</span>
-
-</td>
-
-</tr>
-
-{% endfor %}
-
-</tbody>
-
-</table>
-
-{% else %}
-
-<div class="empty">
-<i class="fa-solid fa-database"></i><br><br>
-No prediction history available yet.
-</div>
-
-{% endif %}
-
-</div>
-
-
-<!-- FOOTER -->
-
-<div class="footer">
-
-<a href="/dashboard" class="btn-blue">
-<i class="fa-solid fa-house"></i> Dashboard
-</a>
-
-<a href="/logout" class="btn-red">
-<i class="fa-solid fa-right-from-bracket"></i> Logout
-</a>
-
-</div>
-
-
-</div>
-
-
-<!-- ================= SEARCH SCRIPT ================= -->
 
 <script>
 
-const search = document.getElementById("search");
-const table = document.getElementById("historyTable");
+/* ── PARTICLES ── */
+const canvas = document.getElementById("bgCanvas");
+const ctx    = canvas.getContext("2d");
+function resize(){ canvas.width=innerWidth; canvas.height=innerHeight; }
+resize(); addEventListener("resize",resize);
+let dots=[];
+for(let i=0;i<80;i++) dots.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,dx:(Math.random()-.5)*.5,dy:(Math.random()-.5)*.5});
+function bgAnimate(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  dots.forEach(d=>{
+    d.x+=d.dx; d.y+=d.dy;
+    if(d.x<0||d.x>canvas.width)  d.dx*=-1;
+    if(d.y<0||d.y>canvas.height) d.dy*=-1;
+    ctx.fillStyle="rgba(56,189,248,.35)";
+    ctx.beginPath(); ctx.arc(d.x,d.y,1.5,0,Math.PI*2); ctx.fill();
+    dots.forEach(o=>{
+      const dist=Math.hypot(d.x-o.x,d.y-o.y);
+      if(dist<110){ ctx.strokeStyle=`rgba(56,189,248,${1-dist/110})`; ctx.lineWidth=.3; ctx.beginPath(); ctx.moveTo(d.x,d.y); ctx.lineTo(o.x,o.y); ctx.stroke(); }
+    });
+  });
+  requestAnimationFrame(bgAnimate);
+}
+bgAnimate();
 
-if(search){
+/* ── DATA ── */
+const allRows = Array.from(document.querySelectorAll("#tableBody tr"));
+let   filtered = [...allRows];
 
-search.addEventListener("keyup",()=>{
+const PAGE_SIZE = 15;
+let   curPage   = 1;
 
-const val = search.value.toLowerCase();
+/* ── STATS ── */
+(function computeStats(){
+  let buys=0, sells=0, holds=0, confSum=0, confCount=0;
+  allRows.forEach(r=>{
+    const a = r.dataset.action;
+    const c = parseFloat(r.dataset.confidence)||0;
+    if(a==="BUY")  buys++;
+    if(a==="SELL") sells++;
+    if(a==="HOLD") holds++;
+    if(c>0){ confSum+=c; confCount++; }
+  });
+  const avg = confCount ? (confSum/confCount).toFixed(1) : "—";
+  document.getElementById("statBuy").textContent  = buys;
+  document.getElementById("statSell").textContent = sells;
+  document.getElementById("statHold").textContent = holds;
+  document.getElementById("statConf").textContent = avg + (confCount ? "%" : "");
+  document.getElementById("herobuys").textContent  = buys;
+  document.getElementById("herosells").textContent = sells;
+  document.getElementById("heroholds").textContent = holds;
+})();
 
-const rows = table.querySelectorAll("tbody tr");
+/* ── FILTER + SORT ── */
+function applyFilters(){
+  const q      = document.getElementById("searchInput").value.toLowerCase();
+  const action = document.getElementById("filterAction").value;
+  const risk   = document.getElementById("filterRisk").value;
+  const sortBy = document.getElementById("sortBy").value;
 
-rows.forEach(row=>{
+  filtered = allRows.filter(r=>{
+    const text = r.innerText.toLowerCase();
+    const a    = r.dataset.action;
+    const rk   = r.dataset.risk;
+    return (
+      (!q      || text.includes(q)) &&
+      (action==="all" || a===action) &&
+      (risk  ==="all" || rk===risk)
+    );
+  });
 
-row.style.display =
-row.innerText.toLowerCase().includes(val)
-? ""
-: "none";
+  // sort
+  filtered.sort((a,b)=>{
+    if(sortBy==="date_desc") return b.dataset.date.localeCompare(a.dataset.date);
+    if(sortBy==="date_asc")  return a.dataset.date.localeCompare(b.dataset.date);
+    if(sortBy==="conf_desc") return (parseFloat(b.dataset.confidence)||0)-(parseFloat(a.dataset.confidence)||0);
+    if(sortBy==="conf_asc")  return (parseFloat(a.dataset.confidence)||0)-(parseFloat(b.dataset.confidence)||0);
+    if(sortBy==="stock_asc") return a.dataset.stock.localeCompare(b.dataset.stock);
+    return 0;
+  });
 
-});
-
-});
-
+  curPage = 1;
+  renderPage();
 }
 
+/* ── RENDER PAGE ── */
+function renderPage(){
+  const tbody = document.getElementById("tableBody");
+  const start = (curPage-1)*PAGE_SIZE;
+  const end   = start+PAGE_SIZE;
+  const page  = filtered.slice(start,end);
+
+  // hide all
+  allRows.forEach(r=>r.style.display="none");
+
+  // show page rows + update row numbers
+  page.forEach((r,i)=>{
+    r.style.display="";
+    const numCell = r.querySelector("td.row-num");
+    if(numCell) numCell.textContent = start+i+1;
+  });
+
+  // pagination info
+  const total = filtered.length;
+  const pages = Math.ceil(total/PAGE_SIZE);
+  document.getElementById("pageInfo").textContent =
+    total === 0 ? "No results found"
+    : `Showing ${start+1}–${Math.min(end,total)} of ${total} records`;
+
+  // pagination buttons
+  const btns = document.getElementById("pageBtns");
+  btns.innerHTML="";
+  if(pages>1){
+    const prev = document.createElement("button");
+    prev.className="page-btn"; prev.textContent="← Prev";
+    prev.disabled = curPage===1;
+    prev.onclick  = ()=>{ curPage--; renderPage(); };
+    btns.appendChild(prev);
+
+    // page numbers
+    for(let p=1;p<=pages;p++){
+      if(pages<=7 || Math.abs(p-curPage)<=2 || p===1 || p===pages){
+        const btn=document.createElement("button");
+        btn.className = "page-btn" + (p===curPage?" active":"");
+        btn.textContent=p;
+        btn.onclick=(()=>{ const pg=p; return ()=>{ curPage=pg; renderPage(); }; })();
+        btns.appendChild(btn);
+      } else if(Math.abs(p-curPage)===3){
+        const sp=document.createElement("span");
+        sp.textContent="…"; sp.style.cssText="color:#334155;padding:0 4px;";
+        btns.appendChild(sp);
+      }
+    }
+
+    const next=document.createElement("button");
+    next.className="page-btn"; next.textContent="Next →";
+    next.disabled = curPage===pages;
+    next.onclick  = ()=>{ curPage++; renderPage(); };
+    btns.appendChild(next);
+  }
+}
+
+/* ── SEARCH live ── */
+document.getElementById("searchInput")?.addEventListener("input", applyFilters);
+
+/* ── SORT COLUMN CLICK ── */
+let sortState = {col:"date", dir:"desc"};
+function sortTable(col){
+  if(sortState.col===col){
+    sortState.dir = sortState.dir==="asc"?"desc":"asc";
+  } else {
+    sortState = {col, dir:"desc"};
+  }
+  const map = {
+    date:  sortState.dir==="desc"?"date_desc":"date_asc",
+    conf:  sortState.dir==="desc"?"conf_desc":"conf_asc",  // not used directly but kept
+    stock: "stock_asc",
+    confidence: sortState.dir==="desc"?"conf_desc":"conf_asc",
+    action:"date_desc"
+  };
+  document.getElementById("sortBy").value = map[col] || "date_desc";
+  applyFilters();
+}
+
+/* ── CLEAR FILTERS ── */
+function clearFilters(){
+  document.getElementById("searchInput").value="";
+  document.getElementById("filterAction").value="all";
+  document.getElementById("filterRisk").value="all";
+  document.getElementById("sortBy").value="date_desc";
+  applyFilters();
+}
+
+/* ── EXPORT CSV ── */
+function exportCSV(){
+  const headers = ["#","Stock","Action","Confidence","Risk","Date"];
+  const rows    = filtered.map((r,i) => [
+    i+1,
+    r.dataset.stock,
+    r.dataset.action,
+    parseFloat(r.dataset.confidence).toFixed(1)+"%",
+    r.dataset.risk,
+    r.dataset.date
+  ]);
+
+  const csv  = [headers, ...rows].map(r=>r.join(",")).join("\n");
+  const blob = new Blob([csv], {type:"text/csv"});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement("a");
+  a.href     = url;
+  a.download = `stock_ai_history_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+/* ── INIT ── */
+applyFilters();
+
 </script>
-
-
 </body>
 </html>

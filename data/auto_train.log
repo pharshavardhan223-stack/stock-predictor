@@ -1,0 +1,366 @@
+[2026-03-11 14:11:59] AutoTrain thread launched (runs in background)
+[2026-03-11 14:11:59] Starting model retrain …
+[2026-03-11 14:12:00]   Fetching AAPL …
+[2026-03-11 14:12:02] AutoTrain thread launched (runs in background)
+[2026-03-11 14:12:02] Lock file found — skipping (another train is running)
+[2026-03-11 14:12:04]   Fetching TSLA …
+[2026-03-11 14:12:04]   Fetching MSFT …
+[2026-03-11 14:12:04]   Fetching GOOGL …
+[2026-03-11 14:12:04]   Fetching AMZN …
+[2026-03-11 14:12:04]   Fetching NVDA …
+[2026-03-11 14:12:05]   Fetching META …
+[2026-03-11 14:12:05]   Fetching NFLX …
+[2026-03-11 14:12:05]   Fetching BABA …
+[2026-03-11 14:12:05]   Fetching TCS.NS …
+[2026-03-11 14:12:06]   Training on 2,408 samples …
+[2026-03-11 14:23:12] AutoTrain thread launched (runs in background)
+[2026-03-11 14:23:12] Starting model retrain …
+[2026-03-11 14:23:12]   Fetching AAPL …
+[2026-03-11 14:23:13]   Fetching TSLA …
+[2026-03-11 14:23:14]   Fetching MSFT …
+[2026-03-11 14:23:14]   Fetching GOOGL …
+[2026-03-11 14:23:14]   Fetching AMZN …
+[2026-03-11 14:23:14]   Fetching NVDA …
+[2026-03-11 14:23:15] Lock file found — skipping (another train is running)
+[2026-03-11 14:23:15] AutoTrain thread launched (runs in background)
+[2026-03-11 14:23:15]   Fetching META …
+[2026-03-11 14:23:16]   Fetching NFLX …
+[2026-03-11 14:23:16]   Fetching BABA …
+[2026-03-11 14:23:17]   Fetching TCS.NS …
+[2026-03-11 14:23:17]   Training on 2,408 samples …
+[2026-03-11 14:29:09] AutoTrain thread launched (runs in background)
+[2026-03-11 14:29:09] Starting model retrain …
+[2026-03-11 14:29:09]   Fetching AAPL …
+[2026-03-11 14:29:10]   Fetching TSLA …
+[2026-03-11 14:29:11]   Fetching MSFT …
+[2026-03-11 14:29:11]   Fetching GOOGL …
+[2026-03-11 14:29:11]   Fetching AMZN …
+[2026-03-11 14:29:12]   Fetching NVDA …
+[2026-03-11 14:29:12]   Fetching META …
+[2026-03-11 14:29:12]   Fetching NFLX …
+[2026-03-11 14:29:12]   Fetching BABA …
+[2026-03-11 14:29:13]   Fetching TCS.NS …
+[2026-03-11 14:29:13]   Training on 2,408 samples …
+[2026-03-11 14:30:22] AutoTrain thread launched (runs in background)
+[2026-03-11 14:30:22] Starting model retrain …
+[2026-03-11 14:30:22]   Fetching AAPL …
+[2026-03-11 14:30:23]   Fetching TSLA …
+[2026-03-11 14:30:24]   Fetching MSFT …
+[2026-03-11 14:30:24]   Fetching GOOGL …
+[2026-03-11 14:30:24]   Fetching AMZN …
+[2026-03-11 14:30:24]   Fetching NVDA …
+[2026-03-11 14:30:24]   Fetching META …
+[2026-03-11 14:30:24]   Fetching NFLX …
+[2026-03-11 14:30:24]   Fetching BABA …
+[2026-03-11 14:30:25]   Fetching TCS.NS …
+[2026-03-11 14:30:25]   Training on 2,408 samples …
+[2026-03-11 14:39:08] AutoTrain thread launched (runs in background)
+[2026-03-11 14:39:08] Starting model retrain …
+[2026-03-11 14:39:08]   Fetching AAPL …
+[2026-03-11 14:39:09]   Fetching TSLA …
+[2026-03-11 14:39:10]   Fetching MSFT …
+[2026-03-11 14:39:11]   Fetching GOOGL …
+[2026-03-11 14:39:11]   Fetching AMZN …
+[2026-03-11 14:39:11]   Fetching NVDA …
+[2026-03-11 14:39:11]   Fetching META …
+[2026-03-11 14:39:11]   Fetching NFLX …
+[2026-03-11 14:39:11]   Fetching BABA …
+[2026-03-11 14:39:12]   Fetching TCS.NS …
+[2026-03-11 14:39:12]   Training on 2,408 samples …
+[2026-03-11 14:40:01] AutoTrain thread launched (runs in background)
+[2026-03-11 14:40:01] Starting model retrain …
+[2026-03-11 14:40:01]   Fetching AAPL …
+[2026-03-11 14:40:01]   Fetching TSLA …
+[2026-03-11 14:40:02]   Fetching MSFT …
+[2026-03-11 14:40:02]   Fetching GOOGL …
+[2026-03-11 14:40:02]   Fetching AMZN …
+[2026-03-11 14:40:02]   Fetching NVDA …
+[2026-03-11 14:40:02]   Fetching META …
+[2026-03-11 14:40:02]   Fetching NFLX …
+[2026-03-11 14:40:03]   Fetching BABA …
+[2026-03-11 14:40:03]   Fetching TCS.NS …
+[2026-03-11 14:40:03]   Training on 2,408 samples …
+[2026-03-11 14:41:21] AutoTrain thread launched (runs in background)
+[2026-03-11 14:41:21] Starting model retrain …
+[2026-03-11 14:41:21]   Fetching AAPL …
+[2026-03-11 14:41:22]   Fetching TSLA …
+[2026-03-11 14:41:22]   Fetching MSFT …
+[2026-03-11 14:41:22]   Fetching GOOGL …
+[2026-03-11 14:41:22]   Fetching AMZN …
+[2026-03-11 14:41:22]   Fetching NVDA …
+[2026-03-11 14:41:23]   Fetching META …
+[2026-03-11 14:41:23]   Fetching NFLX …
+[2026-03-11 14:41:23]   Fetching BABA …
+[2026-03-11 14:41:23]   Fetching TCS.NS …
+[2026-03-11 14:41:23]   Training on 2,408 samples …
+[2026-03-11 14:44:45] AutoTrain thread launched (runs in background)
+[2026-03-11 14:44:45] Starting model retrain …
+[2026-03-11 14:44:45]   Fetching AAPL …
+[2026-03-11 14:44:45]   Fetching TSLA …
+[2026-03-11 14:44:45]   Fetching MSFT …
+[2026-03-11 14:44:46]   Fetching GOOGL …
+[2026-03-11 14:44:46]   Fetching AMZN …
+[2026-03-11 14:44:46]   Fetching NVDA …
+[2026-03-11 14:44:46]   Fetching META …
+[2026-03-11 14:44:46]   Fetching NFLX …
+[2026-03-11 14:44:46]   Fetching BABA …
+[2026-03-11 14:44:46]   Fetching TCS.NS …
+[2026-03-11 14:44:46]   Training on 2,408 samples …
+[2026-03-11 14:51:09] AutoTrain thread launched (runs in background)
+[2026-03-11 14:51:09] Starting model retrain …
+[2026-03-11 14:51:09]   Fetching AAPL …
+[2026-03-11 14:51:10]   Fetching TSLA …
+[2026-03-11 14:51:10]   Fetching MSFT …
+[2026-03-11 14:51:10]   Fetching GOOGL …
+[2026-03-11 14:51:10]   Fetching AMZN …
+[2026-03-11 14:51:11]   Fetching NVDA …
+[2026-03-11 14:51:11]   Fetching META …
+[2026-03-11 14:51:11]   Fetching NFLX …
+[2026-03-11 14:51:12] AutoTrain thread launched (runs in background)
+[2026-03-11 14:51:12] Lock file found — skipping (another train is running)
+[2026-03-11 14:51:12]   Fetching BABA …
+[2026-03-11 14:51:12]   Fetching TCS.NS …
+[2026-03-11 14:51:13]   Training on 2,408 samples …
+[2026-03-11 14:55:20] AutoTrain thread launched (runs in background)
+[2026-03-11 14:55:20] Starting model retrain …
+[2026-03-11 14:55:20]   Fetching AAPL …
+[2026-03-11 14:55:23] Lock file found — skipping (another train is running)
+[2026-03-11 14:55:23] AutoTrain thread launched (runs in background)
+[2026-03-11 14:57:57] AutoTrain thread launched (runs in background)
+[2026-03-11 14:57:57] Starting model retrain …
+[2026-03-11 14:57:57]   Fetching AAPL …
+[2026-03-11 14:57:58]   Fetching TSLA …
+[2026-03-11 14:57:59]   Fetching MSFT …
+[2026-03-11 14:57:59]   Fetching GOOGL …
+[2026-03-11 14:57:59]   Fetching AMZN …
+[2026-03-11 14:58:00]   Fetching NVDA …
+[2026-03-11 14:58:00]   Fetching META …
+[2026-03-11 14:58:00]   Fetching NFLX …
+[2026-03-11 14:58:00]   Fetching BABA …
+[2026-03-11 14:58:01]   Fetching TCS.NS …
+[2026-03-11 14:58:01]   Training on 2,408 samples …
+[2026-03-11 15:11:07] AutoTrain thread launched (runs in background)
+[2026-03-11 15:11:07] Starting model retrain …
+[2026-03-11 15:11:07]   Fetching AAPL …
+[2026-03-11 15:11:08]   Fetching TSLA …
+[2026-03-11 15:11:08]   Fetching MSFT …
+[2026-03-11 15:11:08]   Fetching GOOGL …
+[2026-03-11 15:11:08]   Fetching AMZN …
+[2026-03-11 15:11:08]   Fetching NVDA …
+[2026-03-11 15:11:08]   Fetching META …
+[2026-03-11 15:11:08]   Fetching NFLX …
+[2026-03-11 15:11:08]   Fetching BABA …
+[2026-03-11 15:11:09]   Fetching TCS.NS …
+[2026-03-11 15:11:09]   Training on 2,408 samples …
+[2026-03-11 15:11:10] AutoTrain thread launched (runs in background)
+[2026-03-11 15:11:10] Starting model retrain …
+[2026-03-11 15:11:10]   Fetching AAPL …
+[2026-03-11 15:11:11]   Fetching TSLA …
+[2026-03-11 15:11:11]   Fetching MSFT …
+[2026-03-11 15:11:11]   Fetching GOOGL …
+[2026-03-11 15:11:11]   Fetching AMZN …
+[2026-03-11 15:11:11]   Fetching NVDA …
+[2026-03-11 15:11:11]   Fetching META …
+[2026-03-11 15:11:12]   Fetching NFLX …
+[2026-03-11 15:11:12]   Fetching BABA …
+[2026-03-11 15:11:12]   Fetching TCS.NS …
+[2026-03-11 15:11:12]   Training on 2,408 samples …
+[2026-03-11 15:19:44] AutoTrain thread launched (runs in background)
+[2026-03-11 15:19:44] Starting model retrain …
+[2026-03-11 15:19:44]   Fetching AAPL …
+[2026-03-11 15:19:45]   Fetching TSLA …
+[2026-03-11 15:19:45]   Fetching MSFT …
+[2026-03-11 15:19:45]   Fetching GOOGL …
+[2026-03-11 15:19:45]   Fetching AMZN …
+[2026-03-11 15:19:45]   Fetching NVDA …
+[2026-03-11 15:19:46]   Fetching META …
+[2026-03-11 15:19:46]   Fetching NFLX …
+[2026-03-11 15:19:46]   Fetching BABA …
+[2026-03-11 15:19:46]   Fetching TCS.NS …
+[2026-03-11 15:19:46]   Training on 2,408 samples …
+[2026-03-11 15:19:47] AutoTrain thread launched (runs in background)
+[2026-03-11 15:19:47] Starting model retrain …
+[2026-03-11 15:19:47]   Fetching AAPL …
+[2026-03-11 15:19:48]   Fetching TSLA …
+[2026-03-11 15:19:48]   Fetching MSFT …
+[2026-03-11 15:19:48]   Fetching GOOGL …
+[2026-03-11 15:19:48]   Fetching AMZN …
+[2026-03-11 15:19:48]   Fetching NVDA …
+[2026-03-11 15:19:48]   Fetching META …
+[2026-03-11 15:19:48]   Fetching NFLX …
+[2026-03-11 15:19:48]   Fetching BABA …
+[2026-03-11 15:19:48]   Fetching TCS.NS …
+[2026-03-11 15:19:48]   Training on 2,408 samples …
+[2026-03-11 15:21:07] AutoTrain thread launched (runs in background)
+[2026-03-11 15:21:07] Starting model retrain …
+[2026-03-11 15:21:07]   Fetching AAPL …
+[2026-03-11 15:21:08]   Fetching TSLA …
+[2026-03-11 15:21:08]   Fetching MSFT …
+[2026-03-11 15:21:08]   Fetching GOOGL …
+[2026-03-11 15:21:08]   Fetching AMZN …
+[2026-03-11 15:21:08]   Fetching NVDA …
+[2026-03-11 15:21:08]   Fetching META …
+[2026-03-11 15:21:09]   Fetching NFLX …
+[2026-03-11 15:21:09]   Fetching BABA …
+[2026-03-11 15:21:09]   Fetching TCS.NS …
+[2026-03-11 15:21:09]   Training on 2,408 samples …
+[2026-03-11 15:21:18] AutoTrain thread launched (runs in background)
+[2026-03-11 15:21:18] Starting model retrain â€¦
+[2026-03-11 15:21:18]   Fetching AAPL â€¦
+[2026-03-11 15:21:19]   Fetching TSLA â€¦
+[2026-03-11 15:21:19]   Fetching MSFT â€¦
+[2026-03-11 15:21:19]   Fetching GOOGL â€¦
+[2026-03-11 15:21:19]   Fetching AMZN â€¦
+[2026-03-11 15:21:19]   Fetching NVDA â€¦
+[2026-03-11 15:21:19]   Fetching META â€¦
+[2026-03-11 15:21:19]   Fetching NFLX â€¦
+[2026-03-11 15:21:19]   Fetching BABA â€¦
+[2026-03-11 15:21:20]   Fetching TCS.NS â€¦
+[2026-03-11 15:21:20]   Training on 2,407 samples (after NaN cleanup) â€¦
+[2026-03-11 15:21:20] âœ… Retrain complete â€” model saved to models/linear_model.pkl
+[2026-03-11 15:21:49] AutoTrain thread launched (runs in background)
+[2026-03-11 15:21:49] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-03-11 15:22:06] AutoTrain thread launched (runs in background)
+[2026-03-11 15:22:06] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-03-11 15:23:53] AutoTrain thread launched (runs in background)
+[2026-03-11 15:23:53] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-03-11 15:23:59] AutoTrain thread launched (runs in background)
+[2026-03-11 15:23:59] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-11 15:26:23] AutoTrain thread launched (runs in background)
+[2026-03-11 15:26:23] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-11 15:27:05] AutoTrain thread launched (runs in background)
+[2026-03-11 15:27:05] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-03-11 15:31:14] AutoTrain thread launched (runs in background)
+[2026-03-11 15:31:14] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-11 15:31:22] AutoTrain thread launched (runs in background)
+[2026-03-11 15:31:22] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-11 21:10:18] AutoTrain thread launched (runs in background)
+[2026-03-11 21:10:18] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-11 21:10:21] AutoTrain thread launched (runs in background)
+[2026-03-11 21:10:21] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-11 21:12:00] AutoTrain thread launched (runs in background)
+[2026-03-11 21:12:00] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-11 21:12:54] AutoTrain thread launched (runs in background)
+[2026-03-11 21:12:54] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-11 21:13:13] AutoTrain thread launched (runs in background)
+[2026-03-11 21:13:13] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-11 21:13:42] AutoTrain thread launched (runs in background)
+[2026-03-11 21:13:42] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-11 21:14:07] AutoTrain thread launched (runs in background)
+[2026-03-11 21:14:07] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-11 21:15:49] AutoTrain thread launched (runs in background)
+[2026-03-11 21:15:49] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-11 21:31:31] AutoTrain thread launched (runs in background)
+[2026-03-11 21:31:31] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-11 21:31:34] AutoTrain thread launched (runs in background)
+[2026-03-11 21:31:34] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-11 21:48:53] AutoTrain thread launched (runs in background)
+[2026-03-11 21:48:53] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-11 21:48:56] AutoTrain thread launched (runs in background)
+[2026-03-11 21:48:56] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-11 22:00:06] AutoTrain thread launched (runs in background)
+[2026-03-11 22:00:06] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-11 22:00:08] AutoTrain thread launched (runs in background)
+[2026-03-11 22:00:08] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-12 08:43:40] AutoTrain thread launched (runs in background)
+[2026-03-12 08:43:40] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-12 08:43:43] AutoTrain thread launched (runs in background)
+[2026-03-12 08:43:43] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-12 08:46:12] AutoTrain thread launched (runs in background)
+[2026-03-12 08:46:12] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-12 08:46:15] AutoTrain thread launched (runs in background)
+[2026-03-12 08:46:15] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-12 09:01:22] AutoTrain thread launched (runs in background)
+[2026-03-12 09:01:22] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-12 09:01:25] AutoTrain thread launched (runs in background)
+[2026-03-12 09:01:25] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-12 09:15:34] AutoTrain thread launched (runs in background)
+[2026-03-12 09:15:34] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-12 09:15:37] AutoTrain thread launched (runs in background)
+[2026-03-12 09:15:37] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-12 09:23:27] AutoTrain thread launched (runs in background)
+[2026-03-12 09:23:27] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-12 09:23:30] AutoTrain thread launched (runs in background)
+[2026-03-12 09:23:30] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-12 09:31:58] AutoTrain thread launched (runs in background)
+[2026-03-12 09:31:58] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-12 09:32:01] AutoTrain thread launched (runs in background)
+[2026-03-12 09:32:01] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-12 09:35:36] AutoTrain thread launched (runs in background)
+[2026-03-12 09:35:36] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-12 09:35:39] AutoTrain thread launched (runs in background)
+[2026-03-12 09:35:39] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-12 09:44:25] AutoTrain thread launched (runs in background)
+[2026-03-12 09:44:25] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-12 09:44:27] AutoTrain thread launched (runs in background)
+[2026-03-12 09:44:27] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-12 14:11:25] AutoTrain thread launched (runs in background)
+[2026-03-12 14:11:25] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-12 14:11:28] AutoTrain thread launched (runs in background)
+[2026-03-12 14:11:28] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-12 14:22:35] AutoTrain thread launched (runs in background)
+[2026-03-12 14:22:35] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-12 14:42:56] AutoTrain thread launched (runs in background)
+[2026-03-12 14:42:56] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-12 14:42:59] AutoTrain thread launched (runs in background)
+[2026-03-12 14:42:59] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-12 23:15:50] AutoTrain thread launched (runs in background)
+[2026-03-12 23:15:50] Starting model retrain â€¦
+[2026-03-12 23:15:50]   Fetching AAPL â€¦
+[2026-03-12 23:15:53]   Fetching TSLA â€¦
+[2026-03-12 23:15:53]   Fetching MSFT â€¦
+[2026-03-12 23:15:53]   Fetching GOOGL â€¦
+[2026-03-12 23:15:53]   Fetching AMZN â€¦
+[2026-03-12 23:15:53]   Fetching NVDA â€¦
+[2026-03-12 23:15:53]   Fetching META â€¦
+[2026-03-12 23:15:53]   Fetching NFLX â€¦
+[2026-03-12 23:15:54]   Fetching BABA â€¦
+[2026-03-12 23:15:54]   Fetching TCS.NS â€¦
+[2026-03-12 23:15:54]   Training on 2,416 samples (after NaN cleanup) â€¦
+[2026-03-12 23:15:54] âœ… Retrain complete â€” model saved to models/linear_model.pkl
+[2026-03-12 23:15:54] AutoTrain thread launched (runs in background)
+[2026-03-12 23:15:54] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-13 09:17:49] AutoTrain thread launched (runs in background)
+[2026-03-13 09:17:49] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-13 09:17:56] AutoTrain thread launched (runs in background)
+[2026-03-13 09:17:56] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-13 09:20:41] AutoTrain thread launched (runs in background)
+[2026-03-13 09:20:41] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-13 09:20:43] AutoTrain thread launched (runs in background)
+[2026-03-13 09:20:43] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-13 09:26:23] AutoTrain thread launched (runs in background)
+[2026-03-13 09:26:23] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-13 09:26:25] AutoTrain thread launched (runs in background)
+[2026-03-13 09:26:25] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-13 09:36:54] AutoTrain thread launched (runs in background)
+[2026-03-13 09:36:54] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-13 09:36:57] AutoTrain thread launched (runs in background)
+[2026-03-13 09:36:57] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-13 10:38:42] AutoTrain thread launched (runs in background)
+[2026-03-13 10:38:42] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-13 10:38:49] AutoTrain thread launched (runs in background)
+[2026-03-13 10:38:49] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-13 10:41:12] AutoTrain thread launched (runs in background)
+[2026-03-13 10:41:12] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-13 10:41:20] AutoTrain thread launched (runs in background)
+[2026-03-13 10:41:20] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-13 14:29:52] AutoTrain thread launched (runs in background)
+[2026-03-13 14:29:52] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-13 14:29:55] AutoTrain thread launched (runs in background)
+[2026-03-13 14:29:55] Model is up-to-date (< 24 h old) â€” skipping retrain
+[2026-03-15 20:55:55] AutoTrain thread launched (runs in background)
+[2026-03-15 20:55:55] Starting model retrain â€¦
+[2026-03-15 20:55:55]   Fetching AAPL â€¦
+[2026-03-15 20:55:58] AutoTrain thread launched (runs in background)
+[2026-03-15 20:55:58] Lock file found â€” skipping (another train is running)
+[2026-03-15 20:55:59]   Fetching TSLA â€¦
+[2026-03-15 20:55:59]   Fetching MSFT â€¦
+[2026-03-15 20:55:59]   Fetching GOOGL â€¦
+[2026-03-15 20:55:59]   Fetching AMZN â€¦
+[2026-03-15 20:55:59]   Fetching NVDA â€¦
+[2026-03-15 20:56:00]   Fetching META â€¦
+[2026-03-15 20:56:00]   Fetching NFLX â€¦
+[2026-03-15 20:56:00]   Fetching BABA â€¦
+[2026-03-15 20:56:00]   Fetching TCS.NS â€¦
+[2026-03-15 20:56:00]   Training on 2,407 samples (after NaN cleanup) â€¦
+[2026-03-15 20:56:00] âœ… Retrain complete â€” model saved to models/linear_model.pkl

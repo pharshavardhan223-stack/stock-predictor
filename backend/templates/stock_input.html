@@ -1,189 +1,942 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
+<title>Stock Predictor | Stock AI</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#020917;
+  --surface:rgba(6,14,35,.9);
+  --border:rgba(56,189,248,.12);
+  --border-hover:rgba(56,189,248,.35);
+  --cyan:#38bdf8;
+  --cyan2:#22d3ee;
+  --green:#4ade80;
+  --red:#fb7185;
+  --amber:#fbbf24;
+  --text:#e2e8f0;
+  --muted:#64748b;
+  --mono:'Space Mono',monospace;
+  --sans:'Syne',sans-serif;
+}
+body{
+  min-height:100vh;
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--sans);
+  overflow-x:hidden;
+}
+/* grid overlay */
+body::before{
+  content:"";position:fixed;inset:0;
+  background:
+    linear-gradient(rgba(56,189,248,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(56,189,248,.025) 1px,transparent 1px);
+  background-size:50px 50px;
+  pointer-events:none;z-index:0;
+}
 
-    <title>Live Stock Data | Stock Predictor</title>
+/* ── PARTICLES ── */
+#bgCanvas{position:fixed;inset:0;z-index:0;pointer-events:none;}
 
-    <!-- Main CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(200%)}}
+@keyframes glow{0%,100%{box-shadow:0 0 20px rgba(56,189,248,.1)}50%{box-shadow:0 0 40px rgba(56,189,248,.25)}}
+@keyframes scanline{0%{top:-4px}100%{top:100%}}
+@keyframes tickerScroll{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
 
-    <!-- Font Awesome -->
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+/* ── TOPBAR ── */
+.topbar{
+  position:sticky;top:0;z-index:200;
+  background:rgba(2,9,23,.95);backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--border);
+  padding:0 28px;display:flex;align-items:center;
+  justify-content:space-between;height:62px;gap:12px;
+}
+.topbar-brand{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;}
+.topbar-brand i{color:var(--cyan);font-size:20px;}
+.topbar-brand span{font-size:18px;font-weight:800;font-family:var(--sans);background:linear-gradient(90deg,var(--cyan),var(--cyan2));-webkit-background-clip:text;color:transparent;}
+.topbar-nav{display:flex;align-items:center;gap:5px;flex-wrap:wrap;}
+.nav-btn{
+  display:flex;align-items:center;gap:6px;padding:7px 13px;border-radius:9px;
+  border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.04);
+  color:#94a3b8;font-size:13px;font-weight:600;text-decoration:none;
+  transition:.22s;white-space:nowrap;font-family:var(--sans);
+}
+.nav-btn:hover{background:rgba(56,189,248,.1);border-color:rgba(56,189,248,.3);color:var(--cyan);}
+.nav-btn.active{background:rgba(56,189,248,.13);border-color:rgba(56,189,248,.4);color:var(--cyan);}
+.nav-btn.danger{color:#fb7185;border-color:rgba(251,113,133,.15);}
+.nav-btn.danger:hover{background:rgba(251,113,133,.1);border-color:rgba(251,113,133,.3);}
+.user-badge{
+  display:flex;align-items:center;gap:8px;padding:6px 14px;
+  border-radius:50px;background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.07);font-size:13px;color:#94a3b8;flex-shrink:0;
+}
+.user-badge .udot{width:7px;height:7px;background:var(--green);border-radius:50%;animation:pulse 2s infinite;}
 
-    <style>
+/* ── TICKER BAR ── */
+.ticker-bar{
+  background:rgba(6,14,35,.95);border-bottom:1px solid var(--border);
+  overflow:hidden;height:32px;display:flex;align-items:center;
+  position:relative;z-index:10;
+}
+.ticker-track{
+  display:flex;gap:0;white-space:nowrap;
+  animation:tickerScroll 60s linear infinite;
+}
+.ticker-item{
+  font-family:var(--mono);font-size:.7rem;padding:0 28px;
+  display:flex;align-items:center;gap:8px;border-right:1px solid rgba(255,255,255,.05);
+}
+.ticker-sym{color:var(--cyan);font-weight:700;}
+.ticker-price{color:var(--text);}
+.ticker-chg.up{color:var(--green);}
+.ticker-chg.dn{color:var(--red);}
 
-        .live-box{
-            background:white;
-            padding:20px;
-            border-radius:12px;
-            margin-top:25px;
-            text-align:center;
-            box-shadow:0 2px 10px rgba(0,0,0,0.1);
-        }
+/* ── CONTAINER ── */
+.container{max-width:960px;margin:0 auto;padding:40px 22px 80px;position:relative;z-index:1;}
 
-        .live-box h3{
-            color:#1976d2;
-        }
+/* ── HERO ── */
+.hero{
+  text-align:center;margin-bottom:48px;animation:fadeUp .6s ease both;
+}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--mono);font-size:.7rem;color:var(--cyan);
+  background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.2);
+  padding:6px 14px;border-radius:20px;margin-bottom:20px;
+  text-transform:uppercase;letter-spacing:2px;
+}
+.hero-eyebrow span{width:6px;height:6px;background:var(--cyan);border-radius:50%;animation:pulse 1.5s infinite;}
+.hero h1{
+  font-size:clamp(2.2rem,5vw,3.5rem);font-weight:800;line-height:1.1;
+  background:linear-gradient(135deg,#f1f5f9 0%,var(--cyan) 50%,var(--cyan2) 100%);
+  -webkit-background-clip:text;color:transparent;margin-bottom:14px;
+}
+.hero p{color:var(--muted);font-size:.95rem;max-width:500px;margin:0 auto 28px;}
 
-        .track-btn{
-            background:#1976d2;
-            color:white;
-            padding:10px 20px;
-            border:none;
-            border-radius:8px;
-            cursor:pointer;
-            margin-top:15px;
-        }
+/* ── SEARCH CARD ── */
+.search-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:24px;padding:36px 38px;
+  position:relative;overflow:hidden;
+  box-shadow:0 40px 100px rgba(0,0,0,.7);
+  animation:fadeUp .7s ease both .1s;
+  animation:glow 4s ease infinite,fadeUp .7s ease both .1s;
+}
+.search-card::before{
+  content:"";position:absolute;top:0;left:-100%;width:50%;height:100%;
+  background:linear-gradient(120deg,transparent,rgba(56,189,248,.04),transparent);
+  animation:shimmer 6s infinite;pointer-events:none;
+}
+/* scanline effect */
+.search-card::after{
+  content:"";position:absolute;left:0;width:100%;height:2px;
+  background:linear-gradient(90deg,transparent,rgba(56,189,248,.15),transparent);
+  animation:scanline 4s linear infinite;pointer-events:none;
+}
 
-        .track-btn:hover{
-            background:#125aa0;
-        }
+.search-card-header{
+  display:flex;align-items:center;gap:14px;margin-bottom:30px;
+}
+.scard-icon{
+  width:46px;height:46px;border-radius:14px;
+  background:linear-gradient(135deg,rgba(56,189,248,.15),rgba(34,211,238,.08));
+  border:1px solid rgba(56,189,248,.2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;color:var(--cyan);flex-shrink:0;
+}
+.scard-title{font-size:1.05rem;font-weight:700;color:var(--text);}
+.scard-sub{font-size:.76rem;color:var(--muted);margin-top:2px;}
 
-    </style>
+/* ── INPUT AREA ── */
+.input-group{position:relative;margin-bottom:18px;}
+.input-label{
+  font-family:var(--mono);font-size:.68rem;color:var(--muted);
+  text-transform:uppercase;letter-spacing:1.5px;
+  display:flex;align-items:center;gap:8px;margin-bottom:10px;
+}
+.input-label::after{content:"";flex:1;height:1px;background:rgba(255,255,255,.05);}
+.sym-input{
+  width:100%;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(56,189,248,.2);
+  border-radius:16px;
+  color:#fff;
+  padding:18px 56px 18px 52px;
+  font-size:1.15rem;
+  font-family:var(--mono);
+  outline:none;
+  text-transform:uppercase;
+  letter-spacing:3px;
+  transition:border-color .2s,box-shadow .2s,background .2s;
+}
+.sym-input:focus{
+  border-color:var(--cyan);
+  box-shadow:0 0 0 3px rgba(56,189,248,.1),0 0 30px rgba(56,189,248,.06);
+  background:rgba(56,189,248,.04);
+}
+.sym-input::placeholder{color:#334155;text-transform:none;letter-spacing:0;font-size:.9rem;}
+.input-icon{
+  position:absolute;left:18px;top:50%;transform:translateY(-50%);
+  color:var(--cyan);font-size:.95rem;opacity:.7;pointer-events:none;
+}
+.input-clear{
+  position:absolute;right:16px;top:50%;transform:translateY(-50%);
+  color:var(--muted);font-size:.85rem;cursor:pointer;
+  background:none;border:none;padding:4px 6px;border-radius:6px;
+  transition:.2s;display:none;
+}
+.input-clear:hover{color:var(--text);background:rgba(255,255,255,.08);}
 
+/* ── AUTOCOMPLETE ── */
+.autocomplete-box{
+  position:absolute;top:calc(100% + 8px);left:0;right:0;
+  background:rgba(6,14,35,.98);border:1px solid var(--border-hover);
+  border-radius:14px;overflow:hidden;z-index:100;
+  box-shadow:0 20px 60px rgba(0,0,0,.6);
+  display:none;
+}
+.ac-item{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:13px 18px;cursor:pointer;transition:.15s;
+  border-bottom:1px solid rgba(255,255,255,.04);
+}
+.ac-item:last-child{border-bottom:none;}
+.ac-item:hover,.ac-item.active{background:rgba(56,189,248,.08);}
+.ac-left{display:flex;align-items:center;gap:12px;}
+.ac-icon{
+  width:34px;height:34px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.8rem;font-weight:700;font-family:var(--mono);
+  flex-shrink:0;
+}
+.ac-sym{font-family:var(--mono);font-size:.9rem;font-weight:700;color:var(--cyan);}
+.ac-name{font-size:.76rem;color:var(--muted);margin-top:1px;}
+.ac-right{text-align:right;}
+.ac-price{font-family:var(--mono);font-size:.85rem;color:var(--text);}
+.ac-chg{font-family:var(--mono);font-size:.72rem;margin-top:2px;}
+.ac-chg.up{color:var(--green);}
+.ac-chg.dn{color:var(--red);}
+.ac-empty{padding:20px;text-align:center;color:var(--muted);font-size:.82rem;}
+
+/* ── QUICK PICKS ── */
+.quick-picks-label{
+  font-family:var(--mono);font-size:.67rem;color:var(--muted);
+  text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px;
+}
+.quick-picks{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px;}
+.qp-btn{
+  display:flex;align-items:center;gap:7px;
+  padding:8px 14px;border-radius:10px;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+  color:#94a3b8;font-family:var(--mono);font-size:.78rem;
+  cursor:pointer;transition:.2s;
+}
+.qp-btn:hover{background:rgba(56,189,248,.1);border-color:rgba(56,189,248,.3);color:var(--cyan);}
+.qp-dot{width:6px;height:6px;border-radius:50%;}
+
+/* ── SETTINGS ROW ── */
+.settings-row{
+  display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:28px;
+}
+.setting-group{}
+.setting-label{
+  font-family:var(--mono);font-size:.66rem;color:var(--muted);
+  text-transform:uppercase;letter-spacing:1.2px;margin-bottom:8px;
+  display:flex;align-items:center;gap:6px;
+}
+.setting-label i{color:var(--cyan);font-size:.7rem;}
+.seg-control{display:flex;gap:0;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;overflow:hidden;}
+.seg-btn{
+  flex:1;padding:9px 6px;border:none;background:transparent;
+  color:var(--muted);font-size:.76rem;font-weight:700;cursor:pointer;
+  transition:.2s;font-family:var(--sans);border-right:1px solid rgba(255,255,255,.06);
+}
+.seg-btn:last-child{border-right:none;}
+.seg-btn.active{background:rgba(56,189,248,.15);color:var(--cyan);}
+.seg-btn:hover:not(.active){background:rgba(255,255,255,.06);color:var(--text);}
+
+/* ── PREDICT BUTTON ── */
+.btn-predict{
+  width:100%;
+  background:linear-gradient(135deg,#0284c7,#0891b2);
+  color:#fff;border:none;border-radius:16px;
+  padding:18px 28px;
+  font-size:1rem;font-weight:700;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  font-family:var(--sans);
+  transition:.25s;
+  box-shadow:0 8px 32px rgba(2,132,199,.35);
+  position:relative;overflow:hidden;
+}
+.btn-predict::after{
+  content:"";position:absolute;top:0;left:-100%;width:50%;height:100%;
+  background:linear-gradient(120deg,transparent,rgba(255,255,255,.12),transparent);
+  transition:.5s;
+}
+.btn-predict:hover::after{left:200%;}
+.btn-predict:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(2,132,199,.5);}
+.btn-predict:active{transform:translateY(0);}
+.btn-predict:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none;}
+.btn-predict .btn-spinner{
+  width:18px;height:18px;border:2px solid rgba(255,255,255,.3);
+  border-top:2px solid #fff;border-radius:50%;
+  animation:spin 1s linear infinite;display:none;
+}
+
+/* ── SELECTED STOCK PREVIEW ── */
+.stock-preview{
+  display:none;
+  background:rgba(56,189,248,.06);
+  border:1px solid rgba(56,189,248,.18);
+  border-radius:14px;padding:16px 20px;margin-bottom:20px;
+  animation:fadeUp .3s ease;
+}
+.sp-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.sp-left{display:flex;align-items:center;gap:14px;}
+.sp-logo{
+  width:42px;height:42px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:.85rem;font-weight:700;
+  border:1px solid rgba(255,255,255,.1);flex-shrink:0;
+}
+.sp-sym{font-family:var(--mono);font-size:1.1rem;font-weight:700;color:var(--cyan);}
+.sp-name{font-size:.76rem;color:var(--muted);margin-top:2px;}
+.sp-right{display:flex;gap:16px;align-items:center;}
+.sp-price{font-family:var(--mono);font-size:1.15rem;font-weight:700;color:var(--text);}
+.sp-chg{font-family:var(--mono);font-size:.82rem;padding:3px 10px;border-radius:20px;font-weight:700;}
+.sp-chg.up{color:var(--green);background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.2);}
+.sp-chg.dn{color:var(--red);background:rgba(251,113,133,.1);border:1px solid rgba(251,113,133,.2);}
+.sp-stats{display:flex;gap:20px;margin-top:12px;flex-wrap:wrap;}
+.sp-stat{font-size:.74rem;color:var(--muted);}
+.sp-stat strong{color:var(--text);font-family:var(--mono);}
+
+/* ── FEATURES GRID ── */
+.features{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:14px;
+  margin-top:40px;animation:fadeUp .8s ease both .3s;
+}
+.feat-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:16px;padding:20px;transition:.25s;
+}
+.feat-card:hover{border-color:rgba(56,189,248,.25);transform:translateY(-3px);}
+.feat-icon{
+  width:38px;height:38px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.9rem;margin-bottom:12px;
+}
+.feat-title{font-size:.88rem;font-weight:700;color:var(--text);margin-bottom:5px;}
+.feat-desc{font-size:.75rem;color:var(--muted);line-height:1.5;}
+
+/* ── HOW IT WORKS ── */
+.how-section{
+  margin-top:50px;animation:fadeUp .8s ease both .4s;
+}
+.section-title{
+  font-family:var(--mono);font-size:.7rem;color:var(--cyan);
+  text-transform:uppercase;letter-spacing:3px;
+  text-align:center;margin-bottom:28px;
+  display:flex;align-items:center;gap:12px;justify-content:center;
+}
+.section-title::before,.section-title::after{
+  content:"";width:60px;height:1px;background:rgba(56,189,248,.2);
+}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.step{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:16px;padding:22px;text-align:center;
+  position:relative;overflow:hidden;transition:.25s;
+}
+.step:hover{border-color:rgba(56,189,248,.25);}
+.step-num{
+  font-family:var(--mono);font-size:2.5rem;font-weight:700;
+  color:rgba(56,189,248,.1);position:absolute;top:10px;right:16px;
+  line-height:1;
+}
+.step-icon{
+  width:44px;height:44px;border-radius:12px;margin:0 auto 14px;
+  display:flex;align-items:center;justify-content:center;font-size:1rem;
+}
+.step-title{font-size:.88rem;font-weight:700;color:var(--text);margin-bottom:6px;}
+.step-desc{font-size:.74rem;color:var(--muted);line-height:1.5;}
+
+/* ── LOADER OVERLAY ── */
+.loader-overlay{
+  display:none;position:fixed;inset:0;z-index:500;
+  background:rgba(2,9,23,.92);backdrop-filter:blur(10px);
+  flex-direction:column;align-items:center;justify-content:center;gap:24px;
+}
+.loader-overlay.show{display:flex;}
+.loader-ring{
+  width:64px;height:64px;
+  border:3px solid rgba(56,189,248,.15);
+  border-top:3px solid var(--cyan);
+  border-radius:50%;animation:spin 1s linear infinite;
+}
+.loader-text{font-family:var(--mono);font-size:.85rem;color:var(--cyan);letter-spacing:2px;}
+.loader-steps{display:flex;flex-direction:column;gap:8px;margin-top:10px;}
+.lstep{
+  font-size:.75rem;color:var(--muted);
+  display:flex;align-items:center;gap:10px;
+  font-family:var(--mono);
+}
+.lstep.active{color:var(--cyan);}
+.lstep.done{color:var(--green);}
+.lstep i{font-size:.7rem;width:14px;text-align:center;}
+
+/* ── FLASH ── */
+.flash{
+  display:flex;align-items:center;gap:10px;
+  background:rgba(251,113,133,.08);border:1px solid rgba(251,113,133,.25);
+  border-radius:12px;padding:14px 18px;margin-bottom:20px;
+  color:#fb7185;font-size:.85rem;animation:fadeUp .4s ease;
+}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  .topbar-nav .nav-btn span{display:none;}
+  .features{grid-template-columns:1fr 1fr;}
+  .steps{grid-template-columns:1fr;}
+  .settings-row{grid-template-columns:1fr;}
+  .search-card{padding:24px 20px;}
+}
+@media(max-width:480px){
+  .features{grid-template-columns:1fr;}
+}
+</style>
 </head>
-
 <body>
+<canvas id="bgCanvas"></canvas>
+
+<!-- ── TOPBAR ── -->
+<div class="topbar">
+  <a href="/dashboard" class="topbar-brand">
+    <i class="fa-solid fa-chart-line"></i>
+    <span>Stock AI</span>
+  </a>
+  <div class="topbar-nav">
+    <a href="/dashboard"         class="nav-btn"><i class="fa-solid fa-house"></i><span>Dashboard</span></a>
+    <a href="/stock"             class="nav-btn active"><i class="fa-solid fa-magnifying-glass-chart"></i><span>Predict</span></a>
+    <a href="/watchlist"         class="nav-btn"><i class="fa-solid fa-star"></i><span>Watchlist</span></a>
+    <a href="/news"              class="nav-btn"><i class="fa-solid fa-newspaper"></i><span>News</span></a>
+    <a href="/compare"           class="nav-btn"><i class="fa-solid fa-code-compare"></i><span>Compare</span></a>
+    <a href="/portfolio-advisor" class="nav-btn"><i class="fa-solid fa-chart-pie"></i><span>Advisor</span></a>
+    <a href="/history"           class="nav-btn"><i class="fa-solid fa-clock-rotate-left"></i><span>History</span></a>
+    <a href="/stock-analysis"    class="nav-btn"><i class="fa-solid fa-rocket"></i><span>Advanced AI</span></a>
+    <a href="/profile"           class="nav-btn"><i class="fa-solid fa-user"></i><span>Profile</span></a>
+    <a href="/logout"            class="nav-btn danger"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a>
+  </div>
+  <div class="user-badge">
+    <span class="udot"></span>
+    <span>{{ session.get('user','User') | title }}</span>
+  </div>
+</div>
+
+<!-- ── TICKER ── -->
+<div class="ticker-bar">
+  <div class="ticker-track" id="tickerTrack">
+    <!-- Filled by JS -->
+  </div>
+</div>
+
+<!-- ── LOADER OVERLAY ── -->
+<div class="loader-overlay" id="loaderOverlay">
+  <div class="loader-ring"></div>
+  <div class="loader-text">ANALYZING STOCK DATA</div>
+  <div class="loader-steps">
+    <div class="lstep" id="ls1"><i class="fa-solid fa-circle-dot"></i> Fetching market data…</div>
+    <div class="lstep" id="ls2"><i class="fa-regular fa-circle"></i> Running ML models…</div>
+    <div class="lstep" id="ls3"><i class="fa-regular fa-circle"></i> Calculating indicators…</div>
+    <div class="lstep" id="ls4"><i class="fa-regular fa-circle"></i> Generating prediction report…</div>
+  </div>
+</div>
 
 <div class="container">
 
-    <h2>
-        <i class="fa-solid fa-bolt"></i>
-        Live Stock Tracking
-    </h2>
+  <!-- ── HERO ── -->
+  <div class="hero">
+    <div class="hero-eyebrow">
+      <span></span>
+      AI-Powered Prediction Engine
+    </div>
+    <h1>Predict Any Stock<br>With Confidence</h1>
+    <p>Enter a stock symbol and our machine learning engine will analyze historical data, technical indicators, and market patterns to generate a 7-day forecast.</p>
+  </div>
 
-    <p style="text-align:center;">
-        Enter a stock symbol to fetch real-time data.
-    </p>
+  <!-- ── FLASH MESSAGES ── -->
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="flash">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+      {{ messages[0] }}
+    </div>
+  {% endif %}
+  {% endwith %}
 
+  <!-- ── SEARCH CARD ── -->
+  <div class="search-card">
 
-    <!-- Input Card -->
-    <div class="card">
-
-        <label>
-            <i class="fa-solid fa-chart-simple"></i>
-            Stock Symbol
-        </label>
-
-        <input
-            type="text"
-            id="symbol"
-            placeholder="Example: AAPL, TSLA, RELIANCE.NS"
-        >
-
-        <br><br>
-
-        <button class="track-btn" onclick="startLiveRefresh()">
-            ▶ Start Live Tracking
-        </button>
-
+    <div class="search-card-header">
+      <div class="scard-icon"><i class="fa-solid fa-magnifying-glass-chart"></i></div>
+      <div>
+        <div class="scard-title">Stock Symbol Search</div>
+        <div class="scard-sub">Search US, NSE &amp; BSE markets</div>
+      </div>
     </div>
 
-
-    <!-- Live Data Box -->
-    <div class="live-box">
-
-        <h3>Live Price</h3>
-
-        <p id="livePrice">₹ --</p>
-
-        <p>
-            Last Update:
-            <span id="lastUpdate">--</span>
-        </p>
-
+    <!-- Stock Preview (shown after selection) -->
+    <div class="stock-preview" id="stockPreview">
+      <div class="sp-row">
+        <div class="sp-left">
+          <div class="sp-logo" id="previewLogo" style="background:rgba(56,189,248,.1);color:#38bdf8;">—</div>
+          <div>
+            <div class="sp-sym" id="previewSym">—</div>
+            <div class="sp-name" id="previewName">—</div>
+          </div>
+        </div>
+        <div class="sp-right">
+          <div class="sp-price" id="previewPrice">—</div>
+          <div class="sp-chg" id="previewChg">—</div>
+        </div>
+      </div>
+      <div class="sp-stats">
+        <div class="sp-stat">Open: <strong id="previewOpen">—</strong></div>
+        <div class="sp-stat">High: <strong id="previewHigh">—</strong></div>
+        <div class="sp-stat">Low: <strong id="previewLow">—</strong></div>
+        <div class="sp-stat">Vol: <strong id="previewVol">—</strong></div>
+        <div class="sp-stat">P/E: <strong id="previewPE">—</strong></div>
+        <div class="sp-stat">Mkt Cap: <strong id="previewMCap">—</strong></div>
+      </div>
     </div>
 
-
-    <!-- Messages -->
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-        <p style="color:red; text-align:center;">
-            {{ messages[0] }}
-        </p>
-    {% endif %}
-    {% endwith %}
-
-
-    <!-- Navigation -->
-    <div style="text-align:center; margin-top:25px;">
-
-        <a href="/upload">
-            <i class="fa-solid fa-upload"></i>
-            Upload CSV
-        </a>
-
-        &nbsp;&nbsp;
-
-        <a href="/logout" style="color:#c62828;">
-            <i class="fa-solid fa-right-from-bracket"></i>
-            Logout
-        </a>
-
+    <!-- Input -->
+    <div class="input-group">
+      <div class="input-label">Enter Stock Symbol</div>
+      <i class="fa-solid fa-chart-bar input-icon"></i>
+      <input
+        type="text"
+        id="symbolInput"
+        class="sym-input"
+        placeholder="e.g. AAPL, TSLA, INFY.NS, RELIANCE.NS"
+        autocomplete="off"
+        maxlength="20"
+      >
+      <button class="input-clear" id="clearBtn" onclick="clearInput()">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <div class="autocomplete-box" id="acBox"></div>
     </div>
 
-</div>
+    <!-- Quick Picks -->
+    <div class="quick-picks-label">Quick picks</div>
+    <div class="quick-picks">
+      <button class="qp-btn" onclick="quickPick('AAPL')"><span class="qp-dot" style="background:#38bdf8"></span>AAPL</button>
+      <button class="qp-btn" onclick="quickPick('TSLA')"><span class="qp-dot" style="background:#4ade80"></span>TSLA</button>
+      <button class="qp-btn" onclick="quickPick('MSFT')"><span class="qp-dot" style="background:#a78bfa"></span>MSFT</button>
+      <button class="qp-btn" onclick="quickPick('NVDA')"><span class="qp-dot" style="background:#fbbf24"></span>NVDA</button>
+      <button class="qp-btn" onclick="quickPick('GOOGL')"><span class="qp-dot" style="background:#fb7185"></span>GOOGL</button>
+      <button class="qp-btn" onclick="quickPick('AMZN')"><span class="qp-dot" style="background:#38bdf8"></span>AMZN</button>
+      <button class="qp-btn" onclick="quickPick('INFY.NS')"><span class="qp-dot" style="background:#f97316"></span>INFY.NS</button>
+      <button class="qp-btn" onclick="quickPick('RELIANCE.NS')"><span class="qp-dot" style="background:#22d3ee"></span>RELIANCE.NS</button>
+    </div>
 
+    <!-- Settings -->
+    <div class="settings-row">
+      <div class="setting-group">
+        <div class="setting-label"><i class="fa-solid fa-calendar-days"></i>Forecast Period</div>
+        <div class="seg-control">
+          <button class="seg-btn" onclick="setSeg(this,'days','3')">3 Days</button>
+          <button class="seg-btn active" onclick="setSeg(this,'days','7')">7 Days</button>
+          <button class="seg-btn" onclick="setSeg(this,'days','14')">14 Days</button>
+          <button class="seg-btn" onclick="setSeg(this,'days','30')">30 Days</button>
+        </div>
+      </div>
+      <div class="setting-group">
+        <div class="setting-label"><i class="fa-solid fa-robot"></i>Model Type</div>
+        <div class="seg-control">
+          <button class="seg-btn active" onclick="setSeg(this,'model','linear')">Linear</button>
+          <button class="seg-btn" onclick="setSeg(this,'model','lstm')">LSTM</button>
+          <button class="seg-btn" onclick="setSeg(this,'model','ensemble')">Ensemble</button>
+        </div>
+      </div>
+    </div>
 
-<!-- ========================= -->
-<!-- AUTO REFRESH SCRIPT -->
-<!-- ========================= -->
+    <!-- Hidden form to POST to /fetch_stock -->
+    <form id="predictForm" action="/fetch_stock" method="POST" style="display:none;">
+      <input type="hidden" name="symbol" id="formSymbol">
+      <input type="hidden" name="days"   id="formDays"   value="7">
+      <input type="hidden" name="model"  id="formModel"  value="linear">
+    </form>
+
+    <button class="btn-predict" id="predictBtn" onclick="submitPredict()">
+      <span class="btn-spinner" id="btnSpinner"></span>
+      <i class="fa-solid fa-bolt" id="btnIcon"></i>
+      <span id="btnText">Run AI Prediction</span>
+    </button>
+
+  </div><!-- /search-card -->
+
+  <!-- ── FEATURES ── -->
+  <div class="features">
+    <div class="feat-card">
+      <div class="feat-icon" style="background:rgba(56,189,248,.1);color:#38bdf8;">
+        <i class="fa-solid fa-brain"></i>
+      </div>
+      <div class="feat-title">ML Prediction Engine</div>
+      <div class="feat-desc">Linear regression + LSTM neural network trained on 2 years of historical data with RSI, MACD, and Bollinger Bands.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon" style="background:rgba(74,222,128,.1);color:#4ade80;">
+        <i class="fa-solid fa-chart-line"></i>
+      </div>
+      <div class="feat-title">7-Day Price Forecast</div>
+      <div class="feat-desc">Day-by-day price projection with confidence bands, trend direction, and BUY / HOLD / SELL recommendation.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon" style="background:rgba(251,191,36,.1);color:#fbbf24;">
+        <i class="fa-solid fa-file-pdf"></i>
+      </div>
+      <div class="feat-title">PDF Report Export</div>
+      <div class="feat-desc">Download a professional analysis report with charts, indicators, risk assessment, and prediction summary.</div>
+    </div>
+  </div>
+
+  <!-- ── HOW IT WORKS ── -->
+  <div class="how-section">
+    <div class="section-title">How It Works</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-icon" style="background:rgba(56,189,248,.1);color:#38bdf8;">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+        <div class="step-title">Enter Symbol</div>
+        <div class="step-desc">Type any stock ticker — US markets (AAPL, TSLA) or Indian markets (INFY.NS, TCS.NS).</div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-icon" style="background:rgba(167,139,250,.1);color:#a78bfa;">
+          <i class="fa-solid fa-gears"></i>
+        </div>
+        <div class="step-title">AI Analysis</div>
+        <div class="step-desc">Our engine fetches 2 years of data, calculates 12+ indicators, and runs prediction models in seconds.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-icon" style="background:rgba(74,222,128,.1);color:#4ade80;">
+          <i class="fa-solid fa-chart-bar"></i>
+        </div>
+        <div class="step-title">View &amp; Export</div>
+        <div class="step-desc">See interactive charts, forecast table, confidence score, and download the full PDF report.</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /container -->
 
 <script>
+/* ─── PARTICLES ─── */
+const canvas = document.getElementById("bgCanvas"), ctx = canvas.getContext("2d");
+function resize(){ canvas.width=innerWidth; canvas.height=innerHeight; }
+resize(); addEventListener("resize", resize);
+const dots = Array.from({length:60}, () => ({
+  x:Math.random()*innerWidth, y:Math.random()*innerHeight,
+  dx:(Math.random()-.5)*.4,   dy:(Math.random()-.5)*.4
+}));
+(function bgLoop(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  dots.forEach(d => {
+    d.x+=d.dx; d.y+=d.dy;
+    if(d.x<0||d.x>canvas.width)  d.dx*=-1;
+    if(d.y<0||d.y>canvas.height) d.dy*=-1;
+    ctx.fillStyle="rgba(56,189,248,.3)";
+    ctx.beginPath(); ctx.arc(d.x,d.y,1.5,0,Math.PI*2); ctx.fill();
+    dots.forEach(o => {
+      const dx=d.x-o.x, dy=d.y-o.y, r=Math.sqrt(dx*dx+dy*dy);
+      if(r<100){
+        ctx.strokeStyle=`rgba(56,189,248,${.6*(1-r/100)})`;
+        ctx.lineWidth=.3;
+        ctx.beginPath(); ctx.moveTo(d.x,d.y); ctx.lineTo(o.x,o.y); ctx.stroke();
+      }
+    });
+  });
+  requestAnimationFrame(bgLoop);
+})();
 
-let refreshInterval = null;
+/* ─── TICKER ─── */
+const TICKERS = [
+  {sym:"AAPL",  price:"213.49", chg:"+0.82%", up:true},
+  {sym:"TSLA",  price:"248.05", chg:"-1.34%", up:false},
+  {sym:"NVDA",  price:"875.40", chg:"+2.11%", up:true},
+  {sym:"MSFT",  price:"415.32", chg:"+0.47%", up:true},
+  {sym:"GOOGL", price:"175.18", chg:"-0.23%", up:false},
+  {sym:"AMZN",  price:"193.61", chg:"+1.05%", up:true},
+  {sym:"META",  price:"502.33", chg:"+0.68%", up:true},
+  {sym:"INFY",  price:"₹1548", chg:"+1.22%", up:true},
+  {sym:"TCS",   price:"₹3821", chg:"-0.41%", up:false},
+  {sym:"RELIANCE",price:"₹2940",chg:"+0.93%",up:true},
+];
+const track = document.getElementById("tickerTrack");
+const items = [...TICKERS, ...TICKERS].map(t => `
+  <div class="ticker-item">
+    <span class="ticker-sym">${t.sym}</span>
+    <span class="ticker-price">${t.price}</span>
+    <span class="ticker-chg ${t.up?'up':'dn'}">${t.chg}</span>
+  </div>`).join("");
+track.innerHTML = items;
 
+/* ─── STOCK DATABASE (for autocomplete) ─── */
+const STOCKS = [
+  {sym:"AAPL",  name:"Apple Inc.",             color:"#38bdf8", sector:"Technology"},
+  {sym:"TSLA",  name:"Tesla Inc.",              color:"#4ade80", sector:"Auto"},
+  {sym:"MSFT",  name:"Microsoft Corp.",         color:"#a78bfa", sector:"Technology"},
+  {sym:"NVDA",  name:"NVIDIA Corp.",            color:"#fbbf24", sector:"Semiconductors"},
+  {sym:"GOOGL", name:"Alphabet Inc.",           color:"#fb7185", sector:"Technology"},
+  {sym:"AMZN",  name:"Amazon.com Inc.",         color:"#38bdf8", sector:"E-Commerce"},
+  {sym:"META",  name:"Meta Platforms Inc.",     color:"#22d3ee", sector:"Social Media"},
+  {sym:"NFLX",  name:"Netflix Inc.",            color:"#fb7185", sector:"Streaming"},
+  {sym:"AMD",   name:"Advanced Micro Devices",  color:"#f97316", sector:"Semiconductors"},
+  {sym:"INTC",  name:"Intel Corporation",       color:"#38bdf8", sector:"Semiconductors"},
+  {sym:"JPM",   name:"JPMorgan Chase & Co.",    color:"#4ade80", sector:"Finance"},
+  {sym:"BAC",   name:"Bank of America Corp.",   color:"#a78bfa", sector:"Finance"},
+  {sym:"GS",    name:"Goldman Sachs Group",     color:"#fbbf24", sector:"Finance"},
+  {sym:"WMT",   name:"Walmart Inc.",            color:"#4ade80", sector:"Retail"},
+  {sym:"DIS",   name:"Walt Disney Company",     color:"#38bdf8", sector:"Entertainment"},
+  {sym:"INFY.NS",    name:"Infosys Ltd",             color:"#f97316", sector:"IT"},
+  {sym:"TCS.NS",     name:"Tata Consultancy Services",color:"#38bdf8",sector:"IT"},
+  {sym:"RELIANCE.NS",name:"Reliance Industries",     color:"#22d3ee", sector:"Conglomerate"},
+  {sym:"HDFCBANK.NS",name:"HDFC Bank Ltd",           color:"#4ade80", sector:"Finance"},
+  {sym:"WIPRO.NS",   name:"Wipro Ltd",               color:"#a78bfa", sector:"IT"},
+  {sym:"TATASTEEL.NS",name:"Tata Steel Ltd",         color:"#fbbf24", sector:"Steel"},
+  {sym:"BAJFINANCE.NS",name:"Bajaj Finance Ltd",     color:"#fb7185", sector:"Finance"},
+  {sym:"ICICIBANK.NS", name:"ICICI Bank Ltd",        color:"#38bdf8", sector:"Finance"},
+  {sym:"MARUTI.NS",    name:"Maruti Suzuki",         color:"#4ade80", sector:"Auto"},
+  {sym:"SBIN.NS",      name:"State Bank of India",   color:"#22d3ee", sector:"Finance"},
+];
 
-function startLiveRefresh() {
+/* ─── STATE ─── */
+let selectedSym   = "";
+let acIdx         = -1;
+let currentFilter = [];
+let days = "7", model = "linear";
 
-    const symbol = document.getElementById("symbol").value;
-
-    if (!symbol) {
-        alert("Please enter stock symbol first!");
-        return;
-    }
-
-    // First call
-    fetchLiveData(symbol);
-
-    // Clear old interval
-    if (refreshInterval) {
-        clearInterval(refreshInterval);
-    }
-
-    // Auto refresh every 10 sec
-    refreshInterval = setInterval(() => {
-        fetchLiveData(symbol);
-    }, 10000);
-
+/* ─── SEGMENT CONTROL ─── */
+function setSeg(btn, field, val){
+  const parent = btn.closest(".seg-control");
+  parent.querySelectorAll(".seg-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  if(field==="days")  { days  = val; document.getElementById("formDays").value  = val; }
+  if(field==="model") { model = val; document.getElementById("formModel").value = val; }
 }
 
-
-function fetchLiveData(symbol) {
-
-    fetch(`/live-data/${symbol}`)
-        .then(response => response.json())
-        .then(data => {
-
-            document.getElementById("livePrice").innerText =
-                "₹ " + data.price;
-
-            document.getElementById("lastUpdate").innerText =
-                data.time;
-
-        })
-        .catch(err => {
-
-            document.getElementById("livePrice").innerText = "Error";
-
-            console.log(err);
-
-        });
+/* ─── QUICK PICK ─── */
+function quickPick(sym){
+  document.getElementById("symbolInput").value = sym;
+  selectedSym = sym;
+  document.getElementById("clearBtn").style.display = "flex";
+  closeAC();
+  fetchPreview(sym);
 }
 
+/* ─── CLEAR ─── */
+function clearInput(){
+  document.getElementById("symbolInput").value = "";
+  selectedSym = "";
+  document.getElementById("clearBtn").style.display = "none";
+  document.getElementById("stockPreview").style.display = "none";
+  closeAC();
+  document.getElementById("symbolInput").focus();
+}
+
+/* ─── AUTOCOMPLETE ─── */
+const input = document.getElementById("symbolInput");
+const acBox = document.getElementById("acBox");
+
+input.addEventListener("input", () => {
+  const q = input.value.trim().toUpperCase();
+  document.getElementById("clearBtn").style.display = q ? "flex" : "none";
+  selectedSym = "";
+  if(!q){ closeAC(); return; }
+  currentFilter = STOCKS.filter(s =>
+    s.sym.includes(q) || s.name.toUpperCase().includes(q)
+  ).slice(0, 7);
+  renderAC();
+});
+
+input.addEventListener("keydown", e => {
+  const items = acBox.querySelectorAll(".ac-item");
+  if(e.key === "ArrowDown"){ acIdx = Math.min(acIdx+1, items.length-1); highlightAC(items); e.preventDefault(); }
+  if(e.key === "ArrowUp")  { acIdx = Math.max(acIdx-1, 0); highlightAC(items); e.preventDefault(); }
+  if(e.key === "Enter"){
+    if(acIdx >= 0 && items[acIdx]){
+      items[acIdx].click();
+    } else if(input.value.trim()){
+      submitPredict();
+    }
+  }
+  if(e.key === "Escape") closeAC();
+});
+
+document.addEventListener("click", e => {
+  if(!e.target.closest(".input-group")) closeAC();
+});
+
+function renderAC(){
+  acIdx = -1;
+  if(!currentFilter.length){
+    acBox.innerHTML = `<div class="ac-empty"><i class="fa-solid fa-magnifying-glass"></i> No matches found</div>`;
+    acBox.style.display = "block"; return;
+  }
+  acBox.innerHTML = currentFilter.map((s,i) => `
+    <div class="ac-item" data-sym="${s.sym}" data-idx="${i}">
+      <div class="ac-left">
+        <div class="ac-icon" style="background:${s.color}18;color:${s.color}">
+          ${s.sym.slice(0,2)}
+        </div>
+        <div>
+          <div class="ac-sym">${s.sym}</div>
+          <div class="ac-name">${s.name} · ${s.sector}</div>
+        </div>
+      </div>
+      <div class="ac-right">
+        <div class="ac-price">—</div>
+        <div class="ac-chg">—</div>
+      </div>
+    </div>`).join("");
+  acBox.style.display = "block";
+  acBox.querySelectorAll(".ac-item").forEach(el => {
+    el.addEventListener("click", () => selectStock(el.dataset.sym));
+    el.addEventListener("mouseenter", () => {
+      acBox.querySelectorAll(".ac-item").forEach(x => x.classList.remove("active"));
+      el.classList.add("active");
+    });
+  });
+}
+
+function highlightAC(items){
+  items.forEach((el,i) => el.classList.toggle("active", i===acIdx));
+}
+
+function closeAC(){
+  acBox.style.display = "none";
+  acIdx = -1;
+}
+
+function selectStock(sym){
+  selectedSym = sym;
+  input.value = sym;
+  document.getElementById("clearBtn").style.display = "flex";
+  closeAC();
+  fetchPreview(sym);
+}
+
+/* ─── FETCH PREVIEW (calls /api/compare-full for quick data) ─── */
+async function fetchPreview(sym){
+  const preview = document.getElementById("stockPreview");
+  preview.style.display = "block";
+  document.getElementById("previewSym").textContent  = sym;
+  document.getElementById("previewName").textContent = "Loading…";
+  document.getElementById("previewPrice").textContent = "—";
+  document.getElementById("previewLogo").textContent = sym.slice(0,2);
+
+  try {
+    const r = await fetch(`/api/compare-full/${encodeURIComponent(sym)}?period=5d`);
+    const d = await r.json();
+    if(d.error){ document.getElementById("previewName").textContent = "Symbol found — data pending"; return; }
+
+    const isIN = /\.(NS|BO)$/i.test(sym);
+    const cur  = isIN ? "₹" : "$";
+    const p    = parseFloat(d.price);
+    const chg  = parseFloat(d.change_pct)||0;
+    const stock = STOCKS.find(s => s.sym === sym.toUpperCase());
+
+    // Logo
+    const logo = document.getElementById("previewLogo");
+    logo.textContent = sym.slice(0,2);
+    logo.style.background = stock ? stock.color+"18" : "rgba(56,189,248,.1)";
+    logo.style.color       = stock ? stock.color      : "#38bdf8";
+
+    document.getElementById("previewName").textContent = d.company_name || d.sector || "—";
+    document.getElementById("previewPrice").textContent = isNaN(p) ? "—" : cur + p.toLocaleString(isIN?"en-IN":"en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+
+    const chgEl = document.getElementById("previewChg");
+    chgEl.textContent = `${chg>=0?"▲":"▼"} ${Math.abs(chg).toFixed(2)}%`;
+    chgEl.className   = `sp-chg ${chg>=0?"up":"dn"}`;
+
+    document.getElementById("previewPE").textContent    = d.pe_ratio ?? "N/A";
+    document.getElementById("previewMCap").textContent  = d.market_cap_fmt || "N/A";
+    document.getElementById("previewVol").textContent   = d.volume || "N/A";
+
+    // high/low/open from closes
+    if(d.closes && d.closes.length){
+      const highs = d.closes; 
+      document.getElementById("previewHigh").textContent = cur + Math.max(...highs).toFixed(2);
+      document.getElementById("previewLow").textContent  = cur + Math.min(...highs).toFixed(2);
+      document.getElementById("previewOpen").textContent = cur + parseFloat(d.closes[0]).toFixed(2);
+    }
+  } catch(e){
+    document.getElementById("previewName").textContent = "Preview unavailable";
+  }
+}
+
+/* ─── SUBMIT ─── */
+function submitPredict(){
+  const sym = (selectedSym || document.getElementById("symbolInput").value.trim()).toUpperCase();
+  if(!sym){ shakeInput(); return; }
+
+  document.getElementById("formSymbol").value = sym;
+  document.getElementById("formDays").value   = days;
+  document.getElementById("formModel").value  = model;
+
+  // Show loader
+  const overlay = document.getElementById("loaderOverlay");
+  overlay.classList.add("show");
+
+  // Animate loader steps
+  const steps = ["ls1","ls2","ls3","ls4"];
+  let idx = 0;
+  document.getElementById("ls1").classList.add("active");
+  const stepInterval = setInterval(() => {
+    if(idx < steps.length - 1){
+      document.getElementById(steps[idx]).classList.remove("active");
+      document.getElementById(steps[idx]).classList.add("done");
+      document.getElementById(steps[idx]).querySelector("i").className = "fa-solid fa-check";
+      idx++;
+      document.getElementById(steps[idx]).classList.add("active");
+      document.getElementById(steps[idx]).querySelector("i").className = "fa-solid fa-circle-dot";
+    }
+  }, 900);
+
+  // Disable button
+  const btn = document.getElementById("predictBtn");
+  btn.disabled = true;
+  document.getElementById("btnSpinner").style.display = "block";
+  document.getElementById("btnIcon").style.display    = "none";
+  document.getElementById("btnText").textContent      = "Analyzing…";
+
+  setTimeout(() => {
+    clearInterval(stepInterval);
+    document.getElementById("predictForm").submit();
+  }, 3600);
+}
+
+function shakeInput(){
+  const inp = document.getElementById("symbolInput");
+  inp.style.borderColor = "#fb7185";
+  inp.style.animation = "none";
+  setTimeout(() => { inp.style.animation = ""; }, 10);
+  inp.focus();
+  setTimeout(() => { inp.style.borderColor = ""; }, 1500);
+}
 </script>
-
 </body>
 </html>

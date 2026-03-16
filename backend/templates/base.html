@@ -1,30 +1,386 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Stock Predictor</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Stock AI Analytics{% endblock %}</title>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg-deep:    #020617;
+  --bg-mid:     #0f172a;
+  --bg-card:    rgba(255,255,255,0.04);
+  --accent:     #38bdf8;
+  --accent2:    #22d3ee;
+  --accent3:    #7dd3fc;
+  --danger:     #fb7185;
+  --success:    #4ade80;
+  --warn:       #fde047;
+  --border:     rgba(255,255,255,0.08);
+  --text:       #e5e7eb;
+  --text-muted: #64748b;
+  --font-main:  'Inter', sans-serif;
+  --font-mono:  'JetBrains Mono', monospace;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: var(--font-main);
+  background: var(--bg-deep);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+/* ══════════════════════════════════════
+   TOPBAR
+══════════════════════════════════════ */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  height: 62px;
+  background: rgba(2, 6, 23, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(56, 189, 248, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+/* Brand */
+.topbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.topbar-brand .brand-icon {
+  width: 34px; height: 34px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  box-shadow: 0 0 14px rgba(56,189,248,0.3);
+  flex-shrink: 0;
+}
+.topbar-brand .brand-text {
+  font-size: 17px;
+  font-weight: 800;
+  background: linear-gradient(90deg, #38bdf8, #22d3ee);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.3px;
+}
+
+/* Nav links */
+.topbar-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+  flex: 1;
+  padding: 0 8px;
+}
+.topbar-nav::-webkit-scrollbar { display: none; }
+
+.nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 13px;
+  border-radius: 9px;
+  border: 1px solid rgba(255,255,255,0.07);
+  background: rgba(255,255,255,0.04);
+  color: #94a3b8;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+  font-family: var(--font-main);
+}
+.nav-btn i { font-size: 12px; }
+.nav-btn:hover {
+  background: rgba(56,189,248,0.1);
+  border-color: rgba(56,189,248,0.3);
+  color: var(--accent);
+}
+.nav-btn.active {
+  background: rgba(56,189,248,0.13);
+  border-color: rgba(56,189,248,0.4);
+  color: var(--accent);
+}
+.nav-btn.danger { color: #94a3b8; border-color: rgba(251,113,133,0.15); }
+.nav-btn.danger:hover {
+  background: rgba(251,113,133,0.1);
+  border-color: rgba(251,113,133,0.35);
+  color: var(--danger);
+}
+
+/* Right side: clock + market + user */
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.topbar-market {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--success);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+.market-dot {
+  width: 7px; height: 7px;
+  background: var(--success);
+  border-radius: 50%;
+  animation: pulse-dot 2s ease infinite;
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.4; transform: scale(0.7); }
+}
+
+.topbar-clock {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--accent);
+  background: rgba(56,189,248,0.07);
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(56,189,248,0.14);
+  white-space: nowrap;
+}
+
+.topbar-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 13px;
+  border-radius: 50px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  font-size: 13px;
+  color: #94a3b8;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.topbar-user .udot {
+  width: 7px; height: 7px;
+  background: var(--success);
+  border-radius: 50%;
+  animation: pulse-dot 2s infinite;
+}
+.topbar-user .uname { font-weight: 600; color: var(--text); }
+.topbar-user .urole {
+  font-size: 11px;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ══════════════════════════════════════
+   MAIN CONTENT
+══════════════════════════════════════ */
+.main-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.content {
+  flex: 1;
+  background:
+    radial-gradient(ellipse at top left, rgba(56,189,248,0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at bottom right, rgba(34,211,238,0.02) 0%, transparent 50%),
+    var(--bg-deep);
+}
+
+/* Flash messages */
+.flash-container {
+  padding: 12px 28px 0;
+}
+.flash-msg {
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  animation: slideDown 0.3s ease;
+}
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.flash-msg.success {
+  background: rgba(74,222,128,0.1);
+  border: 1px solid rgba(74,222,128,0.25);
+  color: var(--success);
+}
+.flash-msg.error {
+  background: rgba(251,113,133,0.1);
+  border: 1px solid rgba(251,113,133,0.25);
+  color: var(--danger);
+}
+
+/* ══════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════ */
+@media (max-width: 1024px) {
+  .nav-btn .btn-label { display: none; }
+  .topbar-market span:not(.market-dot) { display: none; }
+  .topbar-clock { display: none; }
+  .topbar-user .urole { display: none; }
+}
+@media (max-width: 640px) {
+  .topbar { padding: 0 14px; gap: 8px; }
+  .topbar-user .uname { display: none; }
+}
+</style>
 </head>
 
 <body>
 
-<div class="main-container">
+<!-- ══ TOPBAR ══ -->
+<div class="topbar">
 
-    <div class="sidebar">
-        <h2>📈 Stock AI</h2>
-        <a href="/dashboard">Dashboard</a>
-        <a href="/upload">Upload CSV</a>
-        <a href="/stock">Live Stock</a>
-        <a href="/logout">Logout</a>
-    </div>
+  <!-- Brand -->
+  <a href="/dashboard" class="topbar-brand">
+    <div class="brand-icon">📈</div>
+    <span class="brand-text">Stock AI</span>
+  </a>
 
-    <div class="content">
-        {% block content %}{% endblock %}
+  <!-- Nav -->
+  <nav class="topbar-nav" id="topbarNav">
+    <a href="/dashboard"         class="nav-btn" data-path="/dashboard">
+      <i class="fas fa-gauge-high"></i><span class="btn-label">Dashboard</span>
+    </a>
+    <a href="/stock"             class="nav-btn" data-path="/stock">
+      <i class="fas fa-magnifying-glass-chart"></i><span class="btn-label">Predict</span>
+    </a>
+    <a href="/live"              class="nav-btn" data-path="/live">
+      <i class="fas fa-bolt"></i><span class="btn-label">Live</span>
+    </a>
+    <a href="/watchlist"         class="nav-btn" data-path="/watchlist">
+      <i class="fas fa-star"></i><span class="btn-label">Watchlist</span>
+    </a>
+    <a href="/news"              class="nav-btn" data-path="/news">
+      <i class="fas fa-newspaper"></i><span class="btn-label">News</span>
+    </a>
+    <a href="/compare"           class="nav-btn" data-path="/compare">
+      <i class="fas fa-code-compare"></i><span class="btn-label">Compare</span>
+    </a>
+    <a href="/portfolio-advisor" class="nav-btn" data-path="/portfolio-advisor">
+      <i class="fas fa-chart-pie"></i><span class="btn-label">Advisor</span>
+    </a>
+    <a href="/stock-analysis"    class="nav-btn" data-path="/stock-analysis">
+      <i class="fas fa-rocket"></i><span class="btn-label">Advanced AI</span>
+    </a>
+    <a href="/history"           class="nav-btn" data-path="/history">
+      <i class="fas fa-clock-rotate-left"></i><span class="btn-label">History</span>
+    </a>
+    <a href="/upload"            class="nav-btn" data-path="/upload">
+      <i class="fas fa-upload"></i><span class="btn-label">Upload</span>
+    </a>
+    <a href="/download_report"   class="nav-btn" data-path="/download_report">
+      <i class="fas fa-file-pdf"></i><span class="btn-label">Report</span>
+    </a>
+    <a href="/profile"           class="nav-btn" data-path="/profile">
+      <i class="fas fa-user"></i><span class="btn-label">Profile</span>
+    </a>
+    {% if session.get('role') == 'admin' %}
+    <a href="/admin"             class="nav-btn" data-path="/admin">
+      <i class="fas fa-shield-halved"></i><span class="btn-label">Admin</span>
+    </a>
+    {% endif %}
+    <a href="/logout" class="nav-btn danger">
+      <i class="fas fa-right-from-bracket"></i><span class="btn-label">Logout</span>
+    </a>
+  </nav>
+
+  <!-- Right: market status + clock + user -->
+  <div class="topbar-right">
+    <div class="topbar-market">
+      <div class="market-dot"></div>
+      <span>LIVE</span>
     </div>
+    <div class="topbar-clock" id="liveClock">--:--:--</div>
+    <div class="topbar-user">
+      <span class="udot"></span>
+      <span class="uname">{{ session.get('user', 'User') | title }}</span>
+      <span class="urole">{{ session.get('role', 'analyst') }}</span>
+    </div>
+  </div>
 
 </div>
+
+<!-- ══ MAIN ══ -->
+<div class="main-wrapper">
+
+  <!-- Flash messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-container">
+        {% for category, message in messages %}
+          <div class="flash-msg {{ category }}">
+            <i class="fas fa-{{ 'check-circle' if category == 'success' else 'exclamation-circle' }}"></i>
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <!-- Page Content -->
+  <div class="content">
+    {% block content %}{% endblock %}
+  </div>
+
+</div>
+
+<script>
+  // Live clock
+  function updateClock() {
+    document.getElementById("liveClock").textContent =
+      new Date().toLocaleTimeString("en-US", { hour12: false });
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  // Auto-highlight active nav link
+  const currentPath = window.location.pathname;
+  document.querySelectorAll(".topbar-nav .nav-btn[data-path]").forEach(link => {
+    const p = link.dataset.path;
+    if (currentPath === p || (p !== "/" && currentPath.startsWith(p))) {
+      link.classList.add("active");
+    }
+  });
+</script>
 
 </body>
 </html>
