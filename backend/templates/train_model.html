@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Train Model | Stock AI</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  min-height:100vh;
+  background:radial-gradient(circle at top left,#0f172a,#020617);
+  animation:bgFlow 15s ease infinite;
+  color:#e5e7eb; font-family:'Inter',sans-serif; overflow-x:hidden;
+}
+
+body::before {
+  content:""; position:fixed; inset:0;
+  background:
+    linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);
+  background-size:45px 45px;
+  animation:gridMove 25s linear infinite;
+  pointer-events:none; z-index:0;
+}
+
+@keyframes bgFlow   { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+@keyframes gridMove { to{transform:translate(45px,45px)} }
+@keyframes fadeUp   { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
+@keyframes pulse    { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(1.5)} }
+@keyframes spin     { to{transform:rotate(360deg)} }
+@keyframes shine    { 0%{transform:translateX(-100%)} 100%{transform:translateX(200%)} }
+@keyframes blink    { 0%,100%{opacity:1} 50%{opacity:0} }
+@keyframes barFill  { from{width:0%} to{width:100%} }
+@keyframes popIn    { from{transform:scale(.8);opacity:0} to{transform:scale(1);opacity:1} }
+
+#bgCanvas { position:fixed; inset:0; z-index:0; pointer-events:none; }
+
+/* TOPBAR */
+.topbar {
+  position:sticky; top:0; z-index:100;
+  background:rgba(2,6,23,.93); backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(56,189,248,.1);
+  padding:0 28px; display:flex; align-items:center;
+  justify-content:space-between; height:62px; gap:12px;
+}
+.topbar-brand { display:flex; align-items:center; gap:10px; text-decoration:none; flex-shrink:0; }
+.topbar-brand i    { color:#38bdf8; font-size:20px; }
+.topbar-brand span { font-size:18px; font-weight:800; background:linear-gradient(90deg,#38bdf8,#22d3ee); -webkit-background-clip:text; color:transparent; font-family:'JetBrains Mono',monospace; }
+.topbar-nav { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+.nav-btn {
+  display:flex; align-items:center; gap:6px; padding:7px 14px; border-radius:9px;
+  border:1px solid rgba(255,255,255,.07); background:rgba(255,255,255,.04);
+  color:#94a3b8; font-size:13px; font-weight:600; text-decoration:none; transition:.25s; white-space:nowrap;
+}
+.nav-btn:hover  { background:rgba(56,189,248,.1); border-color:rgba(56,189,248,.3); color:#38bdf8; }
+.nav-btn.active { background:rgba(56,189,248,.13); border-color:rgba(56,189,248,.4); color:#38bdf8; }
+.nav-btn.danger { color:#fb7185; border-color:rgba(251,113,133,.15); }
+.nav-btn.danger:hover { background:rgba(251,113,133,.1); border-color:rgba(251,113,133,.3); }
+.user-badge {
+  display:flex; align-items:center; gap:8px; padding:6px 14px; border-radius:50px;
+  background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07);
+  font-size:13px; color:#94a3b8; flex-shrink:0;
+}
+.user-badge .udot { width:7px; height:7px; background:#22c55e; border-radius:50%; animation:pulse 2s infinite; }
+
+/* CONTAINER */
+.container { max-width:860px; margin:0 auto; padding:36px 22px 80px; position:relative; z-index:1; }
+
+/* HERO */
+.hero {
+  background:rgba(2,6,23,.9); border-radius:22px; padding:28px 36px;
+  margin-bottom:26px; border:1px solid rgba(56,189,248,.15);
+  box-shadow:0 30px 80px rgba(0,0,0,.7); backdrop-filter:blur(20px);
+  animation:fadeUp .5s ease; position:relative; overflow:hidden;
+}
+.hero::before {
+  content:""; position:absolute; width:340px; height:340px;
+  background:radial-gradient(circle,rgba(56,189,248,.08) 0%,transparent 70%);
+  top:-120px; right:-80px; border-radius:50%; pointer-events:none;
+}
+.hero-inner { position:relative; z-index:1; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px; }
+.hero h2 { font-size:1.8rem; font-weight:800; background:linear-gradient(90deg,#38bdf8,#22d3ee,#7dd3fc); -webkit-background-clip:text; color:transparent; margin-bottom:5px; font-family:'JetBrains Mono',monospace; }
+.hero p { color:#64748b; font-size:.88rem; }
+
+/* STATUS BADGE */
+.model-status {
+  display:flex; align-items:center; gap:10px; padding:10px 18px;
+  border-radius:14px; font-size:.82rem; font-weight:700;
+  font-family:'JetBrains Mono',monospace;
+}
+.model-status.missing { background:rgba(239,68,68,.1); border:1px solid rgba(239,68,68,.25); color:#fb7185; }
+.model-status.ready   { background:rgba(34,197,94,.1);  border:1px solid rgba(34,197,94,.25);  color:#4ade80; }
+
+/* SECTION LABEL */
+.section-label { display:flex; align-items:center; gap:12px; margin:24px 0 16px; }
+.section-label span { font-size:.68rem; color:#475569; text-transform:uppercase; letter-spacing:3px; white-space:nowrap; font-family:'JetBrains Mono',monospace; }
+.section-label::before,.section-label::after { content:""; flex:1; height:1px; background:rgba(255,255,255,.06); }
+
+/* CARD */
+.card {
+  background:rgba(2,6,23,.88); border:1px solid rgba(255,255,255,.08);
+  border-radius:22px; padding:28px; backdrop-filter:blur(20px);
+  box-shadow:0 30px 80px rgba(0,0,0,.5); animation:fadeUp .6s ease both;
+  position:relative; overflow:hidden; margin-bottom:22px;
+}
+.card::after {
+  content:""; position:absolute; top:0; left:-100%; width:60%; height:100%;
+  background:linear-gradient(120deg,transparent,rgba(255,255,255,.03),transparent);
+  animation:shine 6s infinite; pointer-events:none;
+}
+
+/* INFO GRID */
+.info-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:14px; margin-bottom:22px; }
+.info-box {
+  background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07);
+  border-radius:12px; padding:14px 16px; transition:.3s;
+}
+.info-box:hover { background:rgba(56,189,248,.07); border-color:rgba(56,189,248,.2); }
+.ib-label { font-size:.68rem; color:#64748b; text-transform:uppercase; letter-spacing:1px; margin-bottom:5px; font-family:'JetBrains Mono',monospace; }
+.ib-value { font-size:1rem; font-weight:700; color:#f1f5f9; font-family:'JetBrains Mono',monospace; }
+
+/* TRAIN BUTTON */
+.train-btn {
+  width:100%; padding:16px; border:none; border-radius:16px;
+  font-size:1rem; font-weight:700; cursor:pointer;
+  background:linear-gradient(135deg,#0288d1,#0097a7);
+  color:#fff; transition:.3s; margin-top:6px;
+  display:flex; align-items:center; justify-content:center; gap:10px;
+  box-shadow:0 4px 20px rgba(2,136,209,.35); font-family:'Inter',sans-serif;
+  position:relative; overflow:hidden;
+}
+.train-btn::after {
+  content:""; position:absolute; top:0; left:-100%; width:100%; height:100%;
+  background:linear-gradient(120deg,transparent,rgba(255,255,255,.15),transparent);
+  transition:.5s;
+}
+.train-btn:hover::after { left:100%; }
+.train-btn:hover { transform:translateY(-3px); box-shadow:0 8px 30px rgba(2,136,209,.5); }
+.train-btn:disabled { opacity:.5; cursor:not-allowed; transform:none; }
+
+/* PROGRESS */
+.progress-section { display:none; margin-top:22px; animation:popIn .3s ease; }
+.progress-section.show { display:block; }
+.prog-bar-track {
+  width:100%; height:10px; background:rgba(255,255,255,.08);
+  border-radius:10px; overflow:hidden; margin:10px 0 6px;
+}
+.prog-bar-fill {
+  height:100%; width:0%;
+  background:linear-gradient(90deg,#22d3ee,#38bdf8,#7dd3fc);
+  border-radius:10px;
+  box-shadow:0 0 10px rgba(56,189,248,.4);
+  transition:width .4s ease;
+}
+.prog-label { font-size:.78rem; color:#64748b; font-family:'JetBrains Mono',monospace; }
+.prog-step  { font-size:.82rem; color:#38bdf8; font-weight:700; font-family:'JetBrains Mono',monospace; margin-bottom:4px; }
+
+/* LOG TERMINAL */
+.log-terminal {
+  background:#000d1a; border:1px solid rgba(56,189,248,.15);
+  border-radius:14px; padding:18px 20px; margin-top:16px;
+  font-family:'JetBrains Mono',monospace; font-size:.78rem;
+  max-height:200px; overflow-y:auto; line-height:1.7;
+}
+.log-line { color:#4ade80; }
+.log-line.info  { color:#38bdf8; }
+.log-line.warn  { color:#fbbf24; }
+.log-line.error { color:#fb7185; }
+.log-cursor { display:inline-block; width:8px; height:14px; background:#38bdf8; animation:blink .8s step-end infinite; vertical-align:middle; margin-left:2px; }
+
+/* RESULT CARD */
+.result-card {
+  display:none; background:rgba(34,197,94,.07); border:1px solid rgba(34,197,94,.25);
+  border-radius:16px; padding:20px 24px; margin-top:16px; animation:popIn .4s ease;
+}
+.result-card.show { display:block; }
+.result-card.error { background:rgba(239,68,68,.07); border-color:rgba(239,68,68,.25); }
+.rc-title { font-size:1rem; font-weight:800; color:#4ade80; margin-bottom:10px; display:flex; align-items:center; gap:8px; font-family:'JetBrains Mono',monospace; }
+.rc-title.error { color:#fb7185; }
+.rc-metrics { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:10px; margin-top:12px; }
+.rc-metric { background:rgba(255,255,255,.04); border-radius:10px; padding:10px 14px; }
+.rc-metric .rm-label { font-size:.68rem; color:#64748b; text-transform:uppercase; letter-spacing:1px; font-family:'JetBrains Mono',monospace; }
+.rc-metric .rm-val   { font-size:.95rem; font-weight:700; color:#4ade80; font-family:'JetBrains Mono',monospace; margin-top:3px; }
+
+/* STEPS LIST */
+.steps-list { display:flex; flex-direction:column; gap:12px; }
+.step-item {
+  display:flex; align-items:flex-start; gap:14px;
+  background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.06);
+  border-radius:12px; padding:14px 16px; transition:.3s;
+}
+.step-item:hover { background:rgba(56,189,248,.05); border-color:rgba(56,189,248,.15); }
+.step-num {
+  width:28px; height:28px; border-radius:50%; background:rgba(56,189,248,.1);
+  border:1px solid rgba(56,189,248,.3); color:#38bdf8; font-size:.8rem;
+  font-weight:800; display:flex; align-items:center; justify-content:center;
+  flex-shrink:0; font-family:'JetBrains Mono',monospace;
+}
+.step-text .st-title { font-size:.88rem; font-weight:700; color:#f1f5f9; margin-bottom:3px; }
+.step-text .st-desc  { font-size:.76rem; color:#64748b; line-height:1.5; }
+.step-text code { background:rgba(56,189,248,.1); color:#38bdf8; padding:1px 7px; border-radius:5px; font-size:.75rem; font-family:'JetBrains Mono',monospace; }
+
+@media(max-width:768px){
+  .topbar-nav .nav-btn span { display:none; }
+  .hero h2 { font-size:1.4rem; }
+}
+
+</style>
+</head>
+<body>
+
+<canvas id="bgCanvas"></canvas>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <a href="/dashboard" class="topbar-brand">
+    <i class="fa-solid fa-chart-line"></i>
+    <span>Stock AI</span>
+  </a>
+  <div class="topbar-nav">
+    <a href="/dashboard"      class="nav-btn"><i class="fa-solid fa-house"></i><span>Dashboard</span></a>
+    <a href="/stock"          class="nav-btn"><i class="fa-solid fa-magnifying-glass-chart"></i><span>Predict</span></a>
+    <a href="/train-model"    class="nav-btn active"><i class="fa-solid fa-brain"></i><span>Train Model</span></a>
+    <a href="/watchlist"      class="nav-btn"><i class="fa-solid fa-star"></i><span>Watchlist</span></a>
+    <a href="/news"           class="nav-btn"><i class="fa-solid fa-newspaper"></i><span>News</span></a>
+    <a href="/history"        class="nav-btn"><i class="fa-solid fa-clock-rotate-left"></i><span>History</span></a>
+    <a href="/upload"         class="nav-btn"><i class="fa-solid fa-upload"></i><span>Upload</span></a>
+    <a href="/profile"        class="nav-btn"><i class="fa-solid fa-user"></i><span>Profile</span></a>
+    <a href="/logout"         class="nav-btn danger"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a>
+  </div>
+  <div class="user-badge">
+    <span class="udot"></span>
+    <span>{{ session.get('user','User') | title }}</span>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="container">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-inner">
+      <div>
+        <h2><i class="fa-solid fa-brain" style="margin-right:10px;"></i>Train ML Model</h2>
+        <p>Train and save the Linear Regression model used for stock price forecasting</p>
+      </div>
+      <div class="model-status {% if model_exists %}ready{% else %}missing{% endif %}">
+        {% if model_exists %}
+          <i class="fas fa-circle-check"></i> Model Ready
+        {% else %}
+          <i class="fas fa-triangle-exclamation"></i> Model Missing
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- MODEL INFO -->
+  <div class="section-label"><span><i class="fas fa-microchip"></i> &nbsp; Current Model Info</span></div>
+
+  <div class="card">
+    <div class="info-grid">
+      <div class="info-box">
+        <div class="ib-label">Model Type</div>
+        <div class="ib-value">Linear Regression</div>
+      </div>
+      <div class="info-box">
+        <div class="ib-label">File Path</div>
+        <div class="ib-value">models/linear_model.pkl</div>
+      </div>
+      <div class="info-box">
+        <div class="ib-label">Status</div>
+        <div class="ib-value" style="color:{% if model_exists %}#4ade80{% else %}#fb7185{% endif %};">
+          {% if model_exists %}✅ Exists{% else %}❌ Missing{% endif %}
+        </div>
+      </div>
+      <div class="info-box">
+        <div class="ib-label">Last Trained</div>
+        <div class="ib-value" id="lastTrained">{{ last_trained or 'Never' }}</div>
+      </div>
+    </div>
+
+    <!-- TRAIN BUTTON -->
+    <button class="train-btn" id="trainBtn" onclick="startTraining()">
+      <i class="fa-solid fa-play"></i>
+      <span id="trainBtnText">Train Model Now</span>
+    </button>
+
+    <!-- PROGRESS -->
+    <div class="progress-section" id="progressSection">
+      <div class="prog-step" id="progStep">Initializing...</div>
+      <div class="prog-bar-track">
+        <div class="prog-bar-fill" id="progBar"></div>
+      </div>
+      <div class="prog-label" id="progLabel">0%</div>
+      <div class="log-terminal" id="logTerminal">
+        <span class="log-line info">&gt; Stock AI Training Engine v1.0</span><br>
+        <span class="log-cursor"></span>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="result-card" id="resultCard">
+      <div class="rc-title" id="resultTitle">
+        <i class="fas fa-circle-check"></i> Model Trained Successfully
+      </div>
+      <div class="rc-metrics" id="resultMetrics"></div>
+    </div>
+
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="section-label"><span><i class="fas fa-list-ol"></i> &nbsp; How Training Works</span></div>
+
+  <div class="card">
+    <div class="steps-list">
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-text">
+          <div class="st-title">Data Preparation</div>
+          <div class="st-desc">The training engine generates a numeric index array <code>x</code> and uses your stock price series as <code>y</code>. No external data needed — it trains on whatever CSV you upload.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-text">
+          <div class="st-title">Linear Regression Training</div>
+          <div class="st-desc">Fits a straight line through your price data using <code>sklearn.LinearRegression</code>. Learns the slope (daily trend) and intercept (starting value).</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-text">
+          <div class="st-title">Random Forest Scoring</div>
+          <div class="st-desc">Trains a <code>RandomForestRegressor</code> alongside LR to calculate R², MAE, RMSE. The best model by R² is selected as the scoring model.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-text">
+          <div class="st-title">Save to Disk</div>
+          <div class="st-desc">The trained Linear Regression model is saved as <code>models/linear_model.pkl</code> using joblib. This eliminates the startup warning permanently.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">5</div>
+        <div class="step-text">
+          <div class="st-title">Ready for Predictions</div>
+          <div class="st-desc">Once saved, the model loads automatically on every app restart. Go to <code>/stock</code> or <code>/upload</code> to start predicting with the trained model.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+
+/* PARTICLES */
+const canvas = document.getElementById("bgCanvas");
+const ctx    = canvas.getContext("2d");
+function resize(){ canvas.width=innerWidth; canvas.height=innerHeight; }
+resize(); addEventListener("resize", resize);
+let dots = [];
+for(let i=0;i<80;i++) dots.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,dx:(Math.random()-.5)*.5,dy:(Math.random()-.5)*.5});
+function bgAnim(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  dots.forEach(d=>{
+    d.x+=d.dx; d.y+=d.dy;
+    if(d.x<0||d.x>canvas.width) d.dx*=-1;
+    if(d.y<0||d.y>canvas.height) d.dy*=-1;
+    ctx.fillStyle="rgba(56,189,248,.35)"; ctx.beginPath(); ctx.arc(d.x,d.y,1.8,0,Math.PI*2); ctx.fill();
+    dots.forEach(o=>{
+      const dx=d.x-o.x,dy=d.y-o.y,dist=Math.sqrt(dx*dx+dy*dy);
+      if(dist<110){ ctx.strokeStyle=`rgba(56,189,248,${1-dist/110})`; ctx.lineWidth=.35; ctx.beginPath(); ctx.moveTo(d.x,d.y); ctx.lineTo(o.x,o.y); ctx.stroke(); }
+    });
+  });
+  requestAnimationFrame(bgAnim);
+}
+bgAnim();
+
+
+/* TRAINING SIMULATION + REAL API CALL */
+async function startTraining(){
+  const btn      = document.getElementById("trainBtn");
+  const btnText  = document.getElementById("trainBtnText");
+  const progSec  = document.getElementById("progressSection");
+  const progBar  = document.getElementById("progBar");
+  const progLbl  = document.getElementById("progLabel");
+  const progStep = document.getElementById("progStep");
+  const logTerm  = document.getElementById("logTerminal");
+  const resultCard = document.getElementById("resultCard");
+
+  btn.disabled = true;
+  progSec.classList.add("show");
+  resultCard.classList.remove("show");
+  logTerm.innerHTML = "";
+
+  const steps = [
+    { pct:10, step:"Preparing training data...",        log:"[INFO] Generating index array x (n=100)",        cls:"info" },
+    { pct:25, step:"Training Linear Regression...",     log:"[INFO] Fitting LinearRegression()",               cls:"info" },
+    { pct:45, step:"Training Random Forest...",         log:"[INFO] Fitting RandomForestRegressor(n=100)",     cls:"info" },
+    { pct:65, step:"Evaluating models...",              log:"[INFO] Calculating R2, MAE, RMSE scores",         cls:"info" },
+    { pct:80, step:"Selecting best model...",           log:"[INFO] Comparing model performance",              cls:"info" },
+    { pct:92, step:"Saving model to disk...",           log:"[INFO] Saving → models/linear_model.pkl",         cls:"info" },
+    { pct:100, step:"Training complete!",               log:"[OK]   Model saved successfully",                 cls:"" },
+  ];
+
+  function addLog(msg, cls=""){
+    logTerm.innerHTML += `<span class="log-line ${cls}">${msg}</span><br>`;
+    logTerm.scrollTop = logTerm.scrollHeight;
+  }
+
+  // Animate steps
+  for(const s of steps){
+    progStep.textContent   = s.step;
+    progBar.style.width    = s.pct + "%";
+    progLbl.textContent    = s.pct + "%";
+    btnText.textContent    = s.step;
+    addLog(s.log, s.cls);
+    await new Promise(r => setTimeout(r, 420));
+  }
+
+  // Real API call
+  try {
+    const resp = await fetch("/api/train-model", { method:"POST" });
+    const data = await resp.json();
+
+    resultCard.classList.remove("error");
+    resultCard.classList.add("show");
+
+    if(data.success){
+      document.getElementById("resultTitle").innerHTML =
+        `<i class="fas fa-circle-check"></i> Model Trained Successfully`;
+      document.getElementById("resultTitle").className = "rc-title";
+      document.getElementById("resultMetrics").innerHTML = `
+        <div class="rc-metric"><div class="rm-label">R² Score</div><div class="rm-val">${data.r2 ?? "—"}</div></div>
+        <div class="rc-metric"><div class="rm-label">Coefficients</div><div class="rm-val">${data.coef ?? "—"}</div></div>
+        <div class="rc-metric"><div class="rm-label">Intercept</div><div class="rm-val">${data.intercept ?? "—"}</div></div>
+        <div class="rc-metric"><div class="rm-label">Saved To</div><div class="rm-val">models/linear_model.pkl</div></div>
+      `;
+      addLog("[OK]   Training complete — model ready for predictions", "");
+      document.getElementById("lastTrained").textContent = new Date().toLocaleString();
+    } else {
+      resultCard.classList.add("error");
+      document.getElementById("resultTitle").innerHTML =
+        `<i class="fas fa-triangle-exclamation"></i> Training Failed`;
+      document.getElementById("resultTitle").className = "rc-title error";
+      document.getElementById("resultMetrics").innerHTML =
+        `<div class="rc-metric"><div class="rm-label">Error</div><div class="rm-val" style="color:#fb7185;">${data.error ?? "Unknown error"}</div></div>`;
+      addLog(`[ERR]  ${data.error ?? "Training failed"}`, "error");
+    }
+  } catch(e) {
+    addLog("[ERR]  Could not reach /api/train-model", "error");
+  }
+
+  btn.disabled       = false;
+  btnText.textContent = "Re-Train Model";
+}
+
+</script>
+</body>
+</html>

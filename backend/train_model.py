@@ -1,56 +1,32 @@
-import pandas as pd
+# ==========================
+# train_model.py
+# Run this ONCE to generate models/linear_model.pkl
+# Command: python -m backend.utils.train_model
+# ==========================
+
+import os
 import numpy as np
 import joblib
-import os
-
 from sklearn.linear_model import LinearRegression
 
+def train_and_save():
 
-# =========================
-# SETTINGS
-# =========================
+    os.makedirs("models", exist_ok=True)
 
-DATA_FILE = "uploads/sample.csv"   # Put any CSV here
-MODEL_PATH = "models/linear_model.pkl"
-TARGET_COLUMN = "Close"            # Change based on your CSV
+    # Generate synthetic training data
+    # (simple upward trend — just to initialize the model)
+    x = np.arange(100).reshape(-1, 1)
+    y = (x * 1.5 + np.random.randn(100, 1) * 2).ravel()
 
+    model = LinearRegression()
+    model.fit(x, y)
 
-# =========================
-# CREATE FOLDER
-# =========================
+    model_path = "models/linear_model.pkl"
+    joblib.dump(model, model_path)
 
-os.makedirs("models", exist_ok=True)
+    print(f"✅ Model trained and saved to {model_path}")
+    print(f"   Coefficients : {model.coef_}")
+    print(f"   Intercept    : {model.intercept_:.4f}")
 
-
-# =========================
-# LOAD DATA
-# =========================
-
-print("Loading dataset...")
-
-df = pd.read_csv(DATA_FILE)
-
-# Keep only numeric values
-df = df[[TARGET_COLUMN]].dropna()
-
-y = df[TARGET_COLUMN].values.reshape(-1, 1)
-x = np.arange(len(y)).reshape(-1, 1)
-
-
-# =========================
-# TRAIN MODEL
-# =========================
-
-print("Training model...")
-
-model = LinearRegression()
-model.fit(x, y)
-
-
-# =========================
-# SAVE MODEL
-# =========================
-
-joblib.dump(model, MODEL_PATH)
-
-print("Model saved at:", MODEL_PATH)
+if __name__ == "__main__":
+    train_and_save()

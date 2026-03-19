@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Monthly Analysis | Stock AI</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#020917;--s1:rgba(6,14,35,.95);--s2:rgba(8,18,42,.88);
+  --bd:rgba(56,189,248,.12);--bdh:rgba(56,189,248,.35);
+  --cy:#38bdf8;--cy2:#22d3ee;--gr:#4ade80;--rd:#fb7185;--am:#fbbf24;
+  --tx:#e2e8f0;--mt:#64748b;--mt2:#334155;
+  --mono:'Space Mono',monospace;--sans:'Syne',sans-serif;
+}
+body{min-height:100vh;background:var(--bg);color:var(--tx);font-family:var(--sans);overflow-x:hidden;}
+body::before{content:"";position:fixed;inset:0;background:linear-gradient(rgba(56,189,248,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(56,189,248,.018) 1px,transparent 1px);background-size:52px 52px;pointer-events:none;z-index:0;}
+#bgc{position:fixed;inset:0;z-index:0;pointer-events:none;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes tickScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@keyframes glowPulse{0%,100%{border-color:rgba(56,189,248,.12)}50%{border-color:rgba(56,189,248,.32)}}
+@keyframes scanline{0%{top:0}100%{top:100%}}
+
+/* ── NAV ── */
+.nav{position:sticky;top:0;z-index:200;height:60px;background:rgba(2,9,23,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;padding:0 26px;gap:10px;}
+.nav-brand{display:flex;align-items:center;gap:9px;text-decoration:none;flex-shrink:0;}
+.nav-brand i{color:var(--cy);font-size:18px;}
+.nav-brand span{font-size:17px;font-weight:800;background:linear-gradient(90deg,var(--cy),var(--cy2));-webkit-background-clip:text;color:transparent;}
+.nav-links{display:flex;align-items:center;gap:4px;flex-wrap:wrap;}
+.nl{display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:8px;border:1px solid transparent;color:var(--mt);font-size:12.5px;font-weight:600;text-decoration:none;transition:.2s;white-space:nowrap;}
+.nl:hover{background:rgba(56,189,248,.08);border-color:rgba(56,189,248,.2);color:var(--cy);}
+.nl.on{background:rgba(56,189,248,.12);border-color:rgba(56,189,248,.35);color:var(--cy);}
+.nl.out{color:var(--rd);border-color:rgba(251,113,133,.1);}
+.nl.out:hover{background:rgba(251,113,133,.08);}
+.nav-user{display:flex;align-items:center;gap:7px;padding:5px 13px;border-radius:40px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);font-size:12px;color:var(--mt);flex-shrink:0;}
+.udot{width:6px;height:6px;background:var(--gr);border-radius:50%;animation:pulse 2s infinite;}
+
+/* ── TICKER ── */
+.ticker{height:30px;background:rgba(4,10,26,.98);border-bottom:1px solid var(--bd);overflow:hidden;display:flex;align-items:center;position:relative;z-index:10;}
+.tick-wrap{display:flex;white-space:nowrap;animation:tickScroll 50s linear infinite;}
+.tick-item{font-family:var(--mono);font-size:.68rem;padding:0 22px;display:flex;align-items:center;gap:7px;border-right:1px solid rgba(255,255,255,.04);}
+.ts{color:var(--cy);font-weight:700;}
+.tu{color:var(--gr);}
+.td{color:var(--rd);}
+
+/* ── PAGE WRAP ── */
+.page{max-width:860px;margin:0 auto;padding:44px 22px 90px;position:relative;z-index:1;}
+
+/* ── SECTION HEADER ── */
+.page-hd{margin-bottom:40px;animation:fadeUp .5s ease both;}
+.tag{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:.65rem;color:var(--cy);background:rgba(56,189,248,.07);border:1px solid rgba(56,189,248,.18);padding:4px 12px;border-radius:20px;margin-bottom:14px;text-transform:uppercase;letter-spacing:2px;}
+.tag-dot{width:5px;height:5px;background:var(--cy);border-radius:50%;animation:pulse 1.5s infinite;}
+.page-hd h1{font-size:clamp(1.8rem,4vw,2.6rem);font-weight:800;line-height:1.15;background:linear-gradient(135deg,#f1f5f9 0%,var(--cy) 60%);-webkit-background-clip:text;color:transparent;margin-bottom:8px;}
+.page-hd p{color:var(--mt);font-size:.88rem;line-height:1.65;max-width:520px;}
+
+/* ── FLASH ── */
+.flash{display:flex;align-items:center;gap:10px;background:rgba(251,113,133,.07);border:1px solid rgba(251,113,133,.22);border-radius:10px;padding:13px 17px;margin-bottom:20px;color:var(--rd);font-size:.83rem;animation:fadeUp .4s ease;}
+
+/* ── FORM SHELL ── */
+.form-shell{
+  background:var(--s1);border:1px solid var(--bd);border-radius:18px;
+  overflow:hidden;animation:fadeUp .6s ease both .08s,glowPulse 4s ease infinite;
+  position:relative;
+}
+.form-shell::after{content:"";position:absolute;left:0;width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(56,189,248,.12),transparent);animation:scanline 5s linear infinite;pointer-events:none;}
+
+/* top accent line */
+.form-shell::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent 5%,rgba(56,189,248,.4) 50%,transparent 95%);}
+
+/* ── FORM HEADER BAR ── */
+.form-bar{display:flex;align-items:center;gap:14px;padding:22px 28px;border-bottom:1px solid var(--bd);background:rgba(56,189,248,.025);}
+.form-bar-icon{width:40px;height:40px;border-radius:11px;background:rgba(56,189,248,.1);border:1px solid rgba(56,189,248,.2);display:flex;align-items:center;justify-content:center;color:var(--cy);font-size:.9rem;flex-shrink:0;}
+.form-bar-title{font-size:.95rem;font-weight:700;color:var(--tx);}
+.form-bar-sub{font-size:.72rem;color:var(--mt);margin-top:2px;font-family:var(--mono);}
+.form-bar-badge{margin-left:auto;font-family:var(--mono);font-size:.62rem;color:var(--cy);background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.2);padding:3px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:1px;white-space:nowrap;}
+
+/* ── FORM BODY ── */
+.form-body{padding:28px 28px 32px;}
+
+/* quick symbols */
+.qs-label{font-family:var(--mono);font-size:.62rem;color:var(--mt);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:9px;}
+.qs-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:26px;}
+.qs{padding:5px 13px;border-radius:8px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:var(--mt);font-family:var(--mono);font-size:.72rem;cursor:pointer;transition:.18s;display:flex;align-items:center;gap:6px;}
+.qs:hover{background:rgba(56,189,248,.09);border-color:rgba(56,189,248,.28);color:var(--cy);}
+.qs-dot{width:5px;height:5px;border-radius:50%;}
+
+/* divider */
+.rule{height:1px;background:rgba(255,255,255,.06);margin:0 0 24px;}
+
+/* field grid */
+.fg{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:22px;}
+.fld{}
+.fl{font-family:var(--mono);font-size:.62rem;color:var(--mt);text-transform:uppercase;letter-spacing:1.3px;display:flex;align-items:center;gap:5px;margin-bottom:7px;}
+.fl i{color:var(--cy);font-size:.6rem;}
+
+.fi,.fs{
+  width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(56,189,248,.16);
+  border-radius:11px;color:#fff;padding:12px 15px;font-size:.88rem;
+  font-family:var(--mono);outline:none;text-transform:uppercase;letter-spacing:1.5px;
+  transition:.2s;-webkit-appearance:none;
+}
+.fi:focus,.fs:focus{border-color:var(--cy);box-shadow:0 0 0 2px rgba(56,189,248,.1);background:rgba(56,189,248,.04);}
+.fi::placeholder{color:var(--mt2);text-transform:none;letter-spacing:0;font-size:.8rem;}
+.fs{cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%2338bdf8' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;}
+.fs option{background:#0d1a33;color:#e2e8f0;letter-spacing:0;text-transform:none;}
+
+/* submit */
+.btn-run{
+  width:100%;background:linear-gradient(135deg,#0369a1,#0891b2);
+  color:#fff;border:none;border-radius:12px;
+  padding:15px 28px;font-size:.92rem;font-weight:700;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:9px;
+  font-family:var(--sans);transition:.22s;
+  box-shadow:0 6px 24px rgba(3,105,161,.3);
+  position:relative;overflow:hidden;
+}
+.btn-run::after{content:"";position:absolute;top:0;left:-120%;width:60%;height:100%;background:linear-gradient(120deg,transparent,rgba(255,255,255,.1),transparent);transition:.55s;}
+.btn-run:hover::after{left:160%;}
+.btn-run:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(3,105,161,.45);}
+
+/* ── WHAT YOU GET section ── */
+.wg-section{margin-top:38px;animation:fadeUp .7s ease both .2s;}
+.wg-head{font-family:var(--mono);font-size:.65rem;color:var(--mt);text-transform:uppercase;letter-spacing:3px;text-align:center;margin-bottom:22px;display:flex;align-items:center;gap:10px;justify-content:center;}
+.wg-head::before,.wg-head::after{content:"";width:50px;height:1px;background:rgba(56,189,248,.18);}
+
+.wg-list{display:flex;flex-direction:column;gap:0;border:1px solid var(--bd);border-radius:14px;overflow:hidden;}
+.wg-item{display:flex;align-items:flex-start;gap:16px;padding:18px 22px;border-bottom:1px solid rgba(255,255,255,.05);background:var(--s2);transition:.2s;}
+.wg-item:last-child{border-bottom:none;}
+.wg-item:hover{background:rgba(56,189,248,.03);}
+.wg-num{font-family:var(--mono);font-size:1.6rem;font-weight:700;color:rgba(56,189,248,.15);line-height:1;flex-shrink:0;width:36px;}
+.wg-ico{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;margin-top:2px;}
+.wg-txt h4{font-size:.85rem;font-weight:700;color:var(--tx);margin-bottom:4px;}
+.wg-txt p{font-size:.74rem;color:var(--mt);line-height:1.55;}
+
+/* ── STAT STRIP ── */
+.stat-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--bd);border-radius:14px;overflow:hidden;margin-top:20px;animation:fadeUp .8s ease both .3s;}
+.stat-item{padding:18px 16px;border-right:1px solid var(--bd);background:var(--s2);text-align:center;}
+.stat-item:last-child{border-right:none;}
+.stat-val{font-family:var(--mono);font-size:1.25rem;font-weight:700;color:var(--cy);}
+.stat-lbl{font-size:.66rem;color:var(--mt);text-transform:uppercase;letter-spacing:1px;margin-top:4px;font-family:var(--mono);}
+
+/* ── LOADER ── */
+.lov{display:none;position:fixed;inset:0;z-index:500;background:rgba(2,9,23,.93);backdrop-filter:blur(12px);flex-direction:column;align-items:center;justify-content:center;gap:20px;}
+.lov.show{display:flex;}
+.lring{width:54px;height:54px;border:2.5px solid rgba(56,189,248,.15);border-top:2.5px solid var(--cy);border-radius:50%;animation:spin 1s linear infinite;}
+.ltxt{font-family:var(--mono);font-size:.78rem;color:var(--cy);letter-spacing:2px;}
+.lsteps{display:flex;flex-direction:column;gap:9px;}
+.lstep{font-size:.72rem;color:var(--mt);display:flex;align-items:center;gap:9px;font-family:var(--mono);}
+.lstep.act{color:var(--cy);}
+.lstep.don{color:var(--gr);}
+.lstep i{font-size:.65rem;width:13px;text-align:center;}
+
+@media(max-width:768px){.nl span{display:none;}.fg{grid-template-columns:1fr 1fr;}.stat-strip{grid-template-columns:1fr 1fr;}}
+@media(max-width:480px){.fg{grid-template-columns:1fr;}.stat-strip{grid-template-columns:1fr 1fr;}.form-body{padding:20px 16px 24px;}.form-bar{padding:18px 16px;}}
+</style>
+</head>
+<body>
+<canvas id="bgc"></canvas>
+
+<!-- LOADER -->
+<div class="lov" id="lov">
+  <div class="lring"></div>
+  <div class="ltxt">LOADING ANALYSIS</div>
+  <div class="lsteps">
+    <div class="lstep act" id="ls0"><i class="fa-solid fa-circle-dot"></i> Downloading price history…</div>
+    <div class="lstep"     id="ls1"><i class="fa-regular fa-circle"></i> Filtering selected month…</div>
+    <div class="lstep"     id="ls2"><i class="fa-regular fa-circle"></i> Running linear regression…</div>
+    <div class="lstep"     id="ls3"><i class="fa-regular fa-circle"></i> Building report…</div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="/dashboard" class="nav-brand"><i class="fa-solid fa-chart-line"></i><span>Stock AI</span></a>
+  <div class="nav-links">
+    <a href="/dashboard"         class="nl"><i class="fa-solid fa-house"></i><span>Dashboard</span></a>
+    <a href="/stock"             class="nl"><i class="fa-solid fa-magnifying-glass-chart"></i><span>Predict</span></a>
+    <a href="/watchlist"         class="nl"><i class="fa-solid fa-star"></i><span>Watchlist</span></a>
+    <a href="/news"              class="nl"><i class="fa-solid fa-newspaper"></i><span>News</span></a>
+    <a href="/compare"           class="nl"><i class="fa-solid fa-code-compare"></i><span>Compare</span></a>
+    <a href="/portfolio-advisor" class="nl"><i class="fa-solid fa-chart-pie"></i><span>Advisor</span></a>
+    <a href="/history"           class="nl"><i class="fa-solid fa-clock-rotate-left"></i><span>History</span></a>
+    <a href="/stock-analysis"    class="nl on"><i class="fa-solid fa-rocket"></i><span>Advanced AI</span></a>
+    <a href="/profile"           class="nl"><i class="fa-solid fa-user"></i><span>Profile</span></a>
+    <a href="/logout"            class="nl out"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a>
+  </div>
+  <div class="nav-user"><span class="udot"></span><span>{{ session.get('user','User') | title }}</span></div>
+</nav>
+
+<!-- TICKER -->
+<div class="ticker"><div class="tick-wrap" id="tw"></div></div>
+
+<div class="page">
+
+  <!-- PAGE HEADER -->
+  <div class="page-hd">
+    <div class="tag"><span class="tag-dot"></span>Advanced AI · Monthly Deep Dive</div>
+    <h1>Monthly Stock<br>Analysis Engine</h1>
+    <p>Pick any stock, month, and year. Get full closing-price history, return and volatility breakdown, and a next-day linear regression forecast.</p>
+  </div>
+
+  <!-- FLASH -->
+  {% with messages = get_flashed_messages() %}{% if messages %}
+  <div class="flash"><i class="fa-solid fa-triangle-exclamation"></i>{{ messages[0] }}</div>
+  {% endif %}{% endwith %}
+
+  <!-- FORM SHELL -->
+  <div class="form-shell">
+
+    <!-- header bar -->
+    <div class="form-bar">
+      <div class="form-bar-icon"><i class="fa-solid fa-sliders"></i></div>
+      <div>
+        <div class="form-bar-title">Analysis Parameters</div>
+        <div class="form-bar-sub">symbol · month · year → run</div>
+      </div>
+      <div class="form-bar-badge">Linear Regression</div>
+    </div>
+
+    <!-- body -->
+    <div class="form-body">
+
+      <!-- quick symbols -->
+      <div class="qs-label">Quick select</div>
+      <div class="qs-row">
+        <button type="button" class="qs" onclick="qs('AAPL')"><span class="qs-dot" style="background:#38bdf8"></span>AAPL</button>
+        <button type="button" class="qs" onclick="qs('TSLA')"><span class="qs-dot" style="background:#4ade80"></span>TSLA</button>
+        <button type="button" class="qs" onclick="qs('NVDA')"><span class="qs-dot" style="background:#fbbf24"></span>NVDA</button>
+        <button type="button" class="qs" onclick="qs('MSFT')"><span class="qs-dot" style="background:#a78bfa"></span>MSFT</button>
+        <button type="button" class="qs" onclick="qs('GOOGL')"><span class="qs-dot" style="background:#fb7185"></span>GOOGL</button>
+        <button type="button" class="qs" onclick="qs('INFY.NS')"><span class="qs-dot" style="background:#f97316"></span>INFY.NS</button>
+        <button type="button" class="qs" onclick="qs('TCS.NS')"><span class="qs-dot" style="background:#38bdf8"></span>TCS.NS</button>
+        <button type="button" class="qs" onclick="qs('RELIANCE.NS')"><span class="qs-dot" style="background:#22d3ee"></span>RELIANCE.NS</button>
+        <button type="button" class="qs" onclick="qs('TATASTEEL.NS')"><span class="qs-dot" style="background:#fbbf24"></span>TATASTEEL.NS</button>
+        <button type="button" class="qs" onclick="qs('HDFCBANK.NS')"><span class="qs-dot" style="background:#a78bfa"></span>HDFCBANK.NS</button>
+      </div>
+
+      <div class="rule"></div>
+
+      <!-- fields -->
+      <form method="POST" action="/stock-analysis" id="af" onsubmit="showLov()">
+        <div class="fg">
+          <div class="fld">
+            <div class="fl"><i class="fa-solid fa-chart-bar"></i>Stock Symbol</div>
+            <input type="text" name="symbol" id="sym" class="fi" placeholder="e.g. AAPL" required maxlength="20">
+          </div>
+          <div class="fld">
+            <div class="fl"><i class="fa-solid fa-calendar"></i>Month</div>
+            <select name="month" class="fs" required>
+              <option value="" style="text-transform:none;letter-spacing:0">— Month —</option>
+              <option value="1">January</option><option value="2">February</option>
+              <option value="3">March</option><option value="4">April</option>
+              <option value="5">May</option><option value="6">June</option>
+              <option value="7">July</option><option value="8">August</option>
+              <option value="9">September</option><option value="10">October</option>
+              <option value="11">November</option><option value="12">December</option>
+            </select>
+          </div>
+          <div class="fld">
+            <div class="fl"><i class="fa-solid fa-calendar-days"></i>Year</div>
+            <select name="year" class="fs" required>
+              <option value="" style="text-transform:none;letter-spacing:0">— Year —</option>
+              {% for y in range(2020, 2027) %}<option value="{{ y }}">{{ y }}</option>{% endfor %}
+            </select>
+          </div>
+        </div>
+        <button type="submit" class="btn-run">
+          <i class="fa-solid fa-magnifying-glass-chart"></i>
+          Run Monthly Analysis
+        </button>
+      </form>
+
+    </div>
+  </div><!-- /form-shell -->
+
+  <!-- WHAT YOU GET -->
+  <div class="wg-section">
+    <div class="wg-head">What This Analysis Gives You</div>
+    <div class="wg-list">
+      <div class="wg-item">
+        <div class="wg-num">01</div>
+        <div class="wg-ico" style="background:rgba(56,189,248,.1);color:#38bdf8;"><i class="fa-solid fa-chart-line"></i></div>
+        <div class="wg-txt">
+          <h4>Full Month Price Chart</h4>
+          <p>Interactive line chart of every trading day's closing price within the selected month — visualize the full intra-month trend at a glance.</p>
+        </div>
+      </div>
+      <div class="wg-item">
+        <div class="wg-num">02</div>
+        <div class="wg-ico" style="background:rgba(74,222,128,.1);color:#4ade80;"><i class="fa-solid fa-percent"></i></div>
+        <div class="wg-txt">
+          <h4>Return &amp; Volatility Breakdown</h4>
+          <p>Monthly return %, highest and lowest closing price, standard deviation (volatility), mean price, and overall trend direction for the period.</p>
+        </div>
+      </div>
+      <div class="wg-item">
+        <div class="wg-num">03</div>
+        <div class="wg-ico" style="background:rgba(167,139,250,.1);color:#a78bfa;"><i class="fa-solid fa-brain"></i></div>
+        <div class="wg-txt">
+          <h4>Linear Regression Forecast</h4>
+          <p>ML model trained on the month's data predicts the next expected closing price — with trend direction signal (Uptrend / Downtrend).</p>
+        </div>
+      </div>
+      <div class="wg-item">
+        <div class="wg-num">04</div>
+        <div class="wg-ico" style="background:rgba(251,191,36,.1);color:#fbbf24;"><i class="fa-solid fa-table"></i></div>
+        <div class="wg-txt">
+          <h4>Last 10 Days Raw Data</h4>
+          <p>Detailed OHLCV data table for the last 10 trading days of the selected month — useful for granular review and reference.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STAT STRIP -->
+  <div class="stat-strip">
+    <div class="stat-item"><div class="stat-val">5Y</div><div class="stat-lbl">Data History</div></div>
+    <div class="stat-item"><div class="stat-val">LR</div><div class="stat-lbl">Model Type</div></div>
+    <div class="stat-item"><div class="stat-val">NSE</div><div class="stat-lbl">Indian Markets</div></div>
+    <div class="stat-item"><div class="stat-val">PDF</div><div class="stat-lbl">Report Export</div></div>
+  </div>
+
+</div><!-- /page -->
+
+<script>
+/* BG PARTICLES */
+const cv=document.getElementById("bgc"),cx=cv.getContext("2d");
+function rsz(){cv.width=innerWidth;cv.height=innerHeight;}rsz();addEventListener("resize",rsz);
+const pts=Array.from({length:50},()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,dx:(Math.random()-.5)*.35,dy:(Math.random()-.5)*.35}));
+(function loop(){
+  cx.clearRect(0,0,cv.width,cv.height);
+  pts.forEach(p=>{
+    p.x+=p.dx;p.y+=p.dy;
+    if(p.x<0||p.x>cv.width)p.dx*=-1;if(p.y<0||p.y>cv.height)p.dy*=-1;
+    cx.fillStyle="rgba(56,189,248,.25)";cx.beginPath();cx.arc(p.x,p.y,1.3,0,Math.PI*2);cx.fill();
+    pts.forEach(q=>{const dx=p.x-q.x,dy=p.y-q.y,r=Math.sqrt(dx*dx+dy*dy);if(r<90){cx.strokeStyle=`rgba(56,189,248,${.5*(1-r/90)})`;cx.lineWidth=.25;cx.beginPath();cx.moveTo(p.x,p.y);cx.lineTo(q.x,q.y);cx.stroke();}});
+  });
+  requestAnimationFrame(loop);
+})();
+
+/* TICKER */
+const T=[{s:"AAPL",p:"$213.49",c:"+0.82%",u:1},{s:"TSLA",p:"$248.05",c:"-1.34%",u:0},{s:"NVDA",p:"$875.40",c:"+2.11%",u:1},{s:"MSFT",p:"$415.32",c:"+0.47%",u:1},{s:"GOOGL",p:"$175.18",c:"-0.23%",u:0},{s:"INFY",p:"₹1548",c:"+1.22%",u:1},{s:"TCS",p:"₹3821",c:"-0.41%",u:0},{s:"RELIANCE",p:"₹2940",c:"+0.93%",u:1},{s:"TATASTEEL",p:"₹152",c:"+1.8%",u:1},{s:"HDFC",p:"₹1620",c:"-0.3%",u:0}];
+document.getElementById("tw").innerHTML=[...T,...T].map(t=>`<div class="tick-item"><span class="ts">${t.s}</span><span>${t.p}</span><span class="${t.u?'tu':'td'}">${t.c}</span></div>`).join("");
+
+function qs(sym){document.getElementById("sym").value=sym;document.getElementById("sym").focus();}
+
+function showLov(){
+  document.getElementById("lov").classList.add("show");
+  const ids=["ls0","ls1","ls2","ls3"];let i=0;
+  ids.forEach((id,n)=>{const el=document.getElementById(id);el.className="lstep"+(n===0?" act":"");el.querySelector("i").className=n===0?"fa-solid fa-circle-dot":"fa-regular fa-circle";});
+  setInterval(()=>{
+    if(i<ids.length-1){
+      document.getElementById(ids[i]).className="lstep don";document.getElementById(ids[i]).querySelector("i").className="fa-solid fa-check";
+      i++;document.getElementById(ids[i]).className="lstep act";document.getElementById(ids[i]).querySelector("i").className="fa-solid fa-circle-dot";
+    }
+  },700);
+}
+</script>
+</body>
+</html>

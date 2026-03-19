@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Account | Stock AI</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=Clash+Display:wght@400;500;600;700&family=Cabinet+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#030a14;
+  --panel:#070f1d;
+  --border:rgba(56,189,248,.1);
+  --border-h:rgba(56,189,248,.35);
+  --cy:#38bdf8;--cy2:#22d3ee;--pu:#818cf8;
+  --gr:#34d399;--rd:#f87171;--am:#fbbf24;
+  --tx:#e2e8f0;--mt:#64748b;--mt2:#1e293b;
+  --mono:'DM Mono',monospace;
+  --display:'Cabinet Grotesk',sans-serif;
+}
+
+body{
+  min-height:100vh;background:var(--bg);
+  display:flex;overflow:hidden;font-family:var(--display);
+}
+
+/* ── LEFT PANEL (branding) ── */
+.left{
+  flex:0 0 42%;position:relative;
+  background:linear-gradient(135deg,#030d1a 0%,#040f20 50%,#050d1c 100%);
+  overflow:hidden;display:flex;flex-direction:column;
+  padding:48px 52px;border-right:1px solid var(--border);
+}
+
+/* grid overlay */
+.left::before{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(rgba(56,189,248,.025) 1px,transparent 1px),
+             linear-gradient(90deg,rgba(56,189,248,.025) 1px,transparent 1px);
+  background-size:40px 40px;pointer-events:none;
+}
+
+/* diagonal accent line */
+.left::after{
+  content:"";position:absolute;
+  top:-10%;right:-1px;width:2px;height:120%;
+  background:linear-gradient(to bottom,transparent,rgba(56,189,248,.6),rgba(129,140,248,.4),transparent);
+}
+
+/* floating orbs */
+.orb{position:absolute;border-radius:50%;pointer-events:none;}
+.orb1{width:320px;height:320px;top:-80px;left:-80px;
+  background:radial-gradient(circle,rgba(56,189,248,.07) 0%,transparent 65%);}
+.orb2{width:240px;height:240px;bottom:60px;right:-40px;
+  background:radial-gradient(circle,rgba(129,140,248,.09) 0%,transparent 65%);}
+.orb3{width:160px;height:160px;top:45%;left:40%;
+  background:radial-gradient(circle,rgba(34,211,238,.06) 0%,transparent 65%);}
+
+/* brand logo area */
+.brand{position:relative;z-index:2;display:flex;align-items:center;gap:12px;margin-bottom:auto;}
+.brand-icon{
+  width:44px;height:44px;border-radius:12px;
+  background:linear-gradient(135deg,rgba(56,189,248,.15),rgba(129,140,248,.1));
+  border:1px solid rgba(56,189,248,.3);
+  display:flex;align-items:center;justify-content:center;
+}
+.brand-icon img{width:26px;height:26px;object-fit:contain;}
+.brand-icon i{color:var(--cy);font-size:18px;}
+.brand-name{font-size:20px;font-weight:800;color:var(--tx);letter-spacing:-.5px;}
+.brand-sub{font-size:11px;color:var(--mt);font-family:var(--mono);letter-spacing:1px;}
+
+/* hero content */
+.hero{position:relative;z-index:2;margin-top:auto;padding-bottom:20px;}
+.hero-tag{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:5px 12px;border-radius:100px;margin-bottom:24px;
+  background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.2);
+  font-family:var(--mono);font-size:.68rem;color:var(--gr);letter-spacing:1px;
+}
+.hero-tag i{font-size:.6rem;}
+.hero h1{
+  font-size:clamp(2rem,3.2vw,2.8rem);font-weight:800;
+  color:var(--tx);line-height:1.1;letter-spacing:-1px;
+  margin-bottom:16px;
+}
+.hero h1 em{
+  font-style:normal;
+  background:linear-gradient(90deg,var(--cy),var(--cy2),var(--pu));
+  -webkit-background-clip:text;color:transparent;
+}
+.hero p{font-size:.95rem;color:var(--mt);line-height:1.7;max-width:340px;}
+
+/* feature rows */
+.features{position:relative;z-index:2;display:flex;flex-direction:column;gap:14px;margin-top:36px;}
+.feat{display:flex;align-items:center;gap:14px;}
+.feat-dot{
+  flex-shrink:0;width:32px;height:32px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.75rem;
+}
+.feat-dot.cy{background:rgba(56,189,248,.1);color:var(--cy);}
+.feat-dot.pu{background:rgba(129,140,248,.1);color:var(--pu);}
+.feat-dot.gr{background:rgba(52,211,153,.1);color:var(--gr);}
+.feat-text{font-size:.85rem;color:var(--mt);line-height:1.4;}
+.feat-text strong{color:var(--tx);display:block;font-size:.88rem;margin-bottom:2px;}
+
+/* live ticker strip */
+.ticker-strip{
+  position:relative;z-index:2;margin-top:28px;
+  padding:10px 0;border-top:1px solid var(--border);
+  overflow:hidden;
+}
+.ticker-inner{display:flex;gap:0;white-space:nowrap;animation:scrollTick 25s linear infinite;}
+.tick{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:0 18px;font-family:var(--mono);font-size:.67rem;
+  border-right:1px solid rgba(255,255,255,.05);
+}
+.tick-sym{color:var(--cy);font-weight:500;}
+.tick-val{color:var(--tx);}
+.tick-chg.up{color:var(--gr);}
+.tick-chg.dn{color:var(--rd);}
+
+@keyframes scrollTick{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ── RIGHT PANEL (form) ── */
+.right{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  padding:40px 32px;overflow-y:auto;
+  background:var(--bg);
+}
+
+.form-box{width:100%;max-width:440px;}
+
+/* step indicator */
+.step-ind{
+  display:flex;align-items:center;gap:8px;
+  font-family:var(--mono);font-size:.7rem;color:var(--mt);
+  letter-spacing:1px;margin-bottom:32px;
+}
+.step-dot{
+  width:6px;height:6px;border-radius:50%;background:var(--mt2);
+  transition:.3s;
+}
+.step-dot.active{background:var(--cy);box-shadow:0 0 8px rgba(56,189,248,.5);}
+.step-dot.done{background:var(--gr);}
+.step-line{flex:1;height:1px;background:var(--mt2);}
+
+/* form header */
+.fhdr{margin-bottom:28px;}
+.fhdr .badge{
+  font-family:var(--mono);font-size:.68rem;color:var(--cy);
+  letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;display:block;
+}
+.fhdr h2{font-size:1.8rem;font-weight:800;color:var(--tx);letter-spacing:-.5px;line-height:1.2;}
+.fhdr p{font-size:.88rem;color:var(--mt);margin-top:6px;}
+
+/* flash messages */
+.flash{
+  padding:11px 16px;border-radius:10px;
+  font-size:.84rem;display:flex;align-items:flex-start;gap:10px;
+  margin-bottom:18px;
+}
+.flash.error{background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.25);color:var(--rd);}
+.flash.success{background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.25);color:var(--gr);}
+.flash i{margin-top:2px;flex-shrink:0;}
+
+/* input groups */
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.field{margin-bottom:16px;}
+.field label{
+  display:block;font-size:.78rem;font-weight:600;
+  color:var(--mt);margin-bottom:7px;letter-spacing:.3px;
+  font-family:var(--mono);text-transform:uppercase;font-size:.67rem;
+}
+.field label .req{color:var(--cy);margin-left:2px;}
+.inp-wrap{position:relative;}
+.inp-wrap i.icon{
+  position:absolute;left:14px;top:50%;transform:translateY(-50%);
+  color:var(--mt);font-size:.8rem;transition:.2s;pointer-events:none;
+}
+.inp-wrap input{
+  width:100%;padding:12px 14px 12px 40px;
+  background:rgba(7,15,29,.8);border:1px solid var(--border);
+  border-radius:10px;color:var(--tx);font-size:.9rem;
+  font-family:var(--display);outline:none;transition:.2s;
+  -webkit-appearance:none;
+}
+.inp-wrap input:focus{border-color:var(--cy);background:rgba(56,189,248,.04);}
+.inp-wrap input:focus + .icon,
+.inp-wrap input:focus ~ i.icon{color:var(--cy);}
+/* fix icon order for sibling selector */
+.inp-wrap .icon{z-index:1;}
+.inp-wrap input:focus{border-color:var(--cy);}
+.inp-wrap:focus-within i.icon{color:var(--cy);}
+
+.inp-wrap input::placeholder{color:var(--mt);}
+.inp-wrap .toggle-pw{
+  position:absolute;right:14px;top:50%;transform:translateY(-50%);
+  background:none;border:none;color:var(--mt);cursor:pointer;
+  font-size:.8rem;padding:4px;transition:.2s;
+}
+.inp-wrap .toggle-pw:hover{color:var(--cy);}
+
+/* strength meter */
+.strength{margin-top:8px;}
+.strength-bar{
+  height:3px;border-radius:2px;background:var(--mt2);
+  overflow:hidden;margin-bottom:5px;
+}
+.strength-fill{height:100%;width:0;border-radius:2px;transition:.3s;}
+.strength-fill.weak{width:33%;background:var(--rd);}
+.strength-fill.medium{width:66%;background:var(--am);}
+.strength-fill.strong{width:100%;background:var(--gr);}
+.strength-label{font-family:var(--mono);font-size:.65rem;color:var(--mt);}
+
+/* role selector */
+.role-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.role-card{
+  border:1px solid var(--border);border-radius:10px;padding:14px;
+  cursor:pointer;transition:.2s;position:relative;
+  background:rgba(7,15,29,.6);
+}
+.role-card:hover{border-color:var(--border-h);}
+.role-card input{position:absolute;opacity:0;width:0;height:0;}
+.role-card.selected{
+  border-color:rgba(56,189,248,.5);
+  background:rgba(56,189,248,.06);
+}
+.role-card.selected .role-check{opacity:1;}
+.role-icon{font-size:1.3rem;margin-bottom:8px;}
+.role-icon.cy{color:var(--cy);}
+.role-icon.pu{color:var(--pu);}
+.role-title{font-size:.83rem;font-weight:700;color:var(--tx);margin-bottom:3px;}
+.role-desc{font-size:.72rem;color:var(--mt);line-height:1.4;}
+.role-check{
+  position:absolute;top:10px;right:10px;
+  width:18px;height:18px;border-radius:50%;
+  background:var(--cy);display:flex;align-items:center;justify-content:center;
+  opacity:0;transition:.2s;font-size:.6rem;color:#000;
+}
+
+/* terms */
+.terms-row{
+  display:flex;align-items:flex-start;gap:10px;
+  margin-bottom:20px;cursor:pointer;
+}
+.terms-row input{display:none;}
+.checkmark{
+  flex-shrink:0;width:18px;height:18px;border-radius:5px;
+  border:1.5px solid var(--border-h);margin-top:1px;
+  display:flex;align-items:center;justify-content:center;
+  transition:.2s;
+}
+.terms-row input:checked ~ .checkmark{
+  background:var(--cy);border-color:var(--cy);
+}
+.checkmark i{color:#000;font-size:.65rem;opacity:0;transition:.2s;}
+.terms-row input:checked ~ .checkmark i{opacity:1;}
+.terms-txt{font-size:.82rem;color:var(--mt);line-height:1.5;}
+.terms-txt a{color:var(--cy);text-decoration:none;}
+.terms-txt a:hover{text-decoration:underline;}
+
+/* submit button */
+.btn-submit{
+  width:100%;padding:14px;border-radius:10px;border:none;cursor:pointer;
+  background:linear-gradient(90deg,var(--cy),var(--cy2));
+  color:#000;font-size:.95rem;font-weight:800;font-family:var(--display);
+  letter-spacing:.3px;transition:.2s;position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.btn-submit::before{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent);
+  transform:translateX(-100%);transition:.6s;
+}
+.btn-submit:hover::before{transform:translateX(100%);}
+.btn-submit:hover{transform:translateY(-1px);box-shadow:0 10px 30px rgba(56,189,248,.35);}
+.btn-submit:active{transform:translateY(0);}
+.btn-submit:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+
+/* divider */
+.divider{
+  display:flex;align-items:center;gap:12px;
+  margin:18px 0;font-family:var(--mono);font-size:.68rem;color:var(--mt);
+}
+.divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--border);}
+
+/* login link */
+.login-link{
+  text-align:center;font-size:.85rem;color:var(--mt);
+}
+.login-link a{
+  color:var(--cy);font-weight:600;text-decoration:none;
+  transition:.2s;
+}
+.login-link a:hover{color:var(--cy2);}
+
+/* bottom stat strip */
+.stat-strip{
+  position:relative;z-index:2;
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1px;background:var(--border);
+  border-top:1px solid var(--border);border-radius:0 0 0 0;
+  margin-top:28px;overflow:hidden;border-radius:10px;
+}
+.stat-item{
+  padding:14px;background:rgba(7,15,29,.6);text-align:center;
+}
+.stat-val{font-family:var(--mono);font-size:.95rem;color:var(--cy);font-weight:500;}
+.stat-key{font-size:.68rem;color:var(--mt);margin-top:3px;}
+
+/* particles canvas */
+#particles{position:absolute;inset:0;pointer-events:none;z-index:1;}
+
+/* scrollbar */
+.right::-webkit-scrollbar{width:4px;}
+.right::-webkit-scrollbar-track{background:transparent;}
+.right::-webkit-scrollbar-thumb{background:var(--mt2);border-radius:2px;}
+
+/* animations */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.form-box>*{animation:fadeUp .5s ease both;}
+.form-box>*:nth-child(1){animation-delay:.05s}
+.form-box>*:nth-child(2){animation-delay:.1s}
+.form-box>*:nth-child(3){animation-delay:.15s}
+.form-box>*:nth-child(4){animation-delay:.2s}
+
+/* error states */
+.inp-wrap input.has-error{border-color:rgba(248,113,113,.5);}
+.field-err{font-size:.72rem;color:var(--rd);font-family:var(--mono);margin-top:5px;display:none;}
+.field-err.show{display:block;}
+
+@media(max-width:900px){
+  .left{display:none;}
+  .right{flex:1;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ LEFT PANEL ══ -->
+<div class="left">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+  <canvas id="particles"></canvas>
+
+  <!-- Brand -->
+  <div class="brand">
+    <div class="brand-icon">
+      <img src="/static/images/logo.png" alt="StockAI" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <i class="fa-solid fa-chart-line" style="display:none;"></i>
+    </div>
+    <div>
+      <div class="brand-name">Stock<span style="color:var(--cy)">AI</span></div>
+      <div class="brand-sub">INTELLIGENCE PLATFORM</div>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-tag"><i class="fa-solid fa-circle" style="color:var(--gr);font-size:.5rem;"></i> MARKETS ARE LIVE</div>
+    <h1>Trade smarter<br>with <em>AI</em><br>precision</h1>
+    <p>Join thousands of investors using machine learning signals, real-time analytics, and predictive models to stay ahead of the market.</p>
+
+    <div class="features">
+      <div class="feat">
+        <div class="feat-dot cy"><i class="fa-solid fa-brain-circuit"></i></div>
+        <div class="feat-text">
+          <strong>AI Prediction Engine</strong>
+          Linear regression + LSTM models with 12+ technical indicators
+        </div>
+      </div>
+      <div class="feat">
+        <div class="feat-dot pu"><i class="fa-solid fa-chart-candlestick"></i></div>
+        <div class="feat-text">
+          <strong>Live Market Data</strong>
+          Real-time quotes, NSE/BSE support, candlestick charting
+        </div>
+      </div>
+      <div class="feat">
+        <div class="feat-dot gr"><i class="fa-solid fa-file-chart-column"></i></div>
+        <div class="feat-text">
+          <strong>PDF Research Reports</strong>
+          Institutional-grade reports generated in seconds
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Live ticker -->
+  <div class="ticker-strip">
+    <div class="ticker-inner">
+      <span class="tick"><span class="tick-sym">AAPL</span><span class="tick-val">$211.45</span><span class="tick-chg up">+1.2%</span></span>
+      <span class="tick"><span class="tick-sym">TSLA</span><span class="tick-val">$248.90</span><span class="tick-chg dn">-0.8%</span></span>
+      <span class="tick"><span class="tick-sym">INFY.NS</span><span class="tick-val">₹1842</span><span class="tick-chg up">+0.6%</span></span>
+      <span class="tick"><span class="tick-sym">MSFT</span><span class="tick-val">$415.20</span><span class="tick-chg up">+0.4%</span></span>
+      <span class="tick"><span class="tick-sym">NVDA</span><span class="tick-val">$875.30</span><span class="tick-chg up">+2.1%</span></span>
+      <span class="tick"><span class="tick-sym">RELIANCE.NS</span><span class="tick-val">₹2945</span><span class="tick-chg dn">-0.3%</span></span>
+      <span class="tick"><span class="tick-sym">AMZN</span><span class="tick-val">$185.60</span><span class="tick-chg up">+0.9%</span></span>
+      <span class="tick"><span class="tick-sym">GOOGL</span><span class="tick-val">$165.40</span><span class="tick-chg dn">-0.2%</span></span>
+      <!-- duplicate for seamless loop -->
+      <span class="tick"><span class="tick-sym">AAPL</span><span class="tick-val">$211.45</span><span class="tick-chg up">+1.2%</span></span>
+      <span class="tick"><span class="tick-sym">TSLA</span><span class="tick-val">$248.90</span><span class="tick-chg dn">-0.8%</span></span>
+      <span class="tick"><span class="tick-sym">INFY.NS</span><span class="tick-val">₹1842</span><span class="tick-chg up">+0.6%</span></span>
+      <span class="tick"><span class="tick-sym">MSFT</span><span class="tick-val">$415.20</span><span class="tick-chg up">+0.4%</span></span>
+      <span class="tick"><span class="tick-sym">NVDA</span><span class="tick-val">$875.30</span><span class="tick-chg up">+2.1%</span></span>
+      <span class="tick"><span class="tick-sym">RELIANCE.NS</span><span class="tick-val">₹2945</span><span class="tick-chg dn">-0.3%</span></span>
+      <span class="tick"><span class="tick-sym">AMZN</span><span class="tick-val">$185.60</span><span class="tick-chg up">+0.9%</span></span>
+      <span class="tick"><span class="tick-sym">GOOGL</span><span class="tick-val">$165.40</span><span class="tick-chg dn">-0.2%</span></span>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stat-strip">
+    <div class="stat-item"><div class="stat-val">12+</div><div class="stat-key">AI Indicators</div></div>
+    <div class="stat-item"><div class="stat-val">5Y</div><div class="stat-key">Data History</div></div>
+    <div class="stat-item"><div class="stat-val">99.9%</div><div class="stat-key">Uptime</div></div>
+  </div>
+</div>
+
+<!-- ══ RIGHT PANEL (FORM) ══ -->
+<div class="right">
+  <div class="form-box">
+
+    <!-- Step indicator -->
+    <div class="step-ind">
+      <div class="step-dot active"></div>
+      <div class="step-line"></div>
+      <div class="step-dot"></div>
+      <div class="step-line"></div>
+      <div class="step-dot"></div>
+      <span style="margin-left:4px;">STEP 1 OF 1</span>
+    </div>
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+        <div class="flash {{ category }}">
+          <i class="fa-solid {{ 'fa-circle-exclamation' if category == 'error' else 'fa-circle-check' }}"></i>
+          <span>{{ message }}</span>
+        </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <!-- Header -->
+    <div class="fhdr">
+      <span class="badge">NEW ACCOUNT</span>
+      <h2>Create your<br>free account</h2>
+      <p>Start analyzing stocks with AI in seconds</p>
+    </div>
+
+    <!-- Form -->
+    <form method="POST" action="/register" id="regForm" autocomplete="off">
+
+      <!-- Name row -->
+      <div class="row2">
+        <div class="field">
+          <label>First Name <span class="req">*</span></label>
+          <div class="inp-wrap">
+            <i class="icon fa-solid fa-user"></i>
+            <input type="text" name="first_name" placeholder="Harsha" required id="fname">
+          </div>
+        </div>
+        <div class="field">
+          <label>Last Name</label>
+          <div class="inp-wrap">
+            <i class="icon fa-solid fa-user"></i>
+            <input type="text" name="last_name" placeholder="Vardhan">
+          </div>
+        </div>
+      </div>
+
+      <!-- Username -->
+      <div class="field">
+        <label>Username <span class="req">*</span></label>
+        <div class="inp-wrap">
+          <i class="icon fa-solid fa-at"></i>
+          <input type="text" name="username" placeholder="harshavardhan" required id="uname"
+                 pattern="[a-zA-Z0-9_]{3,20}" title="3-20 chars, letters/numbers/underscores">
+        </div>
+        <div class="field-err" id="uname-err">Username must be 3–20 characters</div>
+      </div>
+
+      <!-- Email -->
+      <div class="field">
+        <label>Email Address <span class="req">*</span></label>
+        <div class="inp-wrap">
+          <i class="icon fa-solid fa-envelope"></i>
+          <input type="email" name="email" placeholder="harsha@example.com" required id="email">
+        </div>
+        <div class="field-err" id="email-err">Please enter a valid email</div>
+      </div>
+
+      <!-- Password -->
+      <div class="field">
+        <label>Password <span class="req">*</span></label>
+        <div class="inp-wrap">
+          <i class="icon fa-solid fa-lock"></i>
+          <input type="password" name="password" placeholder="Min. 8 characters" required id="pw" minlength="8">
+          <button type="button" class="toggle-pw" id="togglePw"><i class="fa-regular fa-eye"></i></button>
+        </div>
+        <div class="strength" id="strengthBox" style="display:none;">
+          <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
+          <div class="strength-label" id="strengthLabel">Too weak</div>
+        </div>
+      </div>
+
+      <!-- Confirm password -->
+      <div class="field">
+        <label>Confirm Password <span class="req">*</span></label>
+        <div class="inp-wrap">
+          <i class="icon fa-solid fa-shield-check"></i>
+          <input type="password" name="confirm_password" placeholder="Repeat password" required id="cpw">
+        </div>
+        <div class="field-err" id="cpw-err">Passwords do not match</div>
+      </div>
+
+      <!-- Role selector -->
+      <div class="field">
+        <label>Account Type <span class="req">*</span></label>
+        <div class="role-grid">
+          <label class="role-card selected" id="role-user" onclick="selectRole(this)">
+            <input type="radio" name="role" value="user" checked>
+            <div class="role-icon cy"><i class="fa-solid fa-user-chart"></i></div>
+            <div class="role-title">Investor</div>
+            <div class="role-desc">Personal stock tracking & AI predictions</div>
+            <div class="role-check"><i class="fa-solid fa-check"></i></div>
+          </label>
+          <label class="role-card" id="role-admin" onclick="selectRole(this)">
+            <input type="radio" name="role" value="admin">
+            <div class="role-icon pu"><i class="fa-solid fa-shield-halved"></i></div>
+            <div class="role-title">Admin</div>
+            <div class="role-desc">Full platform access & user management</div>
+            <div class="role-check"><i class="fa-solid fa-check"></i></div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Terms -->
+      <label class="terms-row">
+        <input type="checkbox" id="terms" required>
+        <div class="checkmark"><i class="fa-solid fa-check"></i></div>
+        <div class="terms-txt">
+          I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>. I understand this platform is for informational purposes only.
+        </div>
+      </label>
+
+      <button type="submit" class="btn-submit" id="submitBtn">
+        <i class="fa-solid fa-rocket"></i>
+        Create Account
+      </button>
+    </form>
+
+    <div class="divider">OR</div>
+    <div class="login-link">Already have an account? <a href="/login">Sign in here →</a></div>
+
+  </div>
+</div>
+
+<script>
+// ── Particles ──
+(function(){
+  const c=document.getElementById('particles');
+  if(!c)return;
+  const ctx=c.getContext('2d');
+  let pts=[];
+  function resize(){c.width=c.parentElement.offsetWidth;c.height=c.parentElement.offsetHeight;}
+  resize();window.addEventListener('resize',resize);
+  for(let i=0;i<40;i++) pts.push({
+    x:Math.random()*c.width,y:Math.random()*c.height,
+    vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,
+    r:Math.random()*1.5+.5,a:Math.random()*.5+.1
+  });
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    pts.forEach(p=>{
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0||p.x>c.width)p.vx*=-1;
+      if(p.y<0||p.y>c.height)p.vy*=-1;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(56,189,248,${p.a})`;ctx.fill();
+    });
+    // draw lines between close pts
+    for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){
+      const d=Math.hypot(pts[i].x-pts[j].x,pts[i].y-pts[j].y);
+      if(d<100){
+        ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);
+        ctx.strokeStyle=`rgba(56,189,248,${.08*(1-d/100)})`;ctx.lineWidth=.5;ctx.stroke();
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ── Role selector ──
+function selectRole(el){
+  document.querySelectorAll('.role-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  el.querySelector('input').checked=true;
+}
+
+// ── Password toggle ──
+document.getElementById('togglePw').addEventListener('click',function(){
+  const pw=document.getElementById('pw');
+  const icon=this.querySelector('i');
+  if(pw.type==='password'){pw.type='text';icon.className='fa-regular fa-eye-slash';}
+  else{pw.type='password';icon.className='fa-regular fa-eye';}
+});
+
+// ── Password strength ──
+document.getElementById('pw').addEventListener('input',function(){
+  const v=this.value;
+  const box=document.getElementById('strengthBox');
+  const fill=document.getElementById('strengthFill');
+  const label=document.getElementById('strengthLabel');
+  if(!v){box.style.display='none';return;}
+  box.style.display='block';
+  let score=0;
+  if(v.length>=8)score++;
+  if(/[A-Z]/.test(v)&&/[a-z]/.test(v))score++;
+  if(/[0-9]/.test(v))score++;
+  if(/[^A-Za-z0-9]/.test(v))score++;
+  if(score<=1){fill.className='strength-fill weak';label.textContent='Weak password';}
+  else if(score<=3){fill.className='strength-fill medium';label.textContent='Medium strength';}
+  else{fill.className='strength-fill strong';label.textContent='Strong password ✓';}
+});
+
+// ── Real-time validation ──
+document.getElementById('cpw').addEventListener('input',function(){
+  const err=document.getElementById('cpw-err');
+  if(this.value && this.value!==document.getElementById('pw').value){
+    err.classList.add('show');this.classList.add('has-error');
+  } else {err.classList.remove('show');this.classList.remove('has-error');}
+});
+
+document.getElementById('uname').addEventListener('input',function(){
+  const err=document.getElementById('uname-err');
+  if(this.value && !/^[a-zA-Z0-9_]{3,20}$/.test(this.value)){
+    err.classList.add('show');this.classList.add('has-error');
+  } else {err.classList.remove('show');this.classList.remove('has-error');}
+});
+
+// ── Form submit ──
+document.getElementById('regForm').addEventListener('submit',function(e){
+  const pw=document.getElementById('pw').value;
+  const cpw=document.getElementById('cpw').value;
+  if(pw!==cpw){e.preventDefault();document.getElementById('cpw-err').classList.add('show');return;}
+  const btn=document.getElementById('submitBtn');
+  btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Creating account…';
+});
+</script>
+</body>
+</html>

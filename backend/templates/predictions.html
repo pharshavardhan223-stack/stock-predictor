@@ -2,505 +2,997 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-
 <title>AI Prediction Report | Stock AI</title>
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 
 <style>
 
-/* ================= GLOBAL ================= */
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Inter',sans-serif; }
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Inter',sans-serif;
+body {
+  min-height:100vh;
+  background:radial-gradient(circle at top,#0f172a,#020617),linear-gradient(-45deg,#020617,#0f172a,#020617);
+  background-size:200% 200%; animation:bgFlow 15s ease infinite;
+  color:#e5e7eb; overflow-x:hidden;
 }
 
-body{
-min-height:100vh;
-background:
-linear-gradient(-45deg,#020617,#0f172a,#1e293b,#020617);
-background-size:400% 400%;
-animation:bgFlow 15s ease infinite;
-color:#e5e7eb;
+body::before {
+  content:""; position:fixed; inset:0;
+  background:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);
+  background-size:45px 45px; z-index:0; animation:gridMove 25s linear infinite; pointer-events:none;
 }
 
-@keyframes bgFlow{
-0%{background-position:0% 50%}
-50%{background-position:100% 50%}
-100%{background-position:0% 50%}
+@keyframes bgFlow   { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+@keyframes gridMove { to{transform:translate(45px,45px)} }
+@keyframes fadeUp   { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+@keyframes shine    { 0%{transform:translateX(-100%)} 100%{transform:translateX(200%)} }
+@keyframes fillBar  { to{width:var(--w)} }
+@keyframes pulse    { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(1.5)} }
+@keyframes ringRot  { to{transform:rotate(360deg)} }
+
+#bgCanvas { position:fixed; inset:0; z-index:0; pointer-events:none; }
+
+/* ── TOPBAR ── */
+.topbar {
+  position:sticky; top:0; z-index:100;
+  background:rgba(2,6,23,.93); backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(56,189,248,.1);
+  padding:0 28px; display:flex; align-items:center;
+  justify-content:space-between; height:62px; gap:12px;
 }
-
-/* ================= CONTAINER ================= */
-
-.container{
-width:90%;
-max-width:1200px;
-margin:50px auto;
-animation:fadeUp 1.2s ease;
+.topbar-brand { display:flex; align-items:center; gap:10px; text-decoration:none; flex-shrink:0; }
+.topbar-brand i    { color:#38bdf8; font-size:20px; }
+.topbar-brand span { font-size:18px; font-weight:800; background:linear-gradient(90deg,#38bdf8,#22d3ee); -webkit-background-clip:text; color:transparent; }
+.topbar-nav { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+.nav-btn {
+  display:flex; align-items:center; gap:6px; padding:7px 14px; border-radius:9px;
+  border:1px solid rgba(255,255,255,.07); background:rgba(255,255,255,.04);
+  color:#94a3b8; font-size:13px; font-weight:600; text-decoration:none; transition:.25s; white-space:nowrap;
 }
-
-@keyframes fadeUp{
-from{opacity:0;transform:translateY(40px)}
-to{opacity:1;transform:translateY(0)}
+.nav-btn:hover  { background:rgba(56,189,248,.1); border-color:rgba(56,189,248,.3); color:#38bdf8; }
+.nav-btn.active { background:rgba(56,189,248,.13); border-color:rgba(56,189,248,.4); color:#38bdf8; }
+.nav-btn.danger { color:#fb7185; border-color:rgba(251,113,133,.15); }
+.nav-btn.danger:hover { background:rgba(251,113,133,.1); border-color:rgba(251,113,133,.3); }
+.user-badge {
+  display:flex; align-items:center; gap:8px; padding:6px 14px; border-radius:50px;
+  background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07); font-size:13px; color:#94a3b8; flex-shrink:0;
 }
+.user-badge .udot { width:7px; height:7px; background:#22c55e; border-radius:50%; animation:pulse 2s infinite; }
 
-/* ================= HEADER ================= */
+/* ── CONTAINER ── */
+.container { max-width:1140px; margin:0 auto; padding:30px 22px 70px; position:relative; z-index:1; }
 
-.header{
-text-align:center;
-margin-bottom:35px;
+/* ── HERO ── */
+.hero {
+  background:rgba(2,6,23,.9); border-radius:22px; padding:30px 36px; margin-bottom:28px;
+  position:relative; overflow:hidden; border:1px solid rgba(56,189,248,.15);
+  box-shadow:0 30px 80px rgba(0,0,0,.7); backdrop-filter:blur(20px); animation:fadeUp .6s ease;
 }
-
-.header h2{
-font-size:32px;
-font-weight:600;
-background:linear-gradient(90deg,#38bdf8,#22d3ee,#7dd3fc);
--webkit-background-clip:text;
-color:transparent;
+.hero::before {
+  content:""; position:absolute; width:380px; height:380px;
+  background:radial-gradient(circle,rgba(56,189,248,.1) 0%,transparent 70%);
+  top:-120px; right:-120px; border-radius:50%; animation:ringRot 10s linear infinite;
 }
+.hero-content { position:relative; z-index:1; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; }
+.hero h2 { font-size:1.9rem; font-weight:800; background:linear-gradient(90deg,#38bdf8,#22d3ee,#7dd3fc); -webkit-background-clip:text; color:transparent; margin-bottom:6px; }
+.hero p  { color:#64748b; font-size:.88rem; }
+.hero-stats { display:flex; gap:14px; flex-wrap:wrap; }
+.hero-stat { text-align:center; background:rgba(56,189,248,.06); border:1px solid rgba(56,189,248,.18); border-radius:14px; padding:12px 20px; min-width:82px; transition:.3s; }
+.hero-stat:hover { background:rgba(56,189,248,.12); transform:translateY(-3px); }
+.hs-val { font-size:1.5rem; font-weight:800; color:#38bdf8; font-family:monospace; }
+.hs-lbl { font-size:.66rem; color:#64748b; text-transform:uppercase; letter-spacing:1.5px; margin-top:2px; }
 
-/* ================= CARD ================= */
+/* ── SECTION LABEL ── */
+.section-label { display:flex; align-items:center; gap:12px; margin:28px 0 18px; }
+.section-label span { font-size:.7rem; color:#475569; text-transform:uppercase; letter-spacing:3px; white-space:nowrap; font-family:monospace; }
+.section-label::before,.section-label::after { content:""; flex:1; height:1px; background:rgba(255,255,255,.06); }
 
-.card{
-background:rgba(255,255,255,0.05);
-backdrop-filter:blur(20px);
-border-radius:22px;
-padding:30px;
-border:1px solid rgba(255,255,255,.1);
-box-shadow:0 30px 80px rgba(0,0,0,.7);
-margin-bottom:35px;
-position:relative;
-overflow:hidden;
-transition:.4s;
+/* ── PREDICTION CARD ── */
+.pred-card {
+  background:rgba(2,6,23,.88); border:1px solid rgba(255,255,255,.08);
+  border-radius:22px; padding:30px; margin-bottom:30px;
+  position:relative; overflow:hidden; backdrop-filter:blur(20px);
+  box-shadow:0 30px 80px rgba(0,0,0,.6); animation:fadeUp .7s ease both; transition:.4s;
 }
-
-.card:hover{
-transform:translateY(-6px);
-box-shadow:0 40px 90px rgba(56,189,248,.3);
+.pred-card:hover { transform:translateY(-5px); box-shadow:0 40px 90px rgba(56,189,248,.2); border-color:rgba(56,189,248,.2); }
+.pred-card::after {
+  content:""; position:absolute; top:0; left:-100%; width:60%; height:100%;
+  background:linear-gradient(120deg,transparent,rgba(255,255,255,.04),transparent);
+  animation:shine 7s infinite; pointer-events:none;
 }
-
-/* Shine */
-
-.card::after{
-content:"";
-position:absolute;
-inset:0;
-background:linear-gradient(
-120deg,
-transparent,
-rgba(255,255,255,.07),
-transparent
-);
-animation:shine 6s infinite;
-pointer-events:none;
+.pred-card-header {
+  display:flex; justify-content:space-between; align-items:center;
+  flex-wrap:wrap; gap:14px; margin-bottom:22px;
+  padding-bottom:18px; border-bottom:1px solid rgba(255,255,255,.06);
 }
+.pred-title { font-size:1.4rem; font-weight:800; color:#38bdf8; font-family:monospace; letter-spacing:1px; }
 
-@keyframes shine{
-to{transform:translateX(100%)}
+/* ── TAGS ── */
+.tag { padding:6px 18px; border-radius:20px; font-size:13px; font-weight:800; letter-spacing:1px; font-family:monospace; }
+.tag.buy  { background:rgba(34,197,94,.15);  color:#4ade80; border:1px solid rgba(34,197,94,.3);  box-shadow:0 0 14px rgba(34,197,94,.3); }
+.tag.sell { background:rgba(239,68,68,.15);  color:#f87171; border:1px solid rgba(239,68,68,.3);  box-shadow:0 0 14px rgba(239,68,68,.3); }
+.tag.hold { background:rgba(250,204,21,.15); color:#fde047; border:1px solid rgba(250,204,21,.3); box-shadow:0 0 14px rgba(250,204,21,.3); }
+
+/* ── INFO GRID ── */
+.info-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:14px; margin:18px 0; }
+.info-box { background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.06); border-radius:12px; padding:14px 16px; transition:.3s; }
+.info-box:hover { background:rgba(56,189,248,.07); border-color:rgba(56,189,248,.2); }
+.ib-label { font-size:.7rem; color:#64748b; text-transform:uppercase; letter-spacing:1px; margin-bottom:5px; }
+.ib-value { font-size:1rem; font-weight:700; color:#f1f5f9; font-family:monospace; }
+
+/* ── CONFIDENCE ── */
+.confidence-section { margin:20px 0; }
+.conf-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+.conf-label { font-size:.82rem; color:#94a3b8; font-weight:600; }
+.conf-value { font-size:1.1rem; font-weight:800; color:#38bdf8; font-family:monospace; }
+.bar-track { width:100%; height:10px; background:rgba(255,255,255,.08); border-radius:10px; overflow:hidden; }
+.bar-fill  { height:100%; width:0; background:linear-gradient(90deg,#22d3ee,#38bdf8,#7dd3fc); border-radius:10px; animation:fillBar 2s forwards; box-shadow:0 0 10px rgba(56,189,248,.4); }
+.risk-badge { display:inline-flex; align-items:center; gap:6px; padding:5px 14px; border-radius:20px; font-size:.75rem; font-weight:700; font-family:monospace; margin-top:10px; }
+.risk-badge.low    { background:rgba(34,197,94,.1);  color:#22c55e; border:1px solid rgba(34,197,94,.25); }
+.risk-badge.medium { background:rgba(251,191,36,.1); color:#fbbf24; border:1px solid rgba(251,191,36,.25); }
+.risk-badge.high   { background:rgba(239,68,68,.1);  color:#f87171; border:1px solid rgba(239,68,68,.25); }
+
+/* ══════════════════════════
+   RSI GAUGE
+══════════════════════════ */
+.rsi-section {
+  background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.07);
+  border-radius:18px; padding:24px; margin:22px 0;
 }
+.rsi-section h4 { color:#7dd3fc; font-size:.82rem; font-weight:700; text-transform:uppercase; letter-spacing:2px; margin-bottom:20px; font-family:monospace; }
+.rsi-gauge-wrap { display:flex; align-items:center; gap:30px; flex-wrap:wrap; }
 
-/* ================= TITLE ================= */
+.gauge-svg-wrap { position:relative; flex-shrink:0; }
 
-.card h3{
-color:#7dd3fc;
-margin-bottom:15px;
-}
+.rsi-info { flex:1; min-width:160px; }
+.rsi-value { font-size:3rem; font-weight:800; color:#38bdf8; font-family:monospace; line-height:1; }
+.rsi-label { font-size:.78rem; color:#64748b; text-transform:uppercase; letter-spacing:1.5px; margin-top:4px; }
+.rsi-status { font-size:.88rem; font-weight:700; margin-top:10px; padding:5px 14px; border-radius:20px; display:inline-block; font-family:monospace; }
+.rsi-status.oversold   { color:#f87171; background:rgba(239,68,68,.1);  border:1px solid rgba(239,68,68,.2); }
+.rsi-status.neutral    { color:#fbbf24; background:rgba(251,191,36,.1); border:1px solid rgba(251,191,36,.2); }
+.rsi-status.overbought { color:#4ade80; background:rgba(34,197,94,.1);  border:1px solid rgba(34,197,94,.2); }
+.rsi-zones { display:flex; gap:12px; margin-top:14px; flex-wrap:wrap; }
+.rsi-zone  { font-size:.72rem; font-family:monospace; display:flex; align-items:center; gap:5px; color:#64748b; }
+.rsi-zone .zdot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+.gauge-labels { display:flex; justify-content:space-between; padding:0 8px; font-size:.6rem; color:#475569; font-family:monospace; margin-top:2px; }
 
-/* ================= TAGS ================= */
+/* ── ANALYTICS ── */
+.analytics-section { margin:22px 0; }
+.analytics-section h4 { color:#7dd3fc; font-size:.82rem; font-weight:700; text-transform:uppercase; letter-spacing:2px; margin-bottom:16px; font-family:monospace; }
+.models-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:14px; margin-top:14px; }
+.model-card { background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07); border-radius:14px; padding:16px; transition:.3s; position:relative; overflow:hidden; }
+.model-card:hover { background:rgba(56,189,248,.08); border-color:rgba(56,189,248,.25); transform:translateY(-3px); }
+.model-card.best { border-color:rgba(56,189,248,.4); background:rgba(56,189,248,.07); }
+.model-card.best::before { content:"★ BEST"; position:absolute; top:8px; right:10px; font-size:.6rem; color:#38bdf8; font-weight:700; font-family:monospace; }
+.model-card.lstm-card { border-color:rgba(139,92,246,.35); }
+.model-card.lstm-card:hover { background:rgba(139,92,246,.1); border-color:rgba(139,92,246,.5); }
+.model-r2-bar { height:4px; background:rgba(255,255,255,.08); border-radius:4px; margin:8px 0 12px; overflow:hidden; }
+.model-r2-fill { height:100%; background:linear-gradient(90deg,#38bdf8,#818cf8); border-radius:4px; transition:width 1.2s ease; }
+.auto-badge { font-size:.55rem; background:rgba(56,189,248,.2); color:#38bdf8; border:1px solid rgba(56,189,248,.3); border-radius:4px; padding:1px 5px; margin-left:6px; vertical-align:middle; font-family:monospace; }
+.stat-great { color:#4ade80 !important; font-weight:700; }
+.stat-good  { color:#fbbf24 !important; }
+.stat-low   { color:#f87171 !important; }
+.model-r2-bar { height:4px; background:rgba(255,255,255,.08); border-radius:4px; margin:8px 0 12px; overflow:hidden; }
+.model-r2-fill { height:100%; background:linear-gradient(90deg,#38bdf8,#818cf8); border-radius:4px; transition:width 1.2s ease; }
+.auto-badge { font-size:.55rem; background:rgba(56,189,248,.2); color:#38bdf8; border:1px solid rgba(56,189,248,.3); border-radius:4px; padding:1px 5px; margin-left:6px; vertical-align:middle; font-family:monospace; }
+.stat-great { color:#4ade80 !important; font-weight:700; }
+.stat-good  { color:#fbbf24 !important; }
+.stat-low   { color:#f87171 !important; }
+.model-name { font-size:.85rem; font-weight:700; color:#f1f5f9; margin-bottom:10px; font-family:monospace; }
+.model-stat { font-size:.78rem; color:#64748b; margin-bottom:4px; display:flex; justify-content:space-between; }
+.model-stat span { color:#94a3b8; font-family:monospace; }
 
-.tag{
-padding:4px 12px;
-border-radius:15px;
-font-size:12px;
-font-weight:600;
-}
+/* ── FORECAST TABLE ── */
+.forecast-section { margin:22px 0; }
+.forecast-section h4 { color:#7dd3fc; font-size:.82rem; font-weight:700; text-transform:uppercase; letter-spacing:2px; margin-bottom:16px; font-family:monospace; }
+table { width:100%; border-collapse:collapse; font-size:.85rem; }
+thead th { padding:12px 14px; text-align:center; color:#64748b; font-size:.7rem; text-transform:uppercase; letter-spacing:1.5px; font-family:monospace; border-bottom:1px solid rgba(255,255,255,.07); }
+tbody td { padding:11px 14px; text-align:center; border-bottom:1px solid rgba(255,255,255,.04); color:#e2e8f0; font-family:monospace; transition:.2s; }
+tbody tr:hover td { background:rgba(56,189,248,.06); color:#38bdf8; }
+tbody tr:last-child td { border-bottom:none; }
+.trend-up   { color:#4ade80; font-weight:700; }
+.trend-down { color:#fb7185; font-weight:700; }
 
-/* BUY SELL HOLD */
+/* ── ACTIONS ── */
+.actions { display:flex; justify-content:center; gap:16px; flex-wrap:wrap; margin:36px 0 20px; }
+.btn { padding:12px 28px; border-radius:22px; border:none; font-weight:700; cursor:pointer; text-decoration:none; transition:.3s; display:inline-flex; align-items:center; gap:7px; font-size:14px; font-family:'Inter',sans-serif; }
+.btn-blue  { background:linear-gradient(45deg,#0288d1,#0097a7); color:#fff; box-shadow:0 4px 18px rgba(2,136,209,.35); }
+.btn-green { background:linear-gradient(45deg,#22c55e,#4ade80); color:#020617; box-shadow:0 4px 18px rgba(34,197,94,.35); }
+.btn-red   { background:linear-gradient(45deg,#ef4444,#f87171); color:#fff; box-shadow:0 4px 18px rgba(239,68,68,.35); }
+.btn:hover { transform:translateY(-3px) scale(1.04); filter:brightness(1.1); }
 
-.buy{
-background:rgba(34,197,94,.2);
-color:#4ade80;
-box-shadow:0 0 10px #22c55e;
-}
+/* ── NO RESULTS ── */
+.no-results { text-align:center; padding:80px 20px; border:1px dashed rgba(56,189,248,.12); border-radius:18px; background:rgba(2,6,23,.5); }
+.no-results .icon { font-size:3rem; margin-bottom:16px; }
+.no-results p { color:#475569; font-size:.95rem; line-height:1.7; }
+.no-results a { color:#38bdf8; font-weight:700; text-decoration:none; }
 
-.sell{
-background:rgba(239,68,68,.2);
-color:#f87171;
-box-shadow:0 0 10px #ef4444;
-}
-
-.hold{
-background:rgba(250,204,21,.2);
-color:#fde047;
-box-shadow:0 0 10px #facc15;
-}
-
-/* ================= INFO ================= */
-
-.info-grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-gap:18px;
-margin:18px 0;
-}
-
-.info{
-background:rgba(255,255,255,.04);
-border-radius:12px;
-padding:12px 15px;
-font-size:14px;
-}
-
-/* ================= CONFIDENCE ================= */
-
-.confidence{
-margin:12px 0;
-}
-
-.bar{
-width:100%;
-height:10px;
-background:rgba(255,255,255,.15);
-border-radius:10px;
-overflow:hidden;
-}
-
-.fill{
-height:100%;
-width:0;
-background:linear-gradient(90deg,#22d3ee,#38bdf8);
-border-radius:10px;
-animation:fillBar 2s forwards;
-}
-
-@keyframes fillBar{
-to{width:var(--w);}
-}
-
-/* ================= ANALYTICS ================= */
-
-.analytics{
-margin-top:15px;
-}
-
-.models{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-gap:15px;
-margin-top:10px;
-}
-
-.model{
-background:rgba(255,255,255,.04);
-border-radius:12px;
-padding:12px;
-font-size:13px;
-transition:.3s;
-}
-
-.model:hover{
-background:rgba(56,189,248,.15);
-}
-
-/* ================= TABLE ================= */
-
-table{
-width:100%;
-border-collapse:collapse;
-margin-top:15px;
-font-size:13px;
-}
-
-th,td{
-padding:10px;
-text-align:center;
-border-bottom:1px solid rgba(255,255,255,.08);
-}
-
-th{
-color:#7dd3fc;
-}
-
-tr:hover{
-background:rgba(56,189,248,.1);
-}
-
-/* ================= ACTIONS ================= */
-
-.actions{
-text-align:center;
-margin:35px 0;
-display:flex;
-justify-content:center;
-gap:25px;
-flex-wrap:wrap;
-}
-
-/* Buttons */
-
-.btn{
-padding:12px 28px;
-border-radius:22px;
-border:none;
-font-weight:600;
-cursor:pointer;
-text-decoration:none;
-transition:.3s;
-display:inline-flex;
-align-items:center;
-gap:6px;
-font-size:14px;
-}
-
-.btn-blue{
-background:linear-gradient(45deg,#38bdf8,#22d3ee);
-color:#020617;
-}
-
-.btn-red{
-background:linear-gradient(45deg,#ef4444,#f87171);
-color:#020617;
-}
-
-.btn-green{
-background:linear-gradient(45deg,#22c55e,#4ade80);
-color:#020617;
-}
-
-.btn:hover{
-transform:translateY(-3px) scale(1.05);
-box-shadow:0 0 25px rgba(56,189,248,.7);
-}
-
-/* ================= FOOTER ================= */
-
-.footer{
-text-align:center;
-margin-top:20px;
-font-size:14px;
-}
-
-.footer a{
-color:#7dd3fc;
-text-decoration:none;
-margin:0 10px;
-transition:.3s;
-}
-
-.footer a:hover{
-color:#22d3ee;
-text-shadow:0 0 10px #22d3ee;
+@media(max-width:768px){
+  .topbar-nav .nav-btn span { display:none; }
+  .rsi-gauge-wrap { flex-direction:column; align-items:center; }
+  .hero h2 { font-size:1.4rem; }
 }
 
 </style>
 </head>
-
-
 <body>
 
+<canvas id="bgCanvas"></canvas>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <a href="/dashboard" class="topbar-brand">
+    <i class="fa-solid fa-chart-line"></i>
+    <span>Stock AI</span>
+  </a>
+  <div class="topbar-nav">
+    <a href="/dashboard"      class="nav-btn"><i class="fa-solid fa-house"></i><span>Dashboard</span></a>
+    <a href="/stock"          class="nav-btn active"><i class="fa-solid fa-magnifying-glass-chart"></i><span>Predict</span></a>
+    <a href="/watchlist"      class="nav-btn"><i class="fa-solid fa-star"></i><span>Watchlist</span></a>
+    <a href="/news"           class="nav-btn"><i class="fa-solid fa-newspaper"></i><span>News</span></a>
+    <a href="/history"        class="nav-btn"><i class="fa-solid fa-clock-rotate-left"></i><span>History</span></a>
+    <a href="/stock-analysis" class="nav-btn"><i class="fa-solid fa-rocket"></i><span>Advanced AI</span></a>
+    <a href="/profile"        class="nav-btn"><i class="fa-solid fa-user"></i><span>Profile</span></a>
+    <a href="/logout"         class="nav-btn danger"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a>
+  </div>
+  <div class="user-badge">
+    <span class="udot"></span>
+    <span>{{ session.get('user','User') | title }}</span>
+  </div>
+</div>
+
+<!-- MAIN -->
 <div class="container">
 
-<!-- HEADER -->
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-content">
+      <div>
+        <h2><i class="fa-solid fa-brain" style="margin-right:10px;"></i>AI Prediction Report</h2>
+        <p>Machine learning forecast &nbsp;·&nbsp; RSI gauge analysis &nbsp;·&nbsp; Model comparison</p>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="hs-val">{{ results|length }}</div><div class="hs-lbl">Stocks</div></div>
+        {% set buy_count  = results.values()|selectattr('action','equalto','BUY')|list|length %}
+        {% set sell_count = results.values()|selectattr('action','equalto','SELL')|list|length %}
+        {% set hold_count = results.values()|selectattr('action','equalto','HOLD')|list|length %}
+        <div class="hero-stat"><div class="hs-val" style="color:#4ade80">{{ buy_count }}</div><div class="hs-lbl">BUY</div></div>
+        <div class="hero-stat"><div class="hs-val" style="color:#f87171">{{ sell_count }}</div><div class="hs-lbl">SELL</div></div>
+        <div class="hero-stat"><div class="hs-val" style="color:#fde047">{{ hold_count }}</div><div class="hs-lbl">HOLD</div></div>
+      </div>
+    </div>
+  </div>
 
-<div class="header">
-<h2>AI Prediction & Analytics Report</h2>
+  <!-- NO RESULTS -->
+  {% if not results %}
+  <div class="no-results">
+    <div class="icon">📊</div>
+    <p>No predictions yet.<br>
+      <a href="/upload">Upload a CSV</a> or
+      <a href="/stock">fetch live stock data</a> to get started.
+    </p>
+  </div>
+
+  {% else %}
+
+  {% for col, result in results.items() %}
+
+  <div class="section-label">
+    <span><i class="fas fa-chart-line"></i> &nbsp; {{ col }}</span>
+  </div>
+
+  <div class="pred-card">
+
+    <!-- HEADER -->
+    <div class="pred-card-header">
+      <div class="pred-title">
+        <i class="fa-solid fa-chart-line" style="margin-right:8px;font-size:1.1rem;"></i>{{ col }}
+      </div>
+      <span class="tag {% if result.action=='BUY' %}buy{% elif result.action=='SELL' %}sell{% else %}hold{% endif %}">
+        {% if result.action=='BUY' %}▲{% elif result.action=='SELL' %}▼{% else %}◆{% endif %}
+        {{ result.action }}
+      </span>
+    </div>
+
+    <!-- INFO GRID -->
+    <div class="info-grid">
+      <div class="info-box"><div class="ib-label">Last Value</div><div class="ib-value">{{ result.last }}</div></div>
+      <div class="info-box"><div class="ib-label">Predicted Avg</div><div class="ib-value">{{ result.avg }}</div></div>
+      <div class="info-box"><div class="ib-label">Reason</div><div class="ib-value" style="font-size:.85rem;">{{ result.reason }}</div></div>
+      <div class="info-box"><div class="ib-label">Risk Level</div><div class="ib-value">{{ result.risk }}</div></div>
+    </div>
+
+    <!-- CONFIDENCE -->
+    <div class="confidence-section">
+      <div class="conf-header">
+        <span class="conf-label"><i class="fas fa-brain" style="margin-right:6px;"></i>AI Confidence</span>
+        <span class="conf-value">{{ result.confidence }}%</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" style="--w:{{ result.confidence }}%;"></div></div>
+      <span class="risk-badge {% if result.risk=='Low Risk' %}low{% elif result.risk=='Medium Risk' %}medium{% else %}high{% endif %}">
+        <i class="fas fa-shield-halved"></i> {{ result.risk }}
+      </span>
+    </div>
+
+    <!-- RSI GAUGE -->
+    {% if col in analytics and analytics[col] %}
+    {% set rsi_raw = analytics[col].get('rsi', 50) %}
+    {% set rsi_val = rsi_raw | float if rsi_raw else 50.0 %}
+    {% set needle_deg = (rsi_val / 100.0 * 180.0) - 180.0 %}
+
+    <div class="rsi-section">
+      <h4><i class="fas fa-gauge-high" style="margin-right:8px;"></i>RSI Gauge — Relative Strength Index</h4>
+      <div class="rsi-gauge-wrap">
+
+        <!-- SVG GAUGE -->
+        <div class="gauge-svg-wrap">
+          <svg width="200" height="110" viewBox="0 0 200 110" xmlns="http://www.w3.org/2000/svg">
+            <!-- BG arc -->
+            <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="14" stroke-linecap="round"/>
+            <!-- Oversold zone red (0-30) -->
+            <path d="M 20 100 A 80 80 0 0 1 60.4 37.2" fill="none" stroke="#ef4444" stroke-width="14" stroke-linecap="round" opacity=".65"/>
+            <!-- Neutral zone yellow (30-70) -->
+            <path d="M 60.4 37.2 A 80 80 0 0 1 139.6 37.2" fill="none" stroke="#fbbf24" stroke-width="14" stroke-linecap="round" opacity=".65"/>
+            <!-- Overbought zone green (70-100) -->
+            <path d="M 139.6 37.2 A 80 80 0 0 1 180 100" fill="none" stroke="#22c55e" stroke-width="14" stroke-linecap="round" opacity=".65"/>
+            <!-- Needle -->
+            <g style="transform:rotate({{ needle_deg }}deg);transform-origin:100px 100px;transition:transform 1.5s cubic-bezier(.34,1.56,.64,1);">
+              <line x1="100" y1="100" x2="100" y2="30" stroke="#38bdf8" stroke-width="3" stroke-linecap="round" style="filter:drop-shadow(0 0 6px #38bdf8)"/>
+              <circle cx="100" cy="100" r="6" fill="#38bdf8" style="filter:drop-shadow(0 0 8px #38bdf8)"/>
+            </g>
+            <!-- Center label -->
+            <text x="100" y="94" text-anchor="middle" fill="#38bdf8" font-size="12" font-weight="bold" font-family="monospace">{{ "%.1f"|format(rsi_val) }}</text>
+          </svg>
+          <div class="gauge-labels"><span>0</span><span>50</span><span>100</span></div>
+        </div>
+
+        <!-- RSI INFO -->
+        <div class="rsi-info">
+          <div class="rsi-value">{{ "%.1f"|format(rsi_val) }}</div>
+          <div class="rsi-label">RSI Value</div>
+          {% if rsi_val < 30 %}
+            <div class="rsi-status oversold">⚠️ Oversold — Potential BUY zone</div>
+          {% elif rsi_val > 70 %}
+            <div class="rsi-status overbought">🔥 Overbought — Potential SELL zone</div>
+          {% else %}
+            <div class="rsi-status neutral">⚖️ Neutral Zone</div>
+          {% endif %}
+          <div class="rsi-zones">
+            <div class="rsi-zone"><span class="zdot" style="background:#ef4444;"></span> Oversold &lt; 30</div>
+            <div class="rsi-zone"><span class="zdot" style="background:#fbbf24;"></span> Neutral 30–70</div>
+            <div class="rsi-zone"><span class="zdot" style="background:#22c55e;"></span> Overbought &gt; 70</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- MODEL ANALYTICS -->
+    {% if col in analytics %}
+    <div class="analytics-section">
+      <h4><i class="fas fa-microchip" style="margin-right:8px;"></i>Model Analytics</h4>
+      <div class="info-grid">
+        <div class="info-box">
+          <div class="ib-label">Trend</div>
+          <div class="ib-value {% if analytics[col]['trend_percent']|float > 0 %}trend-up{% else %}trend-down{% endif %}">
+            {% if analytics[col]['trend_percent']|float > 0 %}▲{% else %}▼{% endif %} {{ analytics[col]['trend_percent'] }}%
+          </div>
+        </div>
+        <div class="info-box"><div class="ib-label">Best Model</div><div class="ib-value">{{ analytics[col]['best_model'] }}</div></div>
+        <div class="info-box"><div class="ib-label">R² Score</div><div class="ib-value">{{ analytics[col]['r2'] }}</div></div>
+        <div class="info-box"><div class="ib-label">MAE</div><div class="ib-value">{{ analytics[col]['mae'] }}</div></div>
+        <div class="info-box"><div class="ib-label">RMSE</div><div class="ib-value">{{ analytics[col]['rmse'] }}</div></div>
+        <div class="info-box"><div class="ib-label">MA 7</div><div class="ib-value">{{ analytics[col]['ma7'] }}</div></div>
+        <div class="info-box"><div class="ib-label">MA 14</div><div class="ib-value">{{ analytics[col]['ma14'] }}</div></div>
+        <div class="info-box"><div class="ib-label">EMA 12</div><div class="ib-value">{{ analytics[col].get('ema12','N/A') }}</div></div>
+        <div class="info-box"><div class="ib-label">EMA 26</div><div class="ib-value">{{ analytics[col].get('ema26','N/A') }}</div></div>
+        <div class="info-box">
+          <div class="ib-label">MACD</div>
+          <div class="ib-value {% if analytics[col].get('macd',0)|float > 0 %}trend-up{% else %}trend-down{% endif %}">
+            {{ analytics[col].get('macd','N/A') }}
+          </div>
+        </div>
+        <div class="info-box">
+          <div class="ib-label">Bollinger Upper</div>
+          <div class="ib-value">{{ analytics[col].get('bb_upper','N/A') }}</div>
+        </div>
+        <div class="info-box">
+          <div class="ib-label">Bollinger Lower</div>
+          <div class="ib-value">{{ analytics[col].get('bb_lower','N/A') }}</div>
+        </div>
+        {% if analytics[col].get('lstm_available') %}
+        <div class="info-box" style="border-color:rgba(139,92,246,.4);background:rgba(139,92,246,.08);">
+          <div class="ib-label" style="color:#a78bfa;">🧠 LSTM</div>
+          <div class="ib-value" style="color:#c4b5fd;font-size:.75rem;">Deep Learning Active</div>
+        </div>
+        {% endif %}
+      </div>
+
+      <h4 style="margin-top:20px;"><i class="fas fa-scale-balanced" style="margin-right:8px;"></i>Model Comparison</h4>
+      <div class="models-grid">
+        {% for name, mdata in analytics[col]['models'].items() %}
+        <div class="model-card {% if name == analytics[col]['best_model'] %}best{% endif %} {% if name == 'LSTM' %}lstm-card{% endif %}">
+          <div class="model-name">
+            {% if name == 'LSTM' %}<span style="color:#a78bfa;">🧠 </span>{% endif %}
+            {{ name }}
+            {% if name == analytics[col]['best_model'] %}<span class="auto-badge">AUTO-SELECTED</span>{% endif %}
+          </div>
+          <div class="model-r2-bar">
+            <div class="model-r2-fill" style="width:{{ [([mdata['r2']|float,0]|max)*100, 100]|min }}%"></div>
+          </div>
+          <div class="model-stat">R² Score <span class="{% if mdata['r2']|float > 0.95 %}stat-great{% elif mdata['r2']|float > 0.8 %}stat-good{% else %}stat-low{% endif %}">{{ mdata['r2'] }}</span></div>
+          <div class="model-stat">MAE      <span>{{ mdata['mae'] }}</span></div>
+          <div class="model-stat">RMSE     <span>{{ mdata['rmse'] }}</span></div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- 7-DAY FORECAST -->
+    <div class="forecast-section">
+      <h4><i class="fas fa-calendar-days" style="margin-right:8px;"></i>7-Day Forecast</h4>
+
+      <!-- Forecast Mini Chart -->
+      <div style="position:relative;height:160px;margin-bottom:16px;">
+        <canvas id="fc_{{ col }}" style="width:100%;height:160px;"></canvas>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Day</th>
+            <th>{{ analytics[col]['best_model'] }} Forecast</th>
+            {% if analytics[col].get('lstm_available') and lstm_preds and col in lstm_preds %}<th style="color:#a78bfa;">🧠 LSTM Forecast</th>{% endif %}
+            <th>Trend</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for val in predictions[col] %}
+          <tr>
+            <td>Day {{ loop.index }}</td>
+            <td>{{ "%.2f"|format(val) }}</td>
+            {% if analytics[col].get('lstm_available') and lstm_preds and col in lstm_preds %}
+            <td style="color:#c4b5fd;">{{ "%.2f"|format(lstm_preds[col][loop.index0]) if loop.index0 < lstm_preds[col]|length else "—" }}</td>
+            {% endif %}
+            <td>
+              {% if loop.index > 1 %}
+                {% set prev = predictions[col][loop.index0 - 1] %}
+                {% if val > prev %}
+                  <span class="trend-up">▲ +{{ "%.2f"|format(val - prev) }}</span>
+                {% elif val < prev %}
+                  <span class="trend-down">▼ -{{ "%.2f"|format(prev - val) }}</span>
+                {% else %}
+                  <span style="color:#64748b;">— Flat</span>
+                {% endif %}
+              {% else %}
+                <span style="color:#64748b;">— Base</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  </div><!-- /pred-card -->
+  {% endfor %}
+  {% endif %}
+
+  <!-- ACTIONS -->
+  <div class="actions">
+    <a href="/download_report" class="btn btn-blue"><i class="fa-solid fa-file-pdf"></i> Download PDF</a>
+    <a href="/upload"          class="btn btn-green"><i class="fa-solid fa-upload"></i> New Upload</a>
+    <a href="/dashboard"       class="btn" style="background:rgba(255,255,255,.08);color:#e2e8f0;border:1px solid rgba(255,255,255,.1);"><i class="fa-solid fa-house"></i> Dashboard</a>
+    <a href="/logout"          class="btn btn-red"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+  </div>
+
 </div>
 
+<script>
+/* PARTICLES */
+const canvas=document.getElementById("bgCanvas"),ctx=canvas.getContext("2d");
+function resize(){canvas.width=innerWidth;canvas.height=innerHeight;}
+resize();addEventListener("resize",resize);
+let dots=[];
+for(let i=0;i<90;i++) dots.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,dx:(Math.random()-.5)*.6,dy:(Math.random()-.5)*.6});
+function bgAnimate(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  dots.forEach(d=>{
+    d.x+=d.dx;d.y+=d.dy;
+    if(d.x<0||d.x>canvas.width)d.dx*=-1;
+    if(d.y<0||d.y>canvas.height)d.dy*=-1;
+    ctx.fillStyle="rgba(56,189,248,.4)";ctx.beginPath();ctx.arc(d.x,d.y,2,0,Math.PI*2);ctx.fill();
+    dots.forEach(o=>{
+      const dx=d.x-o.x,dy=d.y-o.y,dist=Math.sqrt(dx*dx+dy*dy);
+      if(dist<120){ctx.strokeStyle=`rgba(56,189,248,${1-dist/120})`;ctx.lineWidth=.4;ctx.beginPath();ctx.moveTo(d.x,d.y);ctx.lineTo(o.x,o.y);ctx.stroke();}
+    });
+  });
+  requestAnimationFrame(bgAnimate);
+}
+bgAnimate();
 
-<!-- ================= LOOP ================= -->
+// ── FORECAST MINI CHARTS ────────────────────────────────────
+(function(){
+  const allPreds    = {{ predictions    | tojson }};
+  const allAnalytics= {{ analytics      | tojson }};
+  {% if lstm_preds is defined %}
+  const allLSTM     = {{ lstm_preds     | tojson }};
+  {% else %}
+  const allLSTM     = {};
+  {% endif %}
 
-{% for col, result in results.items() %}
+  Object.keys(allPreds).forEach(col => {
+    const canvas = document.getElementById("fc_" + col);
+    if (!canvas) return;
+    const best   = allPreds[col]  || [];
+    const lstm   = allLSTM[col]   || [];
+    const labels = best.map((_,i) => "Day " + (i+1));
 
-<div class="card">
+    const datasets = [{
+      label: (allAnalytics[col]?.best_model || "Best Model") + " Forecast",
+      data:  best,
+      borderColor:     "#38bdf8",
+      backgroundColor: "rgba(56,189,248,.12)",
+      borderWidth: 2,
+      pointBackgroundColor: "#38bdf8",
+      pointRadius: 4,
+      tension: 0.4,
+      fill: true
+    }];
 
-<h3>📈 {{ col }}</h3>
+    if (lstm.length) {
+      datasets.push({
+        label: "🧠 LSTM Forecast",
+        data:  lstm,
+        borderColor:     "#a78bfa",
+        backgroundColor: "rgba(167,139,250,.08)",
+        borderWidth: 2,
+        borderDash: [5, 3],
+        pointBackgroundColor: "#a78bfa",
+        pointRadius: 3,
+        tension: 0.4,
+        fill: false
+      });
+    }
 
+    new Chart(canvas, {
+      type: "line",
+      data: { labels, datasets },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            labels: { color:"#94a3b8", font:{size:11} }
+          }
+        },
+        scales: {
+          x: { ticks:{color:"#64748b"}, grid:{color:"rgba(255,255,255,.05)"} },
+          y: { ticks:{color:"#64748b"}, grid:{color:"rgba(255,255,255,.05)"} }
+        }
+      }
+    });
+  });
+})();
+</script>
 
-<!-- ACTION -->
+<!-- ═══════════════════════════════════════════
+     STOCK AI CHATBOT
+     Floating circle button + slide-up chat window
+═══════════════════════════════════════════ -->
 
-<p>
-<b>Action:</b>
-<span class="tag
-{% if result.action=='BUY' %}buy
-{% elif result.action=='SELL' %}sell
-{% else %}hold{% endif %}">
-{{ result.action }}
-</span>
-</p>
+<style>
+/* ── CHAT BUTTON ── */
+@keyframes botPulse {
+  0%,100% { box-shadow:0 0 0 0 rgba(56,189,248,.5),0 4px 24px rgba(56,189,248,.4); }
+  50%      { box-shadow:0 0 0 12px rgba(56,189,248,.0),0 4px 24px rgba(56,189,248,.6); }
+}
+@keyframes chatSlideUp {
+  from { opacity:0; transform:translateY(24px) scale(.96); }
+  to   { opacity:1; transform:translateY(0)    scale(1);   }
+}
+@keyframes msgIn {
+  from { opacity:0; transform:translateY(10px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+@keyframes dotBounce {
+  0%,80%,100% { transform:translateY(0); }
+  40%         { transform:translateY(-6px); }
+}
 
+.chat-fab {
+  position:fixed; bottom:30px; right:30px; z-index:9999;
+  width:60px; height:60px; border-radius:50%; border:none; cursor:pointer;
+  background:linear-gradient(135deg,#0288d1,#0097a7);
+  color:#fff; font-size:1.4rem;
+  display:flex; align-items:center; justify-content:center;
+  animation:botPulse 2.5s infinite;
+  transition:transform .2s;
+}
+.chat-fab:hover { transform:scale(1.1); }
+.chat-fab .fab-badge {
+  position:absolute; top:-3px; right:-3px;
+  width:18px; height:18px; background:#ef4444; border-radius:50%;
+  font-size:.6rem; font-weight:800; display:flex; align-items:center;
+  justify-content:center; border:2px solid #020617;
+}
 
-<!-- INFO -->
+/* ── CHAT WINDOW ── */
+.chat-window {
+  position:fixed; bottom:102px; right:30px; z-index:9998;
+  width:360px; max-height:540px;
+  background:rgba(2,6,23,.97); border:1px solid rgba(56,189,248,.2);
+  border-radius:22px; display:flex; flex-direction:column;
+  box-shadow:0 30px 80px rgba(0,0,0,.8);
+  backdrop-filter:blur(20px);
+  animation:chatSlideUp .3s ease;
+  overflow:hidden;
+  transition:opacity .2s,transform .2s;
+}
+.chat-window.hidden {
+  opacity:0; pointer-events:none; transform:translateY(24px) scale(.96);
+}
 
-<div class="info-grid">
+/* header */
+.chat-head {
+  background:linear-gradient(135deg,#0f2744,#0a1929);
+  border-bottom:1px solid rgba(56,189,248,.15);
+  padding:14px 18px; display:flex; align-items:center; gap:12px; flex-shrink:0;
+}
+.chat-head-icon {
+  width:36px; height:36px; border-radius:50%;
+  background:linear-gradient(135deg,#0288d1,#0097a7);
+  display:flex; align-items:center; justify-content:center;
+  font-size:.9rem; color:#fff; flex-shrink:0;
+}
+.chat-head-info { flex:1; }
+.chat-head-name { font-size:.9rem; font-weight:800; color:#f1f5f9; }
+.chat-head-status { font-size:.7rem; color:#22c55e; display:flex; align-items:center; gap:5px; margin-top:2px; }
+.chat-head-status::before { content:""; width:6px; height:6px; background:#22c55e; border-radius:50%; display:inline-block; animation:pulse 2s infinite; }
+.chat-close {
+  width:28px; height:28px; border-radius:50%; border:none;
+  background:rgba(255,255,255,.07); color:#64748b; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  font-size:.8rem; transition:.2s; flex-shrink:0;
+}
+.chat-close:hover { background:rgba(251,113,133,.15); color:#fb7185; }
 
-<div class="info">
-<b>Last Value:</b> {{ result.last }}
+/* messages */
+.chat-messages {
+  flex:1; overflow-y:auto; padding:16px; display:flex;
+  flex-direction:column; gap:12px; min-height:0;
+  scrollbar-width:thin; scrollbar-color:rgba(56,189,248,.2) transparent;
+}
+.chat-messages::-webkit-scrollbar { width:4px; }
+.chat-messages::-webkit-scrollbar-thumb { background:rgba(56,189,248,.2); border-radius:4px; }
+
+.msg { display:flex; gap:8px; animation:msgIn .3s ease; }
+.msg.user { flex-direction:row-reverse; }
+
+.msg-avatar {
+  width:28px; height:28px; border-radius:50%; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; font-size:.75rem;
+  margin-top:2px;
+}
+.msg.bot  .msg-avatar { background:linear-gradient(135deg,#0288d1,#0097a7); color:#fff; }
+.msg.user .msg-avatar { background:rgba(56,189,248,.15); color:#38bdf8; border:1px solid rgba(56,189,248,.2); }
+
+.msg-bubble {
+  max-width:78%; padding:10px 14px; border-radius:16px;
+  font-size:.82rem; line-height:1.55; position:relative;
+}
+.msg.bot  .msg-bubble {
+  background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08);
+  color:#e2e8f0; border-bottom-left-radius:4px;
+}
+.msg.user .msg-bubble {
+  background:linear-gradient(135deg,#0288d1,#0097a7);
+  color:#fff; border-bottom-right-radius:4px;
+}
+.msg-time { font-size:.62rem; color:#475569; margin-top:5px; }
+
+/* typing indicator */
+.typing-dots { display:flex; gap:4px; align-items:center; padding:4px 0; }
+.typing-dots span {
+  width:7px; height:7px; background:#38bdf8; border-radius:50%;
+  animation:dotBounce 1.2s infinite;
+}
+.typing-dots span:nth-child(2) { animation-delay:.2s; }
+.typing-dots span:nth-child(3) { animation-delay:.4s; }
+
+/* suggestions */
+.chat-suggestions {
+  padding:10px 14px 6px; display:flex; gap:7px; flex-wrap:wrap; flex-shrink:0;
+  border-top:1px solid rgba(255,255,255,.05);
+}
+.sugg-chip {
+  padding:5px 11px; border-radius:20px; font-size:.72rem; font-weight:600;
+  background:rgba(56,189,248,.08); border:1px solid rgba(56,189,248,.2);
+  color:#7dd3fc; cursor:pointer; transition:.2s; white-space:nowrap;
+}
+.sugg-chip:hover { background:rgba(56,189,248,.18); color:#38bdf8; transform:translateY(-1px); }
+
+/* input area */
+.chat-input-row {
+  padding:12px 14px; display:flex; gap:8px; align-items:center;
+  border-top:1px solid rgba(255,255,255,.06); flex-shrink:0;
+}
+.chat-input {
+  flex:1; background:rgba(255,255,255,.05); border:1px solid rgba(56,189,248,.15);
+  border-radius:22px; padding:9px 16px; color:#f1f5f9; font-size:.82rem;
+  outline:none; font-family:'Inter',sans-serif; resize:none;
+  transition:border-color .2s;
+}
+.chat-input:focus { border-color:rgba(56,189,248,.4); }
+.chat-input::placeholder { color:#334155; }
+.chat-send {
+  width:36px; height:36px; border-radius:50%; border:none;
+  background:linear-gradient(135deg,#0288d1,#0097a7);
+  color:#fff; cursor:pointer; font-size:.85rem;
+  display:flex; align-items:center; justify-content:center;
+  transition:.2s; flex-shrink:0;
+}
+.chat-send:hover { transform:scale(1.1); box-shadow:0 0 14px rgba(2,136,209,.5); }
+.chat-send:disabled { opacity:.4; cursor:not-allowed; transform:none; }
+
+@media(max-width:480px){
+  .chat-window { width:calc(100vw - 24px); right:12px; bottom:90px; }
+  .chat-fab    { bottom:16px; right:16px; }
+}
+</style>
+
+<!-- FLOATING BUTTON -->
+<button class="chat-fab" id="chatFab" onclick="toggleChat()" title="Ask Stock AI Bot">
+  <i class="fa-solid fa-robot" id="fabIcon"></i>
+  <span class="fab-badge" id="fabBadge">1</span>
+</button>
+
+<!-- CHAT WINDOW -->
+<div class="chat-window hidden" id="chatWindow">
+
+  <!-- Header -->
+  <div class="chat-head">
+    <div class="chat-head-icon"><i class="fa-solid fa-robot"></i></div>
+    <div class="chat-head-info">
+      <div class="chat-head-name">Stock AI Assistant</div>
+      <div class="chat-head-status">Online — Ask me anything</div>
+    </div>
+    <button class="chat-close" onclick="toggleChat()"><i class="fas fa-times"></i></button>
+  </div>
+
+  <!-- Messages -->
+  <div class="chat-messages" id="chatMessages">
+    <div class="msg bot">
+      <div class="msg-avatar"><i class="fas fa-robot"></i></div>
+      <div>
+        <div class="msg-bubble">
+          👋 Hi! I'm your <b>Stock AI Assistant</b>.<br><br>
+          I can answer questions about your current predictions, RSI, forecast, risk levels, and general stock market topics.<br><br>
+          Try one of the suggestions below or type your own question!
+        </div>
+        <div class="msg-time">Just now</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Suggested Questions -->
+  <div class="chat-suggestions" id="chatSuggestions">
+    <span class="sugg-chip" onclick="askSuggestion(this)">📈 What is my BUY signal?</span>
+    <span class="sugg-chip" onclick="askSuggestion(this)">📊 What is the RSI value?</span>
+    <span class="sugg-chip" onclick="askSuggestion(this)">🏆 Which model performed best?</span>
+    <span class="sugg-chip" onclick="askSuggestion(this)">📅 Show 7-day forecast</span>
+    <span class="sugg-chip" onclick="askSuggestion(this)">⚠️ What is my risk level?</span>
+    <span class="sugg-chip" onclick="askSuggestion(this)">🎯 Explain confidence score</span>
+  </div>
+
+  <!-- Input -->
+  <div class="chat-input-row">
+    <input class="chat-input" id="chatInput" type="text"
+           placeholder="Ask about your predictions..."
+           onkeydown="if(event.key==='Enter') sendMessage()">
+    <button class="chat-send" id="chatSend" onclick="sendMessage()">
+      <i class="fas fa-paper-plane"></i>
+    </button>
+  </div>
+
 </div>
 
-<div class="info">
-<b>Predicted Avg:</b> {{ result.avg }}
-</div>
+<script>
+// ── PREDICTION DATA FROM JINJA (passed to JS) ──
+const PRED_DATA = {
+  results:     {{ results     | tojson }},
+  predictions: {{ predictions | tojson }},
+  analytics:   {{ analytics   | tojson }}
+};
 
-<div class="info">
-<b>Risk:</b> {{ result.risk }}
-</div>
+let chatOpen   = false;
+let chatHistory = [];   // full conversation history for context
 
-<div class="info">
-<b>Reason:</b> {{ result.reason }}
-</div>
+// ── TOGGLE ──
+function toggleChat(){
+  chatOpen = !chatOpen;
+  const win  = document.getElementById("chatWindow");
+  const icon = document.getElementById("fabIcon");
+  const badge = document.getElementById("fabBadge");
 
-</div>
+  if(chatOpen){
+    win.classList.remove("hidden");
+    icon.className = "fa-solid fa-times";
+    badge.style.display = "none";
+    setTimeout(()=>{ document.getElementById("chatInput").focus(); }, 200);
+  } else {
+    win.classList.add("hidden");
+    icon.className = "fa-solid fa-robot";
+  }
+}
 
+// ── SUGGESTION CLICK ──
+function askSuggestion(el){
+  const q = el.textContent.replace(/^[^\w]+/,"").trim();
+  document.getElementById("chatInput").value = q;
+  // hide suggestions after first use so chat feels cleaner
+  document.getElementById("chatSuggestions").style.display = "none";
+  sendMessage();
+}
 
-<!-- CONFIDENCE -->
+// ── SEND MESSAGE ──
+async function sendMessage(){
+  const input = document.getElementById("chatInput");
+  const msg   = input.value.trim();
+  if(!msg) return;
 
-<div class="confidence">
+  input.value = "";
+  document.getElementById("chatSend").disabled = true;
+  appendMsg("user", msg);
 
-<p><b>AI Confidence:</b> {{ result.confidence }}%</p>
+  // Show typing indicator
+  const typingId = showTyping();
 
-<div class="bar">
-<div class="fill" style="--w:{{ result.confidence }}%;"></div>
-</div>
+  // Build context from session prediction data
+  const context = buildContext();
 
-</div>
+  try {
+    const reply = await callBot(msg, context);
+    removeTyping(typingId);
+    appendMsg("bot", reply);
+  } catch(e) {
+    removeTyping(typingId);
+    appendMsg("bot", "⚠️ Sorry, I couldn't reach the AI right now. Please try again.");
+  }
 
+  document.getElementById("chatSend").disabled = false;
+  input.focus();
+}
 
-<!-- ================= ANALYTICS ================= -->
+// ── BUILD CONTEXT FROM PREDICTION DATA ──
+function buildContext(){
+  let ctx = "You are Stock AI Assistant, an expert financial analysis bot embedded in a stock prediction app.\n\n";
+  ctx += "=== CURRENT SESSION PREDICTION DATA ===\n";
 
-<div class="analytics">
+  const results = PRED_DATA.results     || {};
+  const preds   = PRED_DATA.predictions || {};
+  const analyt  = PRED_DATA.analytics   || {};
 
-<h4>Model Analytics</h4>
+  if(Object.keys(results).length === 0){
+    ctx += "No prediction data available in this session.\n";
+  } else {
+    for(const [col, res] of Object.entries(results)){
+      ctx += `\nStock/Column: ${col}\n`;
+      ctx += `  Action: ${res.action}\n`;
+      ctx += `  Last Value: ${res.last}\n`;
+      ctx += `  Predicted Average: ${res.avg}\n`;
+      ctx += `  Confidence: ${res.confidence}%\n`;
+      ctx += `  Risk: ${res.risk}\n`;
+      ctx += `  Reason: ${res.reason}\n`;
 
-{% if col in analytics %}
+      if(analyt[col]){
+        const a = analyt[col];
+        ctx += `  RSI: ${a.rsi ?? 'N/A'}\n`;
+        ctx += `  Best Model: ${a.best_model ?? 'N/A'}\n`;
+        ctx += `  R2 Score: ${a.r2 ?? 'N/A'}\n`;
+        ctx += `  MAE: ${a.mae ?? 'N/A'}\n`;
+        ctx += `  RMSE: ${a.rmse ?? 'N/A'}\n`;
+        ctx += `  MA7: ${a.ma7 ?? 'N/A'}\n`;
+        ctx += `  MA14: ${a.ma14 ?? 'N/A'}\n`;
+        ctx += `  Trend: ${a.trend_percent ?? 'N/A'}%\n`;
+        ctx += `  Volatility: ${a.volatility ?? 'N/A'}%\n`;
+      }
 
-<div class="info-grid">
+      if(preds[col] && preds[col].length > 0){
+        const forecastStr = preds[col].map((v,i)=>`Day ${i+1}: ${v.toFixed(2)}`).join(", ");
+        ctx += `  7-Day Forecast: ${forecastStr}\n`;
+      }
+    }
+  }
 
-<div class="info">
-<b>Trend:</b> {{ analytics[col]["trend_percent"] }}%
-</div>
+  ctx += "\n=== INSTRUCTIONS ===\n";
+  ctx += "Answer the user's question using the above data when relevant.\n";
+  ctx += "For general stock market questions, use your own financial knowledge.\n";
+  ctx += "Keep answers concise, clear, and friendly. Use bullet points for lists.\n";
+  ctx += "Format numbers nicely. If RSI < 30 mention oversold, > 70 mention overbought.\n";
+  ctx += "Never make up data — only use what is in the context above.\n";
 
-<div class="info">
-<b>Best Model:</b> {{ analytics[col]["best_model"] }}
-</div>
+  return ctx;
+}
 
-<div class="info">
-<b>R²:</b> {{ analytics[col]["r2"] }}
-</div>
+// ── CALL BOT VIA FLASK BACKEND (avoids CORS) ──
+async function callBot(userMsg, systemContext){
+  const response = await fetch("/api/chatbot", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      message: userMsg,
+      context: systemContext
+    })
+  });
 
-<div class="info">
-<b>MAE:</b> {{ analytics[col]["mae"] }}
-</div>
+  if(!response.ok){
+    const err = await response.text();
+    throw new Error("Server error " + response.status + ": " + err);
+  }
 
-<div class="info">
-<b>RMSE:</b> {{ analytics[col]["rmse"] }}
-</div>
+  const data  = await response.json();
+  const reply = data.reply || "No response.";
 
-<div class="info">
-<b>MA7:</b> {{ analytics[col]["ma7"] }}
-</div>
+  // Store history locally for context (not sent to server to avoid duplicates)
+  chatHistory.push({ role:"user",      content: userMsg });
+  chatHistory.push({ role:"assistant", content: reply   });
+  if(chatHistory.length > 40) chatHistory = chatHistory.slice(-40);
 
-<div class="info">
-<b>MA14:</b> {{ analytics[col]["ma14"] }}
-</div>
+  return reply;
+}
 
-</div>
+// ── APPEND MESSAGE ──
+function appendMsg(role, text){
+  const box  = document.getElementById("chatMessages");
+  const time = new Date().toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"});
+  const isBot = role === "bot";
 
+  // Convert **bold** and newlines for display
+  const formatted = text
+    .replace(/\*\*(.*?)\*\*/g, "<b>$1</b>")
+    .replace(/\n/g, "<br>");
 
-<!-- MODELS -->
+  const div = document.createElement("div");
+  div.className = `msg ${role}`;
+  div.innerHTML = `
+    <div class="msg-avatar"><i class="fas fa-${isBot ? "robot" : "user"}"></i></div>
+    <div>
+      <div class="msg-bubble">${formatted}</div>
+      <div class="msg-time">${time}</div>
+    </div>`;
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+}
 
-<h5 style="margin-top:15px;">Model Comparison</h5>
+// ── TYPING INDICATOR ──
+function showTyping(){
+  const box = document.getElementById("chatMessages");
+  const id  = "typing-" + Date.now();
+  const div = document.createElement("div");
+  div.className = "msg bot";
+  div.id = id;
+  div.innerHTML = `
+    <div class="msg-avatar"><i class="fas fa-robot"></i></div>
+    <div>
+      <div class="msg-bubble">
+        <div class="typing-dots"><span></span><span></span><span></span></div>
+      </div>
+    </div>`;
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+  return id;
+}
 
-<div class="models">
-
-{% for name,data in analytics[col]["models"].items() %}
-
-<div class="model">
-
-<b>{{ name }}</b><br>
-
-R²: {{ data["r2"] }}<br>
-MAE: {{ data["mae"] }}<br>
-RMSE: {{ data["rmse"] }}
-
-</div>
-
-{% endfor %}
-
-</div>
-
-{% else %}
-
-<p style="color:#f87171;">No analytics available</p>
-
-{% endif %}
-
-</div>
-
-
-<!-- ================= FORECAST ================= -->
-
-<h4 style="margin-top:20px;">📅 7-Day Forecast</h4>
-
-<table>
-
-<tr>
-<th>Day</th>
-<th>Value</th>
-</tr>
-
-{% for val in predictions[col] %}
-
-<tr>
-<td>Day {{ loop.index }}</td>
-<td>{{ "%.2f"|format(val) }}</td>
-</tr>
-
-{% endfor %}
-
-</table>
-
-</div>
-
-{% endfor %}
-
-
-<!-- ================= ACTIONS ================= -->
-
-<div class="actions">
-
-<a href="/download_report" class="btn btn-blue">
-<i class="fa-solid fa-file-pdf"></i> Download PDF
-</a>
-
-<a href="/upload" class="btn btn-green">
-<i class="fa-solid fa-upload"></i> New Upload
-</a>
-
-<a href="/logout" class="btn btn-red">
-<i class="fa-solid fa-right-from-bracket"></i> Logout
-</a>
-
-</div>
-
-
-<!-- FOOTER -->
-
-<div class="footer">
-
-<a href="/dashboard">Dashboard</a> |
-<a href="/live">Live</a> |
-<a href="/profile">Profile</a>
-
-</div>
-
-
-</div>
+function removeTyping(id){
+  const el = document.getElementById(id);
+  if(el) el.remove();
+}
+</script>
 
 </body>
 </html>

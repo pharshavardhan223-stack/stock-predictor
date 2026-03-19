@@ -2,513 +2,711 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>User Profile | Stock AI</title>
-
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>My Profile | Stock AI</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Cabinet+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
 <style>
-
-/* ================= GLOBAL ================= */
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Inter',sans-serif;
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#030a14;--s1:rgba(6,14,35,.97);--s2:rgba(8,18,42,.9);
+  --bd:rgba(56,189,248,.1);--bdh:rgba(56,189,248,.28);
+  --cy:#38bdf8;--cy2:#22d3ee;--gr:#34d399;--rd:#f87171;--am:#fbbf24;--pu:#818cf8;
+  --tx:#e2e8f0;--mt:#64748b;--mt2:#1e293b;--mt3:#0f1929;
+  --mono:'DM Mono',monospace;--sans:'Cabinet Grotesk',sans-serif;
 }
+body{min-height:100vh;background:var(--bg);color:var(--tx);font-family:var(--sans);overflow-x:hidden;}
+body::before{content:"";position:fixed;inset:0;
+  background:linear-gradient(rgba(56,189,248,.018) 1px,transparent 1px),
+             linear-gradient(90deg,rgba(56,189,248,.018) 1px,transparent 1px);
+  background-size:48px 48px;pointer-events:none;z-index:0;}
 
-body{
-min-height:100vh;
-background:
-linear-gradient(-45deg,#0f172a,#1e293b,#020617,#0f172a);
-background-size:400% 400%;
-animation:bgMove 15s ease infinite;
-color:#e5e7eb;
-overflow-x:hidden;
+/* ── NAV ── */
+.nav{position:sticky;top:0;z-index:200;height:58px;
+  background:rgba(3,10,20,.97);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--bd);
+  display:flex;align-items:center;justify-content:space-between;padding:0 24px;}
+.nav-brand{display:flex;align-items:center;gap:9px;text-decoration:none;}
+.nav-logo{width:30px;height:30px;border-radius:8px;
+  background:rgba(56,189,248,.1);border:1px solid var(--bd);
+  display:flex;align-items:center;justify-content:center;}
+.nav-logo img{width:18px;object-fit:contain;}
+.nav-logo i{color:var(--cy);font-size:13px;}
+.nav-title{font-size:16px;font-weight:800;color:var(--tx);}
+.nav-title span{color:var(--cy);}
+.nav-links{display:flex;align-items:center;gap:2px;}
+.nl{display:flex;align-items:center;gap:5px;padding:6px 11px;border-radius:7px;
+  color:var(--mt);font-size:12px;font-weight:600;text-decoration:none;transition:.2s;white-space:nowrap;}
+.nl:hover{background:rgba(56,189,248,.07);color:var(--cy);}
+.nl.on{background:rgba(56,189,248,.1);color:var(--cy);}
+.nl.out{color:var(--rd);}
+.nl.out:hover{background:rgba(248,113,113,.07);}
+
+/* ── LAYOUT ── */
+.page{max-width:1160px;margin:0 auto;padding:32px 24px 60px;position:relative;z-index:1;}
+
+/* ── PAGE HEADER ── */
+.phdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:12px;}
+.phdr-left{display:flex;align-items:center;gap:10px;}
+.phdr-badge{
+  font-family:var(--mono);font-size:.65rem;color:var(--cy);
+  letter-spacing:2px;padding:4px 10px;border:1px solid rgba(56,189,248,.25);
+  border-radius:4px;background:rgba(56,189,248,.05);}
+.phdr-title{font-size:1.6rem;font-weight:800;color:var(--tx);letter-spacing:-.5px;}
+.btn-edit{
+  display:flex;align-items:center;gap:7px;
+  padding:9px 18px;border-radius:9px;border:1px solid var(--bdh);
+  background:rgba(56,189,248,.07);color:var(--cy);font-size:.82rem;
+  font-weight:700;text-decoration:none;transition:.2s;font-family:var(--sans);}
+.btn-edit:hover{background:rgba(56,189,248,.14);transform:translateY(-1px);}
+
+/* ── GRID ── */
+.grid{display:grid;grid-template-columns:300px 1fr;gap:20px;align-items:start;}
+@media(max-width:900px){.grid{grid-template-columns:1fr;}}
+
+/* ── PANEL BASE ── */
+.panel{background:var(--s1);border:1px solid var(--bd);border-radius:14px;overflow:hidden;}
+.panel-hdr{
+  padding:14px 18px;border-bottom:1px solid var(--bd);
+  display:flex;align-items:center;justify-content:space-between;
 }
+.panel-hdr h3{font-size:.8rem;font-weight:700;color:var(--mt);letter-spacing:1.5px;text-transform:uppercase;font-family:var(--mono);}
+.panel-hdr .tag{font-family:var(--mono);font-size:.65rem;padding:3px 8px;border-radius:4px;letter-spacing:.5px;}
+.tag-green{background:rgba(52,211,153,.1);color:var(--gr);}
+.tag-cy{background:rgba(56,189,248,.1);color:var(--cy);}
+.tag-pu{background:rgba(129,140,248,.1);color:var(--pu);}
 
-/* Gradient Motion */
-
-@keyframes bgMove{
-0%{background-position:0% 50%}
-50%{background-position:100% 50%}
-100%{background-position:0% 50%}
+/* ── AVATAR CARD ── */
+.avatar-panel{padding:28px 20px;text-align:center;}
+.avatar-ring{
+  position:relative;width:90px;height:90px;margin:0 auto 16px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--cy),var(--pu));
+  padding:2.5px;
 }
-
-/* Particles */
-
-#bgCanvas{
-position:fixed;
-inset:0;
-z-index:-1;
-}
-
-/* ================= CONTAINER ================= */
-
-.container{
-width:88%;
-margin:40px auto;
-animation:fadeUp 1.2s ease;
-}
-
-@keyframes fadeUp{
-from{opacity:0;transform:translateY(40px)}
-to{opacity:1;transform:translateY(0)}
-}
-
-/* ================= PROFILE CARD ================= */
-
-.profile-card{
-background:rgba(255,255,255,0.05);
-backdrop-filter:blur(20px);
-border-radius:22px;
-padding:30px 35px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-border:1px solid rgba(255,255,255,0.1);
-box-shadow:0 30px 70px rgba(0,0,0,.6);
-position:relative;
-overflow:hidden;
-}
-
-/* Shine */
-
-.profile-card::after{
-content:"";
-position:absolute;
-inset:0;
-background:linear-gradient(
-120deg,
-transparent,
-rgba(255,255,255,.08),
-transparent
-);
-animation:shine 6s infinite;
-}
-
-@keyframes shine{
-to{transform:translateX(100%)}
-}
-
-/* LEFT */
-
-.profile-left{
-display:flex;
-align-items:center;
-gap:25px;
-z-index:2;
-}
-
-/* Avatar */
-
-.avatar{
-width:120px;
-height:120px;
-border-radius:50%;
-background:linear-gradient(45deg,#38bdf8,#22d3ee,#7dd3fc);
-padding:4px;
-animation:ring 6s linear infinite;
-}
-
-@keyframes ring{
-to{transform:rotate(360deg)}
-}
-
 .avatar-inner{
-width:100%;
-height:100%;
-border-radius:50%;
-background:#020617;
-display:flex;
-align-items:center;
-justify-content:center;
-overflow:hidden;
+  width:100%;height:100%;border-radius:50%;
+  background:var(--mt3);display:flex;align-items:center;justify-content:center;
+  font-size:2rem;font-weight:800;color:var(--cy);
+  position:relative;overflow:hidden;
+}
+.avatar-inner img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+.avatar-online{
+  position:absolute;bottom:4px;right:4px;
+  width:16px;height:16px;background:var(--gr);border-radius:50%;
+  border:2.5px solid var(--s1);
+}
+.profile-name{font-size:1.15rem;font-weight:800;color:var(--tx);margin-bottom:4px;}
+.profile-handle{font-family:var(--mono);font-size:.75rem;color:var(--cy);margin-bottom:6px;}
+.profile-role{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:3px 10px;border-radius:100px;font-size:.7rem;font-weight:700;
+  margin-bottom:18px;letter-spacing:.5px;font-family:var(--mono);
+}
+.role-user{background:rgba(56,189,248,.1);color:var(--cy);border:1px solid rgba(56,189,248,.2);}
+.role-admin{background:rgba(251,191,36,.1);color:var(--am);border:1px solid rgba(251,191,36,.2);}
+.profile-bio{font-size:.82rem;color:var(--mt);line-height:1.6;margin-bottom:20px;}
+
+/* quick stat mini-bar */
+.qstat{display:flex;justify-content:center;gap:1px;margin-bottom:20px;border-radius:10px;overflow:hidden;background:var(--bd);}
+.qs{flex:1;padding:10px 8px;background:var(--mt3);text-align:center;}
+.qs-val{font-family:var(--mono);font-size:.95rem;color:var(--cy);}
+.qs-key{font-size:.65rem;color:var(--mt);margin-top:3px;}
+
+/* detail rows */
+.detail-rows{padding:0 20px 20px;}
+.detail-row{
+  display:flex;align-items:center;gap:12px;
+  padding:11px 0;border-bottom:1px solid rgba(56,189,248,.05);
+}
+.detail-row:last-child{border-bottom:none;}
+.detail-row i{width:30px;height:30px;background:var(--mt3);border-radius:8px;
+  display:flex;align-items:center;justify-content:center;font-size:.75rem;color:var(--cy);flex-shrink:0;}
+.detail-key{font-size:.72rem;color:var(--mt);margin-bottom:2px;font-family:var(--mono);}
+.detail-val{font-size:.87rem;color:var(--tx);font-weight:600;}
+.detail-val.mono{font-family:var(--mono);font-size:.8rem;}
+
+/* ── RIGHT COLUMN ── */
+.right-col{display:flex;flex-direction:column;gap:20px;}
+
+/* ── STATS BAND ── */
+.stats-band{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--bd);border-radius:14px;overflow:hidden;}
+.sb-item{padding:18px;background:var(--s1);position:relative;overflow:hidden;}
+.sb-item::after{
+  content:"";position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--cy),transparent);
+  opacity:0;transition:.3s;
+}
+.sb-item:hover::after{opacity:1;}
+.sb-label{font-family:var(--mono);font-size:.65rem;color:var(--mt);letter-spacing:1px;margin-bottom:8px;}
+.sb-val{font-size:1.6rem;font-weight:800;color:var(--tx);letter-spacing:-1px;line-height:1;}
+.sb-sub{font-size:.72rem;color:var(--mt);margin-top:5px;display:flex;align-items:center;gap:5px;}
+.sb-sub .up{color:var(--gr);}
+.sb-sub .dn{color:var(--rd);}
+
+/* ── SECTION TABS ── */
+.tabs{display:flex;gap:2px;padding:14px 16px;border-bottom:1px solid var(--bd);}
+.tab{
+  padding:6px 14px;border-radius:7px;border:1px solid transparent;
+  font-size:.78rem;font-weight:700;color:var(--mt);cursor:pointer;
+  transition:.2s;font-family:var(--mono);
+}
+.tab:hover{color:var(--tx);}
+.tab.active{background:rgba(56,189,248,.1);border-color:rgba(56,189,248,.25);color:var(--cy);}
+
+/* ── FORM FIELDS ── */
+.form-section{padding:20px;}
+.field-2col{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.field{margin-bottom:16px;}
+.field label{display:block;font-family:var(--mono);font-size:.65rem;color:var(--mt);
+  letter-spacing:1px;text-transform:uppercase;margin-bottom:7px;}
+.inp-wrap{position:relative;}
+.inp-wrap i.ico{position:absolute;left:13px;top:50%;transform:translateY(-50%);
+  color:var(--mt);font-size:.75rem;pointer-events:none;transition:.2s;}
+.inp-wrap input,.inp-wrap select{
+  width:100%;padding:11px 13px 11px 38px;
+  background:var(--mt3);border:1px solid var(--bd);border-radius:9px;
+  color:var(--tx);font-size:.88rem;font-family:var(--sans);outline:none;transition:.2s;}
+.inp-wrap input:focus,.inp-wrap select:focus{border-color:var(--cy);background:rgba(56,189,248,.03);}
+.inp-wrap:focus-within i.ico{color:var(--cy);}
+.inp-wrap input::placeholder{color:var(--mt);}
+.inp-wrap select option{background:var(--bg);}
+.inp-wrap input[readonly]{color:var(--mt);cursor:not-allowed;}
+
+/* avatar upload */
+.avatar-upload{
+  display:flex;align-items:center;gap:16px;
+  padding:16px;background:var(--mt3);border:1px solid var(--bd);
+  border-radius:10px;margin-bottom:16px;
+}
+.avatar-preview{
+  width:52px;height:52px;border-radius:50%;
+  background:linear-gradient(135deg,rgba(56,189,248,.2),rgba(129,140,248,.1));
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.2rem;font-weight:800;color:var(--cy);flex-shrink:0;overflow:hidden;
+}
+.avatar-preview img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+.avatar-upload-info{flex:1;}
+.avatar-upload-info h4{font-size:.85rem;font-weight:700;color:var(--tx);margin-bottom:3px;}
+.avatar-upload-info p{font-size:.72rem;color:var(--mt);}
+.btn-upload{
+  padding:7px 14px;border-radius:7px;border:1px solid var(--bdh);
+  background:rgba(56,189,248,.07);color:var(--cy);font-size:.75rem;
+  font-weight:700;cursor:pointer;transition:.2s;font-family:var(--sans);}
+.btn-upload:hover{background:rgba(56,189,248,.14);}
+
+/* save button */
+.btn-save{
+  padding:12px 28px;border-radius:9px;border:none;
+  background:linear-gradient(90deg,var(--cy),var(--cy2));
+  color:#000;font-size:.9rem;font-weight:800;font-family:var(--sans);
+  cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:7px;}
+.btn-save:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(56,189,248,.3);}
+.btn-actions{display:flex;align-items:center;gap:10px;margin-top:4px;}
+.btn-cancel{
+  padding:12px 20px;border-radius:9px;border:1px solid var(--bd);
+  background:none;color:var(--mt);font-size:.88rem;font-weight:600;
+  font-family:var(--sans);cursor:pointer;transition:.2s;}
+.btn-cancel:hover{border-color:var(--bdh);color:var(--tx);}
+
+/* ── SECURITY PANEL ── */
+.security-rows{padding:0 18px 18px;}
+.sec-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 0;border-bottom:1px solid rgba(56,189,248,.05);gap:12px;
+}
+.sec-row:last-child{border-bottom:none;}
+.sec-left{display:flex;align-items:center;gap:12px;}
+.sec-icon{
+  width:36px;height:36px;border-radius:9px;background:var(--mt3);
+  display:flex;align-items:center;justify-content:center;font-size:.8rem;flex-shrink:0;
+}
+.sec-icon.cy{color:var(--cy);}
+.sec-icon.gr{color:var(--gr);}
+.sec-icon.am{color:var(--am);}
+.sec-icon.rd{color:var(--rd);}
+.sec-title{font-size:.87rem;font-weight:700;color:var(--tx);}
+.sec-desc{font-size:.74rem;color:var(--mt);margin-top:2px;}
+.sec-action{
+  padding:6px 14px;border-radius:7px;border:1px solid var(--bd);
+  font-size:.75rem;font-weight:700;color:var(--mt);
+  background:none;cursor:pointer;transition:.2s;white-space:nowrap;font-family:var(--sans);}
+.sec-action:hover{border-color:var(--bdh);color:var(--cy);}
+.sec-badge{font-family:var(--mono);font-size:.7rem;padding:4px 9px;border-radius:5px;}
+.badge-on{background:rgba(52,211,153,.1);color:var(--gr);}
+.badge-off{background:rgba(248,113,113,.1);color:var(--rd);}
+
+/* ── ACTIVITY FEED ── */
+.activity-list{padding:0 18px 18px;}
+.act-item{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:11px 0;border-bottom:1px solid rgba(56,189,248,.04);
+}
+.act-item:last-child{border-bottom:none;}
+.act-dot{
+  flex-shrink:0;width:8px;height:8px;border-radius:50%;
+  margin-top:6px;
+}
+.act-dot.buy{background:var(--gr);box-shadow:0 0 6px rgba(52,211,153,.4);}
+.act-dot.sell{background:var(--rd);box-shadow:0 0 6px rgba(248,113,113,.4);}
+.act-dot.info{background:var(--cy);box-shadow:0 0 6px rgba(56,189,248,.4);}
+.act-dot.warn{background:var(--am);}
+.act-body{flex:1;}
+.act-text{font-size:.83rem;color:var(--tx);line-height:1.4;}
+.act-text strong{color:var(--cy);}
+.act-time{font-family:var(--mono);font-size:.68rem;color:var(--mt);margin-top:3px;}
+.act-tag{
+  flex-shrink:0;font-family:var(--mono);font-size:.65rem;
+  padding:3px 7px;border-radius:4px;margin-top:2px;
 }
 
-.avatar-inner img{
-width:100%;
-height:100%;
-object-fit:cover;
+/* ── TAB CONTENT ── */
+.tab-content{display:none;}
+.tab-content.active{display:block;}
+
+/* ── DANGER ZONE ── */
+.danger-zone{
+  padding:18px;margin:0 18px 18px;
+  background:rgba(248,113,113,.04);border:1px solid rgba(248,113,113,.15);
+  border-radius:10px;
 }
+.dz-title{font-size:.8rem;font-weight:700;color:var(--rd);margin-bottom:4px;display:flex;align-items:center;gap:6px;}
+.dz-desc{font-size:.78rem;color:var(--mt);margin-bottom:12px;}
+.btn-danger{
+  padding:9px 18px;border-radius:8px;
+  border:1px solid rgba(248,113,113,.4);
+  background:rgba(248,113,113,.07);color:var(--rd);
+  font-size:.8rem;font-weight:700;cursor:pointer;transition:.2s;font-family:var(--sans);}
+.btn-danger:hover{background:rgba(248,113,113,.15);}
 
-.avatar-inner i{
-font-size:42px;
-color:#38bdf8;
-}
-
-/* Info */
-
-.profile-info h2{
-color:#7dd3fc;
-margin-bottom:6px;
-}
-
-.profile-info p{
-color:#c7d2fe;
-font-size:14px;
-}
-
-/* Edit Button */
-
-.edit-btn{
-background:linear-gradient(45deg,#38bdf8,#22d3ee);
-padding:10px 22px;
-border-radius:20px;
-color:#020617;
-font-weight:600;
-text-decoration:none;
-transition:.3s;
-z-index:2;
-}
-
-.edit-btn:hover{
-transform:scale(1.1);
-box-shadow:0 0 20px #38bdf8;
-}
-
-/* ================= STATS ================= */
-
-.stats{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-gap:25px;
-margin-top:35px;
-}
-
-/* Stat Card */
-
-.stat-card{
-background:rgba(255,255,255,.05);
-backdrop-filter:blur(15px);
-border-radius:18px;
-padding:25px;
-text-align:center;
-border:1px solid rgba(255,255,255,.08);
-position:relative;
-overflow:hidden;
-transition:.4s;
-}
-
-.stat-card::before{
-content:"";
-position:absolute;
-inset:-2px;
-background:linear-gradient(45deg,#3b82f6,#22d3ee,#3b82f6);
-opacity:0;
-transition:.4s;
-}
-
-.stat-card:hover::before{opacity:1}
-
-.stat-card:hover{
-transform:translateY(-8px) scale(1.03);
-box-shadow:0 20px 40px rgba(56,189,248,.3);
-}
-
-.stat-card *{
-position:relative;
-z-index:2;
-}
-
-.stat-card i{
-font-size:26px;
-color:#38bdf8;
-}
-
-.stat-card h3{
-margin:8px 0;
-font-size:28px;
-}
-
-/* ================= ACTIVITY ================= */
-
-.activity-box{
-margin-top:30px;
-background:rgba(255,255,255,.05);
-backdrop-filter:blur(15px);
-border-radius:18px;
-padding:25px;
-border:1px solid rgba(255,255,255,.08);
-box-shadow:0 20px 40px rgba(0,0,0,.5);
-}
-
-.activity-box h4{
-color:#7dd3fc;
-margin-bottom:15px;
-}
-
-.activity-item{
-padding:8px 0;
-border-bottom:1px solid rgba(255,255,255,.08);
-font-size:14px;
-transition:.3s;
-}
-
-.activity-item:hover{
-color:#22d3ee;
-transform:translateX(6px);
-}
-
-/* ================= PROGRESS ================= */
-
-.progress-wrap{
-margin-top:15px;
-}
-
-.progress{
-width:100%;
-height:10px;
-background:rgba(255,255,255,.15);
-border-radius:10px;
-overflow:hidden;
-}
-
-.progress-fill{
-width:0;
-height:100%;
-background:linear-gradient(90deg,#22d3ee,#38bdf8,#7dd3fc);
-border-radius:10px;
-animation:fill 2.5s ease forwards;
-}
-
-@keyframes fill{
-to{width:92%;}
-}
-
-/* ================= RESPONSIVE ================= */
-
-@media(max-width:900px){
-
-.profile-card{
-flex-direction:column;
-text-align:center;
-gap:20px;
-}
-
-}
-
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.panel{animation:fadeUp .4s ease both;}
+.stats-band{animation:fadeUp .4s ease .1s both;}
+.right-col>.panel:nth-child(2){animation:fadeUp .4s ease .2s both;}
 </style>
 </head>
-
 <body>
 
-<!-- Particle Background -->
-<canvas id="bgCanvas"></canvas>
+<!-- NAV -->
+<nav class="nav">
+  <a href="/dashboard" class="nav-brand">
+    <div class="nav-logo">
+      <img src="/static/images/logo.png" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <i class="fa-solid fa-chart-line" style="display:none;"></i>
+    </div>
+    <div class="nav-title">Stock<span>AI</span></div>
+  </a>
+  <div class="nav-links">
+    <a href="/dashboard"         class="nl"><i class="fa-solid fa-house"></i><span>Dashboard</span></a>
+    <a href="/stock"             class="nl"><i class="fa-solid fa-magnifying-glass-chart"></i><span>Predict</span></a>
+    <a href="/compare"           class="nl"><i class="fa-solid fa-code-compare"></i><span>Compare</span></a>
+    <a href="/live"              class="nl"><i class="fa-solid fa-signal-stream"></i><span>Live</span></a>
+    <a href="/history"           class="nl"><i class="fa-solid fa-clock-rotate-left"></i><span>History</span></a>
+    <a href="/profile"           class="nl on"><i class="fa-solid fa-user"></i><span>Profile</span></a>
+    <a href="/logout"            class="nl out"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a>
+  </div>
+</nav>
 
-<div class="container">
+<div class="page">
 
-<!-- PROFILE HEADER -->
+  <!-- Page header -->
+  <div class="phdr">
+    <div class="phdr-left">
+      <span class="phdr-badge">PROFILE</span>
+      <h1 class="phdr-title">My Account</h1>
+    </div>
+    <a href="/edit_profile" class="btn-edit"><i class="fa-solid fa-pen-to-square"></i> Edit Profile</a>
+  </div>
 
-<div class="profile-card">
+  <!-- Flash messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+      <div style="padding:11px 16px;border-radius:10px;font-size:.84rem;
+        background:{{ 'rgba(248,113,113,.08)' if category=='error' else 'rgba(52,211,153,.08)' }};
+        border:1px solid {{ 'rgba(248,113,113,.25)' if category=='error' else 'rgba(52,211,153,.25)' }};
+        color:{{ 'var(--rd)' if category=='error' else 'var(--gr)' }};
+        display:flex;align-items:center;gap:10px;margin-bottom:18px;">
+        <i class="fa-solid {{ 'fa-circle-exclamation' if category=='error' else 'fa-circle-check' }}"></i>
+        {{ message }}
+      </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
 
-<div class="profile-left">
+  <div class="grid">
 
-<!-- Avatar -->
-<div class="avatar">
+    <!-- ── LEFT: Profile card ── -->
+    <div>
+      <div class="panel">
+        <div class="panel-hdr">
+          <h3>Profile</h3>
+          <span class="tag tag-green">● ACTIVE</span>
+        </div>
 
-<div class="avatar-inner">
+        <!-- Avatar -->
+        <div class="avatar-panel">
+          <div class="avatar-ring">
+            <div class="avatar-inner">
+              {% if session.get('avatar') %}
+                <img src="{{ session.avatar }}" alt="Avatar">
+              {% else %}
+                {{ (session.get('user','?')[0])|upper }}
+              {% endif %}
+            </div>
+            <div class="avatar-online"></div>
+          </div>
+          <div class="profile-name">{{ session.get('full_name', session.get('user','User')) }}</div>
+          <div class="profile-handle">@{{ session.get('user','username') }}</div>
+          <div class="profile-role {{ 'role-admin' if session.get('role')=='admin' else 'role-user' }}">
+            <i class="fa-solid {{ 'fa-shield-halved' if session.get('role')=='admin' else 'fa-user-chart' }}"></i>
+            {{ (session.get('role','user'))|upper }}
+          </div>
+          <div class="profile-bio">Stock investor & data enthusiast using AI-powered analytics to make smarter trading decisions.</div>
 
-{% if session.get("profile_photo") %}
-<img src="{{ url_for('static', filename='profile_pics/' + session.get('profile_photo')) }}">
-{% else %}
-<i class="fa-solid fa-user"></i>
-{% endif %}
+          <!-- Quick stats -->
+          <div class="qstat">
+            <div class="qs"><div class="qs-val">{{ session.get('pred_count',0) }}</div><div class="qs-key">Predictions</div></div>
+            <div class="qs"><div class="qs-val">{{ session.get('watch_count',0) }}</div><div class="qs-key">Watchlist</div></div>
+            <div class="qs"><div class="qs-val">{{ session.get('report_count',0) }}</div><div class="qs-key">Reports</div></div>
+          </div>
+        </div>
 
+        <!-- Detail rows -->
+        <div class="detail-rows">
+          <div class="detail-row">
+            <i class="fa-solid fa-envelope"></i>
+            <div>
+              <div class="detail-key">EMAIL</div>
+              <div class="detail-val mono">{{ session.get('email','—') }}</div>
+            </div>
+          </div>
+          <div class="detail-row">
+            <i class="fa-solid fa-calendar-days"></i>
+            <div>
+              <div class="detail-key">MEMBER SINCE</div>
+              <div class="detail-val">{{ session.get('joined','—') }}</div>
+            </div>
+          </div>
+          <div class="detail-row">
+            <i class="fa-solid fa-location-dot"></i>
+            <div>
+              <div class="detail-key">REGION</div>
+              <div class="detail-val">{{ session.get('region','India') }}</div>
+            </div>
+          </div>
+          <div class="detail-row">
+            <i class="fa-solid fa-clock"></i>
+            <div>
+              <div class="detail-key">LAST LOGIN</div>
+              <div class="detail-val mono">{{ session.get('last_login','—') }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── RIGHT ── -->
+    <div class="right-col">
+
+      <!-- Stats band -->
+      <div class="stats-band">
+        <div class="sb-item">
+          <div class="sb-label">PREDICTIONS RUN</div>
+          <div class="sb-val">{{ session.get('pred_count',0) }}</div>
+          <div class="sb-sub"><span class="up">↑ 12%</span> this month</div>
+        </div>
+        <div class="sb-item">
+          <div class="sb-label">AVG CONFIDENCE</div>
+          <div class="sb-val">{{ session.get('avg_conf','—') }}%</div>
+          <div class="sb-sub"><span class="up">↑ 4pt</span> vs last month</div>
+        </div>
+        <div class="sb-item">
+          <div class="sb-label">REPORTS SAVED</div>
+          <div class="sb-val">{{ session.get('report_count',0) }}</div>
+          <div class="sb-sub" style="color:var(--mt);">PDF downloads</div>
+        </div>
+        <div class="sb-item">
+          <div class="sb-label">ACCURACY RATE</div>
+          <div class="sb-val">{{ session.get('accuracy','—') }}%</div>
+          <div class="sb-sub"><span class="up">↑</span> 3-month rolling</div>
+        </div>
+      </div>
+
+      <!-- Main panel with tabs -->
+      <div class="panel">
+        <div class="panel-hdr">
+          <h3>Account Settings</h3>
+          <span class="tag tag-cy">EDITABLE</span>
+        </div>
+
+        <div class="tabs">
+          <div class="tab active" onclick="switchTab('info',this)">Personal Info</div>
+          <div class="tab" onclick="switchTab('security',this)">Security</div>
+          <div class="tab" onclick="switchTab('activity',this)">Activity</div>
+          <div class="tab" onclick="switchTab('preferences',this)">Preferences</div>
+        </div>
+
+        <!-- TAB: Personal Info -->
+        <div class="tab-content active" id="tab-info">
+          <div class="form-section">
+            <!-- Avatar -->
+            <div class="avatar-upload">
+              <div class="avatar-preview">
+                {% if session.get('avatar') %}
+                  <img src="{{ session.avatar }}" alt="">
+                {% else %}
+                  {{ (session.get('user','?')[0])|upper }}
+                {% endif %}
+              </div>
+              <div class="avatar-upload-info">
+                <h4>Profile Photo</h4>
+                <p>JPG, PNG or GIF · Max 2MB</p>
+              </div>
+              <button class="btn-upload" onclick="document.getElementById('avatarInput').click()">
+                <i class="fa-solid fa-upload"></i> Upload
+              </button>
+              <input type="file" id="avatarInput" accept="image/*" style="display:none"
+                     onchange="previewAvatar(this)">
+            </div>
+
+            <form method="POST" action="/edit_profile" enctype="multipart/form-data">
+              <div class="field-2col">
+                <div class="field">
+                  <label>First Name</label>
+                  <div class="inp-wrap">
+                    <i class="ico fa-solid fa-user"></i>
+                    <input type="text" name="first_name" value="{{ session.get('first_name','') }}" placeholder="First name">
+                  </div>
+                </div>
+                <div class="field">
+                  <label>Last Name</label>
+                  <div class="inp-wrap">
+                    <i class="ico fa-solid fa-user"></i>
+                    <input type="text" name="last_name" value="{{ session.get('last_name','') }}" placeholder="Last name">
+                  </div>
+                </div>
+              </div>
+
+              <div class="field">
+                <label>Username</label>
+                <div class="inp-wrap">
+                  <i class="ico fa-solid fa-at"></i>
+                  <input type="text" value="{{ session.get('user','') }}" readonly>
+                </div>
+              </div>
+
+              <div class="field">
+                <label>Email Address</label>
+                <div class="inp-wrap">
+                  <i class="ico fa-solid fa-envelope"></i>
+                  <input type="email" name="email" value="{{ session.get('email','') }}" placeholder="your@email.com">
+                </div>
+              </div>
+
+              <div class="field-2col">
+                <div class="field">
+                  <label>Region / Country</label>
+                  <div class="inp-wrap">
+                    <i class="ico fa-solid fa-globe"></i>
+                    <select name="region">
+                      <option value="India" {{ 'selected' if session.get('region')=='India' }}>India</option>
+                      <option value="US" {{ 'selected' if session.get('region')=='US' }}>United States</option>
+                      <option value="UK" {{ 'selected' if session.get('region')=='UK' }}>United Kingdom</option>
+                      <option value="Other" {{ 'selected' if session.get('region') not in ['India','US','UK'] }}>Other</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="field">
+                  <label>Default Currency</label>
+                  <div class="inp-wrap">
+                    <i class="ico fa-solid fa-indian-rupee-sign"></i>
+                    <select name="currency">
+                      <option value="INR" {{ 'selected' if session.get('currency','INR')=='INR' }}>₹ INR</option>
+                      <option value="USD" {{ 'selected' if session.get('currency')=='USD' }}>$ USD</option>
+                      <option value="GBP" {{ 'selected' if session.get('currency')=='GBP' }}>£ GBP</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="btn-actions">
+                <button type="submit" class="btn-save"><i class="fa-solid fa-floppy-disk"></i> Save Changes</button>
+                <button type="button" class="btn-cancel">Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- TAB: Security -->
+        <div class="tab-content" id="tab-security">
+          <div class="security-rows">
+            <div class="sec-row">
+              <div class="sec-left">
+                <div class="sec-icon cy"><i class="fa-solid fa-lock"></i></div>
+                <div>
+                  <div class="sec-title">Password</div>
+                  <div class="sec-desc">Last changed: <span style="color:var(--cy);">{{ session.get('pw_changed','Never') }}</span></div>
+                </div>
+              </div>
+              <a href="/edit_profile#password" class="sec-action">Change</a>
+            </div>
+            <div class="sec-row">
+              <div class="sec-left">
+                <div class="sec-icon gr"><i class="fa-solid fa-shield-check"></i></div>
+                <div>
+                  <div class="sec-title">Two-Factor Auth</div>
+                  <div class="sec-desc">Add an extra layer of security to your account</div>
+                </div>
+              </div>
+              <span class="sec-badge badge-off">DISABLED</span>
+            </div>
+            <div class="sec-row">
+              <div class="sec-left">
+                <div class="sec-icon am"><i class="fa-solid fa-bell"></i></div>
+                <div>
+                  <div class="sec-title">Email Alerts</div>
+                  <div class="sec-desc">Price alerts and prediction notifications</div>
+                </div>
+              </div>
+              <span class="sec-badge badge-on">ENABLED</span>
+            </div>
+            <div class="sec-row">
+              <div class="sec-left">
+                <div class="sec-icon rd"><i class="fa-solid fa-right-from-bracket"></i></div>
+                <div>
+                  <div class="sec-title">Active Sessions</div>
+                  <div class="sec-desc">You have 1 active session right now</div>
+                </div>
+              </div>
+              <a href="/logout" class="sec-action" style="color:var(--rd);">Sign Out All</a>
+            </div>
+          </div>
+          <!-- Danger zone -->
+          <div class="danger-zone">
+            <div class="dz-title"><i class="fa-solid fa-triangle-exclamation"></i> DANGER ZONE</div>
+            <div class="dz-desc">Once you delete your account, there is no going back. All predictions, history, and data will be permanently removed.</div>
+            <button class="btn-danger"><i class="fa-solid fa-trash"></i> Delete Account</button>
+          </div>
+        </div>
+
+        <!-- TAB: Activity -->
+        <div class="tab-content" id="tab-activity">
+          <div class="activity-list">
+            <div class="act-item">
+              <div class="act-dot buy"></div>
+              <div class="act-body">
+                <div class="act-text">Predicted <strong>AAPL</strong> — BUY signal with 84.2% confidence</div>
+                <div class="act-time">Today, 09:24 AM</div>
+              </div>
+              <span class="act-tag" style="background:rgba(52,211,153,.1);color:var(--gr);">BUY</span>
+            </div>
+            <div class="act-item">
+              <div class="act-dot info"></div>
+              <div class="act-body">
+                <div class="act-text">Downloaded PDF report for <strong>TSLA</strong></div>
+                <div class="act-time">Yesterday, 03:15 PM</div>
+              </div>
+              <span class="act-tag" style="background:rgba(56,189,248,.1);color:var(--cy);">PDF</span>
+            </div>
+            <div class="act-item">
+              <div class="act-dot sell"></div>
+              <div class="act-body">
+                <div class="act-text">Predicted <strong>INFY.NS</strong> — SELL signal with 71.3% confidence</div>
+                <div class="act-time">2 days ago, 11:40 AM</div>
+              </div>
+              <span class="act-tag" style="background:rgba(248,113,113,.1);color:var(--rd);">SELL</span>
+            </div>
+            <div class="act-item">
+              <div class="act-dot info"></div>
+              <div class="act-body">
+                <div class="act-text">Added <strong>NVDA</strong> to watchlist with ₹900 alert</div>
+                <div class="act-time">3 days ago, 08:55 AM</div>
+              </div>
+              <span class="act-tag" style="background:rgba(129,140,248,.1);color:var(--pu);">WATCH</span>
+            </div>
+            <div class="act-item">
+              <div class="act-dot warn"></div>
+              <div class="act-body">
+                <div class="act-text">Compared <strong>AAPL vs MSFT</strong> — Full technical analysis</div>
+                <div class="act-time">4 days ago, 02:30 PM</div>
+              </div>
+              <span class="act-tag" style="background:rgba(251,191,36,.1);color:var(--am);">COMPARE</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB: Preferences -->
+        <div class="tab-content" id="tab-preferences">
+          <div class="form-section">
+            <form method="POST" action="/edit_profile">
+              <div class="field-2col">
+                <div class="field">
+                  <label>Default Forecast Days</label>
+                  <div class="inp-wrap">
+                    <i class="ico fa-solid fa-calendar-days"></i>
+                    <select name="forecast_days">
+                      <option value="7">7 Days</option>
+                      <option value="14">14 Days</option>
+                      <option value="30">30 Days</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="field">
+                  <label>Default Chart Type</label>
+                  <div class="inp-wrap">
+                    <i class="ico fa-solid fa-chart-line"></i>
+                    <select name="chart_type">
+                      <option value="line">Line</option>
+                      <option value="candlestick">Candlestick</option>
+                      <option value="area">Area</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="field">
+                <label>Default Market</label>
+                <div class="inp-wrap">
+                  <i class="ico fa-solid fa-building-columns"></i>
+                  <select name="default_market">
+                    <option value="NSE">NSE (India)</option>
+                    <option value="NYSE">NYSE (US)</option>
+                    <option value="NASDAQ">NASDAQ (US)</option>
+                    <option value="BSE">BSE (India)</option>
+                  </select>
+                </div>
+              </div>
+              <div class="btn-actions">
+                <button type="submit" class="btn-save"><i class="fa-solid fa-floppy-disk"></i> Save Preferences</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+      </div><!-- /panel -->
+    </div><!-- /right-col -->
+  </div><!-- /grid -->
 </div>
-
-</div>
-
-<!-- Info -->
-
-<div class="profile-info">
-
-<h2>{{ username }}</h2>
-
-<p>Email: {{ email }}</p>
-<p>Member Since: Jan 2026</p>
-<p>Last Activity: N/A</p>
-
-</div>
-
-</div>
-
-<!-- Edit -->
-
-<a href="/edit-profile" class="edit-btn">
-<i class="fa-solid fa-pen"></i> Edit Profile
-</a>
-
-</div>
-
-
-<!-- STATS -->
-
-<div class="stats">
-
-<div class="stat-card">
-<i class="fa-solid fa-database"></i>
-<h3 data-count="0">0</h3>
-<p>Total Predictions</p>
-</div>
-
-<div class="stat-card">
-<i class="fa-solid fa-arrow-up"></i>
-<h3 data-count="12">0</h3>
-<p>BUY Signals</p>
-</div>
-
-<div class="stat-card">
-<i class="fa-solid fa-arrow-down"></i>
-<h3 data-count="1">0</h3>
-<p>SELL Signals</p>
-</div>
-
-<div class="stat-card">
-<i class="fa-solid fa-bullseye"></i>
-<h3 data-count="92">0</h3>
-<p>Accuracy (%)</p>
-</div>
-
-</div>
-
-
-<!-- ACTIVITY -->
-
-<div class="activity-box">
-
-<h4>Recent Activity</h4>
-
-{% if activities %}
-
-{% for act in activities %}
-
-<div class="activity-item">
-<strong>{{ act.action }}</strong> - {{ act.stock }}
-| Confidence: {{ act.confidence }}%
-| {{ act.date }}
-</div>
-
-{% endfor %}
-
-{% else %}
-
-<p>No recent activity</p>
-
-{% endif %}
-
-
-<div class="progress-wrap">
-
-<p style="margin:10px 0;">Model Accuracy</p>
-
-<div class="progress">
-<div class="progress-fill"></div>
-</div>
-
-</div>
-
-</div>
-
-
-</div>
-
-
-<!-- ================= SCRIPTS ================= -->
 
 <script>
-
-/* Background Particles */
-
-const canvas=document.getElementById("bgCanvas");
-const ctx=canvas.getContext("2d");
-
-function resize(){
-canvas.width=innerWidth;
-canvas.height=innerHeight;
-}
-resize();
-addEventListener("resize",resize);
-
-let dots=[];
-
-for(let i=0;i<90;i++){
-dots.push({
-x:Math.random()*canvas.width,
-y:Math.random()*canvas.height,
-dx:(Math.random()-.5)*.6,
-dy:(Math.random()-.5)*.6
-});
+function switchTab(id,el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tab-'+id).classList.add('active');
 }
 
-function animateBG(){
-
-ctx.clearRect(0,0,canvas.width,canvas.height);
-
-dots.forEach(d=>{
-
-d.x+=d.dx;
-d.y+=d.dy;
-
-if(d.x<0||d.x>canvas.width) d.dx*=-1;
-if(d.y<0||d.y>canvas.height) d.dy*=-1;
-
-ctx.fillStyle="rgba(56,189,248,.6)";
-ctx.beginPath();
-ctx.arc(d.x,d.y,2,0,Math.PI*2);
-ctx.fill();
-
-dots.forEach(o=>{
-
-const dx=d.x-o.x;
-const dy=d.y-o.y;
-const dist=Math.sqrt(dx*dx+dy*dy);
-
-if(dist<130){
-
-ctx.strokeStyle=`rgba(56,189,248,${1-dist/130})`;
-ctx.beginPath();
-ctx.moveTo(d.x,d.y);
-ctx.lineTo(o.x,o.y);
-ctx.stroke();
-
+function previewAvatar(input){
+  if(input.files&&input.files[0]){
+    const reader=new FileReader();
+    reader.onload=e=>{
+      document.querySelectorAll('.avatar-preview,.avatar-inner').forEach(el=>{
+        el.innerHTML=`<img src="${e.target.result}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+      });
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
 }
-
-});
-
-});
-
-requestAnimationFrame(animateBG);
-}
-
-animateBG();
-
-
-/* Counter Animation */
-
-const counters=document.querySelectorAll("[data-count]");
-
-counters.forEach(c=>{
-
-let start=0;
-const end=+c.dataset.count;
-const speed=40;
-
-const timer=setInterval(()=>{
-
-start++;
-c.innerText=start;
-
-if(start>=end) clearInterval(timer);
-
-},speed);
-
-});
-
 </script>
-
 </body>
 </html>

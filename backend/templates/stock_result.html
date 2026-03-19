@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>{{ symbol }} — {{ month }}/{{ year }} Analysis | Stock AI</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#020917;--s1:rgba(6,14,35,.95);--s2:rgba(8,18,42,.88);
+  --bd:rgba(56,189,248,.12);--bdh:rgba(56,189,248,.35);
+  --cy:#38bdf8;--cy2:#22d3ee;--gr:#4ade80;--rd:#fb7185;--am:#fbbf24;--pu:#a78bfa;
+  --tx:#e2e8f0;--mt:#64748b;
+  --mono:'Space Mono',monospace;--sans:'Syne',sans-serif;
+}
+body{min-height:100vh;background:var(--bg);color:var(--tx);font-family:var(--sans);overflow-x:hidden;}
+body::before{content:"";position:fixed;inset:0;background:linear-gradient(rgba(56,189,248,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(56,189,248,.018) 1px,transparent 1px);background-size:52px 52px;pointer-events:none;z-index:0;}
+#bgc{position:fixed;inset:0;z-index:0;pointer-events:none;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes tickScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@keyframes fillBar{from{width:0}to{width:var(--w)}}
+@keyframes countPop{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
+
+/* ── NAV ── */
+.nav{position:sticky;top:0;z-index:200;height:60px;background:rgba(2,9,23,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;padding:0 26px;gap:10px;}
+.nav-brand{display:flex;align-items:center;gap:9px;text-decoration:none;flex-shrink:0;}
+.nav-brand i{color:var(--cy);font-size:18px;}
+.nav-brand span{font-size:17px;font-weight:800;background:linear-gradient(90deg,var(--cy),var(--cy2));-webkit-background-clip:text;color:transparent;}
+.nav-links{display:flex;align-items:center;gap:4px;flex-wrap:wrap;}
+.nl{display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:8px;border:1px solid transparent;color:var(--mt);font-size:12.5px;font-weight:600;text-decoration:none;transition:.2s;white-space:nowrap;}
+.nl:hover{background:rgba(56,189,248,.08);border-color:rgba(56,189,248,.2);color:var(--cy);}
+.nl.on{background:rgba(56,189,248,.12);border-color:rgba(56,189,248,.35);color:var(--cy);}
+.nl.out{color:var(--rd);border-color:rgba(251,113,133,.1);}
+.nl.out:hover{background:rgba(251,113,133,.08);}
+.nav-user{display:flex;align-items:center;gap:7px;padding:5px 13px;border-radius:40px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);font-size:12px;color:var(--mt);flex-shrink:0;}
+.udot{width:6px;height:6px;background:var(--gr);border-radius:50%;animation:pulse 2s infinite;}
+
+/* ── TICKER ── */
+.ticker{height:30px;background:rgba(4,10,26,.98);border-bottom:1px solid var(--bd);overflow:hidden;display:flex;align-items:center;}
+.tick-wrap{display:flex;white-space:nowrap;animation:tickScroll 50s linear infinite;}
+.tick-item{font-family:var(--mono);font-size:.68rem;padding:0 22px;display:flex;align-items:center;gap:7px;border-right:1px solid rgba(255,255,255,.04);}
+.ts{color:var(--cy);font-weight:700;}
+.tu{color:var(--gr);}
+.td{color:var(--rd);}
+
+/* ── PAGE ── */
+.page{max-width:980px;margin:0 auto;padding:36px 22px 90px;position:relative;z-index:1;}
+
+/* ── RESULT HEADER ── */
+.res-hd{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:32px;animation:fadeUp .5s ease both;}
+.res-hd-left{}
+.res-tag{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:.62rem;color:var(--cy);background:rgba(56,189,248,.07);border:1px solid rgba(56,189,248,.18);padding:4px 11px;border-radius:20px;margin-bottom:10px;text-transform:uppercase;letter-spacing:2px;}
+.res-hd h1{font-size:clamp(1.6rem,4vw,2.2rem);font-weight:800;line-height:1.15;}
+.res-hd h1 span.sym{background:linear-gradient(90deg,var(--cy),var(--cy2));-webkit-background-clip:text;color:transparent;}
+.res-hd h1 span.per{color:var(--mt);font-size:.8em;}
+.res-hd-right{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+.btn-back{display:flex;align-items:center;gap:7px;padding:10px 18px;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:var(--mt);font-size:.8rem;font-weight:600;text-decoration:none;transition:.2s;font-family:var(--sans);}
+.btn-back:hover{border-color:rgba(56,189,248,.25);color:var(--cy);}
+.btn-pdf{display:flex;align-items:center;gap:7px;padding:10px 20px;border-radius:10px;background:linear-gradient(135deg,rgba(251,191,36,.15),rgba(251,191,36,.06));border:1px solid rgba(251,191,36,.3);color:var(--am);font-size:.82rem;font-weight:700;text-decoration:none;transition:.2s;font-family:var(--sans);}
+.btn-pdf:hover{background:linear-gradient(135deg,rgba(251,191,36,.22),rgba(251,191,36,.1));border-color:rgba(251,191,36,.5);transform:translateY(-1px);}
+
+/* ── DIVIDER LABEL ── */
+.dl{display:flex;align-items:center;gap:10px;margin:28px 0 16px;}
+.dl span{font-family:var(--mono);font-size:.62rem;color:var(--mt);text-transform:uppercase;letter-spacing:2.5px;white-space:nowrap;}
+.dl::before,.dl::after{content:"";flex:1;height:1px;background:rgba(255,255,255,.06);}
+
+/* ── OVERVIEW BAND ── */
+.ov-band{display:grid;grid-template-columns:repeat(5,1fr);border:1px solid var(--bd);border-radius:14px;overflow:hidden;animation:fadeUp .55s ease both .05s;}
+.ov-item{padding:18px 14px;border-right:1px solid var(--bd);background:var(--s2);text-align:center;transition:.2s;}
+.ov-item:last-child{border-right:none;}
+.ov-item:hover{background:rgba(56,189,248,.04);}
+.ov-val{font-family:var(--mono);font-size:1.15rem;font-weight:700;animation:countPop .5s ease both;}
+.ov-lbl{font-family:var(--mono);font-size:.6rem;color:var(--mt);text-transform:uppercase;letter-spacing:1px;margin-top:5px;}
+.ov-val.pos{color:var(--gr);}
+.ov-val.neg{color:var(--rd);}
+.ov-val.cy{color:var(--cy);}
+
+/* ── CHART PANEL ── */
+.chart-panel{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:24px 26px;animation:fadeUp .6s ease both .1s;position:relative;overflow:hidden;}
+.chart-panel::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(56,189,248,.18),transparent);}
+.cp-header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:20px;}
+.cp-title{display:flex;align-items:center;gap:9px;}
+.cp-title-text{font-size:.88rem;font-weight:700;color:var(--tx);}
+.cp-title i{color:var(--cy);font-size:.85rem;}
+.cp-pills{display:flex;gap:7px;}
+.cp-pill{font-family:var(--mono);font-size:.65rem;padding:3px 10px;border-radius:20px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:var(--mt);cursor:pointer;transition:.18s;}
+.cp-pill.act{background:rgba(56,189,248,.12);border-color:rgba(56,189,248,.3);color:var(--cy);}
+
+/* ── PREDICTION PANEL ── */
+.pred-panel{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:24px 26px;animation:fadeUp .65s ease both .15s;position:relative;overflow:hidden;}
+.pred-panel::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(167,139,250,.25),transparent);}
+
+.pred-layout{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;}
+.pred-left{}
+.pred-section-title{display:flex;align-items:center;gap:8px;margin-bottom:18px;}
+.pred-section-title i{color:var(--pu);}
+.pred-section-title span{font-size:.88rem;font-weight:700;}
+
+.pred-price-row{display:flex;align-items:baseline;gap:8px;margin-bottom:10px;}
+.pred-curr{font-family:var(--mono);font-size:2rem;font-weight:700;color:var(--tx);}
+.pred-arrow{font-size:1rem;font-weight:700;}
+.pred-arrow.up{color:var(--gr);}
+.pred-arrow.dn{color:var(--rd);}
+.pred-next{font-family:var(--mono);font-size:2rem;font-weight:700;}
+.pred-next.up{color:var(--gr);}
+.pred-next.dn{color:var(--rd);}
+.pred-sub{font-size:.74rem;color:var(--mt);margin-bottom:20px;}
+
+.trend-pill{display:inline-flex;align-items:center;gap:7px;padding:8px 18px;border-radius:30px;font-size:.82rem;font-weight:700;font-family:var(--mono);}
+.trend-pill.up{background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.25);color:var(--gr);}
+.trend-pill.dn{background:rgba(251,113,133,.1);border:1px solid rgba(251,113,133,.25);color:var(--rd);}
+
+.pred-right{}
+.pred-stats{display:flex;flex-direction:column;gap:10px;}
+.pst-row{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05);border-radius:9px;padding:11px 14px;}
+.pst-label{font-size:.75rem;color:var(--mt);}
+.pst-val{font-family:var(--mono);font-size:.85rem;font-weight:700;color:var(--tx);}
+
+/* bar row */
+.bar-row{margin-top:14px;}
+.bar-row-label{font-family:var(--mono);font-size:.6rem;color:var(--mt);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;}
+.bar-track{height:6px;background:rgba(255,255,255,.06);border-radius:20px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:20px;animation:fillBar .9s ease forwards;width:0;}
+
+/* ── TABLE PANEL ── */
+.tbl-panel{background:var(--s1);border:1px solid var(--bd);border-radius:14px;overflow:hidden;animation:fadeUp .7s ease both .2s;}
+.tbl-header{display:flex;align-items:center;gap:9px;padding:18px 22px;border-bottom:1px solid var(--bd);background:rgba(56,189,248,.02);}
+.tbl-header i{color:var(--cy);font-size:.85rem;}
+.tbl-header span{font-size:.88rem;font-weight:700;}
+.tbl-header .tbl-sub{font-size:.72rem;color:var(--mt);margin-left:auto;font-family:var(--mono);}
+.tbl-wrap{overflow-x:auto;}
+.rtbl{width:100%;border-collapse:collapse;font-size:.8rem;}
+.rtbl th{padding:11px 14px;text-align:left;font-family:var(--mono);font-size:.62rem;color:var(--cy);text-transform:uppercase;letter-spacing:1px;background:rgba(56,189,248,.04);border-bottom:1px solid var(--bd);white-space:nowrap;}
+.rtbl td{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.04);font-family:var(--mono);color:var(--tx);white-space:nowrap;transition:.15s;}
+.rtbl tr:hover td{background:rgba(56,189,248,.04);}
+.rtbl tr:last-child td{border-bottom:none;}
+.rtbl td:first-child{color:var(--mt);font-size:.72rem;}
+
+/* override pandas table classes */
+.table{width:100%!important;border-collapse:collapse!important;}
+.table th{padding:11px 14px!important;text-align:left!important;font-family:var(--mono)!important;font-size:.62rem!important;color:var(--cy)!important;text-transform:uppercase!important;letter-spacing:1px!important;background:rgba(56,189,248,.04)!important;border-bottom:1px solid var(--bd)!important;white-space:nowrap!important;border:none!important;}
+.table td{padding:10px 14px!important;border-bottom:1px solid rgba(255,255,255,.04)!important;font-family:var(--mono)!important;font-size:.78rem!important;color:var(--tx)!important;white-space:nowrap!important;border:none!important;border-bottom:1px solid rgba(255,255,255,.04)!important;}
+.table tr:hover td{background:rgba(56,189,248,.04)!important;}
+.table-striped tbody tr:nth-of-type(odd) td{background:rgba(255,255,255,.02)!important;}
+
+/* ── DISCLAIMER ── */
+.disc{background:rgba(251,191,36,.04);border:1px solid rgba(251,191,36,.15);border-radius:10px;padding:13px 17px;display:flex;align-items:flex-start;gap:10px;margin-top:24px;animation:fadeUp .8s ease both .3s;}
+.disc i{color:var(--am);font-size:.82rem;margin-top:2px;flex-shrink:0;}
+.disc p{font-size:.72rem;color:var(--mt);line-height:1.55;}
+
+@media(max-width:900px){.ov-band{grid-template-columns:repeat(3,1fr);}.pred-layout{grid-template-columns:1fr;}}
+@media(max-width:768px){.nl span{display:none;}.ov-band{grid-template-columns:1fr 1fr 1fr;}}
+@media(max-width:520px){.ov-band{grid-template-columns:1fr 1fr;}.res-hd{flex-direction:column;}.res-hd-right{width:100%;}}
+</style>
+</head>
+<body>
+<canvas id="bgc"></canvas>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="/dashboard" class="nav-brand"><i class="fa-solid fa-chart-line"></i><span>Stock AI</span></a>
+  <div class="nav-links">
+    <a href="/dashboard"         class="nl"><i class="fa-solid fa-house"></i><span>Dashboard</span></a>
+    <a href="/stock"             class="nl"><i class="fa-solid fa-magnifying-glass-chart"></i><span>Predict</span></a>
+    <a href="/watchlist"         class="nl"><i class="fa-solid fa-star"></i><span>Watchlist</span></a>
+    <a href="/news"              class="nl"><i class="fa-solid fa-newspaper"></i><span>News</span></a>
+    <a href="/compare"           class="nl"><i class="fa-solid fa-code-compare"></i><span>Compare</span></a>
+    <a href="/portfolio-advisor" class="nl"><i class="fa-solid fa-chart-pie"></i><span>Advisor</span></a>
+    <a href="/history"           class="nl"><i class="fa-solid fa-clock-rotate-left"></i><span>History</span></a>
+    <a href="/stock-analysis"    class="nl on"><i class="fa-solid fa-rocket"></i><span>Advanced AI</span></a>
+    <a href="/profile"           class="nl"><i class="fa-solid fa-user"></i><span>Profile</span></a>
+    <a href="/logout"            class="nl out"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a>
+  </div>
+  <div class="nav-user"><span class="udot"></span><span>{{ session.get('user','User') | title }}</span></div>
+</nav>
+
+<!-- TICKER -->
+<div class="ticker"><div class="tick-wrap" id="tw"></div></div>
+
+<div class="page">
+
+  <!-- RESULT HEADER -->
+  <div class="res-hd">
+    <div class="res-hd-left">
+      <div class="res-tag"><i class="fa-solid fa-rocket"></i>&nbsp;Monthly Analysis Result</div>
+      <h1>
+        <span class="sym">{{ symbol }}</span>
+        &nbsp;
+        <span class="per">—&nbsp;{{ ['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][month|int] }} {{ year }}</span>
+      </h1>
+    </div>
+    <div class="res-hd-right">
+      <a href="/stock-analysis" class="btn-back"><i class="fa-solid fa-arrow-left"></i>New Analysis</a>
+      <a href="/download_report" class="btn-pdf"><i class="fa-solid fa-file-pdf"></i>Download PDF Report</a>
+    </div>
+  </div>
+
+  <!-- ── OVERVIEW ── -->
+  <div class="dl"><span>Overview</span></div>
+  <div class="ov-band">
+    {% set ret = overview.return %}
+    <div class="ov-item">
+      <div class="ov-val cy">{{ overview.total_days }}</div>
+      <div class="ov-lbl">Trading Days</div>
+    </div>
+    <div class="ov-item">
+      <div class="ov-val cy">{{ overview.highest }}</div>
+      <div class="ov-lbl">Period High</div>
+    </div>
+    <div class="ov-item">
+      <div class="ov-val cy">{{ overview.lowest }}</div>
+      <div class="ov-lbl">Period Low</div>
+    </div>
+    <div class="ov-item">
+      <div class="ov-val cy">{{ overview.volatility }}</div>
+      <div class="ov-lbl">Std Dev (Volatility)</div>
+    </div>
+    <div class="ov-item">
+      <div class="ov-val {% if ret >= 0 %}pos{% else %}neg{% endif %}">
+        {% if ret >= 0 %}+{% endif %}{{ ret }}%
+      </div>
+      <div class="ov-lbl">Monthly Return</div>
+    </div>
+  </div>
+
+  <!-- ── PRICE CHART ── -->
+  <div class="dl"><span>Price History</span></div>
+  <div class="chart-panel">
+    <div class="cp-header">
+      <div class="cp-title">
+        <i class="fa-solid fa-chart-line"></i>
+        <span class="cp-title-text">Closing Price — {{ ['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][month|int] }} {{ year }}</span>
+      </div>
+      <div class="cp-pills">
+        <span class="cp-pill act" id="pill-line" onclick="switchChart('line',this)">Line</span>
+        <span class="cp-pill" id="pill-bar"  onclick="switchChart('bar',this)">Bar</span>
+      </div>
+    </div>
+    <canvas id="priceChart" height="90"></canvas>
+  </div>
+
+  <!-- ── PREDICTION ── -->
+  <div class="dl"><span>AI Prediction</span></div>
+  <div class="pred-panel">
+    <div class="pred-layout">
+      <div class="pred-left">
+        <div class="pred-section-title">
+          <i class="fa-solid fa-brain"></i>
+          <span>Linear Regression Forecast</span>
+        </div>
+        <div class="pred-price-row">
+          <span class="pred-curr">{{ summary.last_price }}</span>
+          {% if summary.trend == 'Uptrend' %}
+          <span class="pred-arrow up">→</span>
+          <span class="pred-next up">{{ summary.prediction }}</span>
+          {% else %}
+          <span class="pred-arrow dn">→</span>
+          <span class="pred-next dn">{{ summary.prediction }}</span>
+          {% endif %}
+        </div>
+        <div class="pred-sub">Last close &nbsp;→&nbsp; Next-day forecast (LR model)</div>
+
+        {% if summary.trend == 'Uptrend' %}
+        <div class="trend-pill up"><i class="fa-solid fa-arrow-trend-up"></i>Uptrend — Bullish Signal</div>
+        {% else %}
+        <div class="trend-pill dn"><i class="fa-solid fa-arrow-trend-down"></i>Downtrend — Bearish Signal</div>
+        {% endif %}
+
+        <!-- regression bar -->
+        {% set diff = ((summary.prediction - summary.last_price) / summary.last_price * 100) | round(2) %}
+        {% set bar_pct = [diff | abs * 10, 100] | min %}
+        <div class="bar-row" style="margin-top:20px;">
+          <div class="bar-row-label">Predicted move magnitude</div>
+          <div class="bar-track">
+            <div class="bar-fill" style="--w:{{ bar_pct }}%;background:{% if diff >= 0 %}var(--gr){% else %}var(--rd){% endif %}"></div>
+          </div>
+          <div style="font-family:var(--mono);font-size:.68rem;color:var(--mt);margin-top:5px;">
+            {% if diff >= 0 %}+{% endif %}{{ diff }}% expected move
+          </div>
+        </div>
+      </div>
+
+      <div class="pred-right">
+        <div class="pred-section-title">
+          <i class="fa-solid fa-table-cells" style="color:var(--cy)"></i>
+          <span>Period Summary</span>
+        </div>
+        <div class="pred-stats">
+          <div class="pst-row">
+            <span class="pst-label">Last Closing Price</span>
+            <span class="pst-val">{{ summary.last_price }}</span>
+          </div>
+          <div class="pst-row">
+            <span class="pst-label">Mean Price (Month)</span>
+            <span class="pst-val">{{ summary.mean_price }}</span>
+          </div>
+          <div class="pst-row">
+            <span class="pst-label">Predicted Next Close</span>
+            <span class="pst-val" style="color:{% if summary.trend=='Uptrend' %}var(--gr){% else %}var(--rd){% endif %}">{{ summary.prediction }}</span>
+          </div>
+          <div class="pst-row">
+            <span class="pst-label">Period High</span>
+            <span class="pst-val">{{ overview.highest }}</span>
+          </div>
+          <div class="pst-row">
+            <span class="pst-label">Period Low</span>
+            <span class="pst-val">{{ overview.lowest }}</span>
+          </div>
+          <div class="pst-row">
+            <span class="pst-label">Volatility (Std Dev)</span>
+            <span class="pst-val">{{ overview.volatility }}</span>
+          </div>
+          <div class="pst-row">
+            <span class="pst-label">Monthly Return</span>
+            <span class="pst-val" style="color:{% if overview.return >= 0 %}var(--gr){% else %}var(--rd){% endif %}">
+              {% if overview.return >= 0 %}+{% endif %}{{ overview.return }}%
+            </span>
+          </div>
+          <div class="pst-row">
+            <span class="pst-label">Trend Direction</span>
+            <span class="pst-val" style="color:{% if summary.trend=='Uptrend' %}var(--gr){% else %}var(--rd){% endif %}">{{ summary.trend }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── RAW DATA TABLE ── -->
+  <div class="dl"><span>Last 10 Trading Days</span></div>
+  <div class="tbl-panel">
+    <div class="tbl-header">
+      <i class="fa-solid fa-table"></i>
+      <span>Raw OHLCV Data</span>
+      <span class="tbl-sub">10 most recent trading days</span>
+    </div>
+    <div class="tbl-wrap">
+      {{ table | safe }}
+    </div>
+  </div>
+
+  <!-- DISCLAIMER -->
+  <div class="disc">
+    <i class="fa-solid fa-triangle-exclamation"></i>
+    <p>This analysis is generated by an AI model using historical data and linear regression. It is for informational purposes only and does not constitute financial advice. Past performance is not indicative of future results. Always conduct your own research before making investment decisions.</p>
+  </div>
+
+</div><!-- /page -->
+
+<script>
+/* BG */
+const cv=document.getElementById("bgc"),cx=cv.getContext("2d");
+function rsz(){cv.width=innerWidth;cv.height=innerHeight;}rsz();addEventListener("resize",rsz);
+const pts=Array.from({length:45},()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,dx:(Math.random()-.5)*.3,dy:(Math.random()-.5)*.3}));
+(function loop(){
+  cx.clearRect(0,0,cv.width,cv.height);
+  pts.forEach(p=>{
+    p.x+=p.dx;p.y+=p.dy;
+    if(p.x<0||p.x>cv.width)p.dx*=-1;if(p.y<0||p.y>cv.height)p.dy*=-1;
+    cx.fillStyle="rgba(56,189,248,.22)";cx.beginPath();cx.arc(p.x,p.y,1.2,0,Math.PI*2);cx.fill();
+    pts.forEach(q=>{const dx=p.x-q.x,dy=p.y-q.y,r=Math.sqrt(dx*dx+dy*dy);if(r<80){cx.strokeStyle=`rgba(56,189,248,${.4*(1-r/80)})`;cx.lineWidth=.22;cx.beginPath();cx.moveTo(p.x,p.y);cx.lineTo(q.x,q.y);cx.stroke();}});
+  });
+  requestAnimationFrame(loop);
+})();
+
+/* TICKER */
+const T=[{s:"AAPL",p:"$213.49",c:"+0.82%",u:1},{s:"TSLA",p:"$248.05",c:"-1.34%",u:0},{s:"NVDA",p:"$875.40",c:"+2.11%",u:1},{s:"MSFT",p:"$415.32",c:"+0.47%",u:1},{s:"GOOGL",p:"$175.18",c:"-0.23%",u:0},{s:"INFY",p:"₹1548",c:"+1.22%",u:1},{s:"TCS",p:"₹3821",c:"-0.41%",u:0},{s:"RELIANCE",p:"₹2940",c:"+0.93%",u:1}];
+document.getElementById("tw").innerHTML=[...T,...T].map(t=>`<div class="tick-item"><span class="ts">${t.s}</span><span>${t.p}</span><span class="${t.u?'tu':'td'}">${t.c}</span></div>`).join("");
+
+/* CHART */
+const LABELS = {{ chart_labels | tojson }};
+const DATA   = {{ chart_data   | tojson }};
+const isUp   = DATA.length > 1 && DATA[DATA.length-1] >= DATA[0];
+
+const chartConfig = (type) => ({
+  type,
+  data:{
+    labels:LABELS,
+    datasets:[{
+      label:"Close Price",
+      data:DATA,
+      borderColor: isUp ? "#4ade80" : "#fb7185",
+      backgroundColor: type==="line"
+        ? (isUp ? "rgba(74,222,128,.07)" : "rgba(251,113,133,.07)")
+        : (isUp ? "rgba(74,222,128,.45)" : "rgba(251,113,133,.45)"),
+      fill: type==="line",
+      tension:.42,
+      pointRadius:2.5,
+      pointHoverRadius:5,
+      borderWidth:2,
+    }]
+  },
+  options:{
+    responsive:true,animation:{duration:800},
+    plugins:{
+      legend:{display:false},
+      tooltip:{
+        backgroundColor:"rgba(6,14,35,.95)",
+        borderColor:"rgba(56,189,248,.25)",
+        borderWidth:1,
+        titleColor:"#38bdf8",
+        bodyColor:"#e2e8f0",
+        titleFont:{family:"'Space Mono',monospace",size:11},
+        bodyFont:{family:"'Space Mono',monospace",size:11},
+        callbacks:{label:ctx=>`  Close: ${ctx.parsed.y.toFixed(2)}`}
+      }
+    },
+    scales:{
+      x:{ticks:{color:"#64748b",maxTicksLimit:10,font:{family:"'Space Mono',monospace",size:10}},grid:{display:false}},
+      y:{ticks:{color:"#64748b",font:{family:"'Space Mono',monospace",size:10}},grid:{color:"rgba(255,255,255,.04)"}}
+    }
+  }
+});
+
+let myChart = new Chart(document.getElementById("priceChart"), chartConfig("line"));
+
+function switchChart(type, el){
+  document.querySelectorAll(".cp-pill").forEach(p=>p.classList.remove("act"));
+  el.classList.add("act");
+  myChart.destroy();
+  myChart = new Chart(document.getElementById("priceChart"), chartConfig(type));
+}
+</script>
+</body>
+</html>

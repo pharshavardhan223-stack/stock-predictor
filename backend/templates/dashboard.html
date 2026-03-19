@@ -76,12 +76,16 @@ perspective:1200px;
 /* ================= HEADER ================= */
 
 .header{
-text-align:center;
+display:flex;
+align-items:center;
+justify-content:space-between;
 margin-bottom:35px;
+flex-wrap:wrap;
+gap:15px;
 }
 
-.header h1{
-font-size:34px;
+.header-left h1{
+font-size:30px;
 background:linear-gradient(90deg,#38bdf8,#22d3ee,#7dd3fc);
 -webkit-background-clip:text;
 color:transparent;
@@ -89,9 +93,107 @@ letter-spacing:1px;
 animation:textGlow 4s infinite alternate;
 }
 
+.header-left p{
+color:#64748b;
+font-size:13px;
+margin-top:4px;
+}
+
 @keyframes textGlow{
 from{opacity:.7}
 to{opacity:1}
+}
+
+/* User badge */
+.user-badge{
+display:flex;
+align-items:center;
+gap:10px;
+background:rgba(255,255,255,.05);
+border:1px solid rgba(255,255,255,.08);
+border-radius:50px;
+padding:8px 18px;
+font-size:14px;
+}
+
+.user-badge .dot{
+width:8px;
+height:8px;
+background:#22d3ee;
+border-radius:50%;
+animation:pulse 2s infinite;
+}
+
+@keyframes pulse{
+0%,100%{opacity:1;transform:scale(1)}
+50%{opacity:.5;transform:scale(1.4)}
+}
+
+/* ================= STATS ROW ================= */
+
+.stats-row{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+gap:16px;
+margin-bottom:25px;
+}
+
+.stat-card{
+background:rgba(255,255,255,.04);
+border:1px solid rgba(255,255,255,.07);
+border-radius:16px;
+padding:18px 20px;
+display:flex;
+align-items:center;
+gap:14px;
+transition:.3s;
+animation:fadeUp .6s ease both;
+}
+
+.stat-card:nth-child(1){animation-delay:.1s}
+.stat-card:nth-child(2){animation-delay:.2s}
+.stat-card:nth-child(3){animation-delay:.3s}
+.stat-card:nth-child(4){animation-delay:.4s}
+
+@keyframes fadeUp{
+from{opacity:0;transform:translateY(20px)}
+to{opacity:1;transform:translateY(0)}
+}
+
+.stat-card:hover{
+background:rgba(56,189,248,.08);
+border-color:rgba(56,189,248,.3);
+transform:translateY(-3px);
+}
+
+.stat-icon{
+width:44px;
+height:44px;
+border-radius:12px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:18px;
+flex-shrink:0;
+}
+
+.stat-icon.blue{background:rgba(59,130,246,.15);color:#3b82f6}
+.stat-icon.cyan{background:rgba(34,211,238,.15);color:#22d3ee}
+.stat-icon.green{background:rgba(34,197,94,.15);color:#22c55e}
+.stat-icon.purple{background:rgba(168,85,247,.15);color:#a855f7}
+
+.stat-info p{
+font-size:11px;
+color:#64748b;
+text-transform:uppercase;
+letter-spacing:.5px;
+}
+
+.stat-info h3{
+font-size:20px;
+font-weight:700;
+color:#f1f5f9;
+margin-top:2px;
 }
 
 /* ================= TICKER ================= */
@@ -110,14 +212,51 @@ box-shadow:0 10px 30px rgba(0,0,0,.4);
 display:flex;
 gap:45px;
 white-space:nowrap;
-animation:ticker 20s linear infinite;
+animation:ticker 25s linear infinite;
 }
 
 @keyframes ticker{
-to{transform:translateX(-100%)}
+to{transform:translateX(-50%)}
 }
 
 .ticker span{
+color:#38bdf8;
+font-weight:600;
+font-size:13px;
+}
+
+.ticker span.up{color:#22c55e}
+.ticker span.down{color:#f87171}
+
+/* ================= STOCK SWITCHER ================= */
+
+.switcher{
+display:flex;
+gap:10px;
+margin-bottom:20px;
+flex-wrap:wrap;
+}
+
+.switcher button{
+padding:7px 18px;
+border-radius:50px;
+border:1px solid rgba(255,255,255,.1);
+background:rgba(255,255,255,.04);
+color:#94a3b8;
+font-size:13px;
+cursor:pointer;
+transition:.3s;
+font-family:'Inter',sans-serif;
+}
+
+.switcher button:hover{
+border-color:#38bdf8;
+color:#38bdf8;
+}
+
+.switcher button.active{
+background:rgba(56,189,248,.15);
+border-color:#38bdf8;
 color:#38bdf8;
 font-weight:600;
 }
@@ -134,7 +273,7 @@ margin-bottom:35px;
 .card{
 background:rgba(255,255,255,.05);
 border-radius:18px;
-padding:25px;
+padding:0;
 text-align:center;
 backdrop-filter:blur(15px);
 border:1px solid rgba(255,255,255,.08);
@@ -142,6 +281,7 @@ position:relative;
 overflow:hidden;
 transition:.4s;
 transform-style:preserve-3d;
+cursor:pointer;
 }
 
 .card::before{
@@ -151,6 +291,8 @@ inset:-2px;
 background:linear-gradient(45deg,#3b82f6,#22d3ee,#3b82f6);
 opacity:0;
 transition:.4s;
+border-radius:18px;
+z-index:0;
 }
 
 .card:hover::before{opacity:1}
@@ -182,6 +324,15 @@ color:#cbd5f5;
 .card a{
 text-decoration:none;
 color:inherit;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+width:100%;
+height:100%;
+padding:25px;
+position:relative;
+z-index:3;
 }
 
 /* ================= MARKET ================= */
@@ -197,6 +348,7 @@ backdrop-filter:blur(20px);
 box-shadow:0 30px 80px rgba(0,0,0,.7);
 position:relative;
 overflow:hidden;
+margin-bottom:25px;
 }
 
 /* Pulse + Ring */
@@ -229,16 +381,51 @@ border-top:1px solid rgba(255,255,255,.12);
 margin:12px 0;
 }
 
+.market-left ul{
+list-style:none;
+}
+
 .market-left li{
 display:flex;
 justify-content:space-between;
 padding:6px 0;
 transition:.3s;
+font-size:14px;
 }
 
 .market-left li:hover{
 color:#22d3ee;
 transform:translateX(6px);
+}
+
+/* Live price big display */
+.live-price-display{
+margin:12px 0;
+}
+
+.live-price-display .price-big{
+font-size:32px;
+font-weight:700;
+color:#38bdf8;
+}
+
+.live-price-display .price-change{
+font-size:13px;
+margin-left:8px;
+}
+
+.price-change.up{color:#22c55e}
+.price-change.down{color:#f87171}
+
+/* Live dot */
+.live-dot{
+display:inline-block;
+width:8px;
+height:8px;
+background:#22c55e;
+border-radius:50%;
+margin-right:6px;
+animation:pulse 1.5s infinite;
 }
 
 /* ================= CHART ================= */
@@ -269,6 +456,95 @@ pointer-events:none;
 to{transform:translateX(100%);}
 }
 
+.chart-header{
+display:flex;
+align-items:center;
+justify-content:space-between;
+margin-bottom:15px;
+}
+
+.chart-toggle{
+display:flex;
+gap:6px;
+}
+
+.chart-toggle button{
+padding:4px 12px;
+border-radius:20px;
+border:1px solid rgba(255,255,255,.1);
+background:transparent;
+color:#64748b;
+font-size:12px;
+cursor:pointer;
+transition:.2s;
+font-family:'Inter',sans-serif;
+}
+
+.chart-toggle button.active{
+background:rgba(56,189,248,.15);
+border-color:#38bdf8;
+color:#38bdf8;
+}
+
+/* ================= WATCHLIST MINI ================= */
+
+.watchlist-mini{
+background:rgba(2,6,23,.9);
+border-radius:22px;
+padding:25px;
+backdrop-filter:blur(20px);
+box-shadow:0 30px 80px rgba(0,0,0,.7);
+margin-bottom:25px;
+}
+
+.watchlist-mini h3{
+color:#7dd3fc;
+margin-bottom:15px;
+display:flex;
+align-items:center;
+gap:8px;
+}
+
+.watchlist-grid{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
+gap:12px;
+}
+
+.watchlist-item{
+background:rgba(255,255,255,.04);
+border:1px solid rgba(255,255,255,.07);
+border-radius:12px;
+padding:12px;
+text-align:center;
+transition:.3s;
+}
+
+.watchlist-item:hover{
+border-color:#38bdf8;
+background:rgba(56,189,248,.06);
+}
+
+.watchlist-item .symbol{
+font-weight:700;
+font-size:15px;
+color:#f1f5f9;
+}
+
+.watchlist-item .w-price{
+font-size:13px;
+color:#38bdf8;
+margin-top:4px;
+}
+
+.watchlist-item .w-change{
+font-size:11px;
+margin-top:2px;
+}
+
+.w-change.up{color:#22c55e}
+.w-change.down{color:#f87171}
+
 /* ================= LOGOUT ================= */
 
 .logout{
@@ -287,11 +563,36 @@ transition:.3s;
 text-shadow:0 0 12px #fb7185;
 }
 
+/* ================= MARKET STATUS ================= */
+.market-status{
+display:inline-flex;
+align-items:center;
+gap:6px;
+font-size:12px;
+padding:3px 10px;
+border-radius:20px;
+margin-bottom:8px;
+}
+.market-status.open{
+background:rgba(34,197,94,.1);
+color:#22c55e;
+border:1px solid rgba(34,197,94,.2);
+}
+.market-status.closed{
+background:rgba(248,113,113,.1);
+color:#f87171;
+border:1px solid rgba(248,113,113,.2);
+}
+
 /* ================= RESPONSIVE ================= */
 
 @media(max-width:900px){
 .market{
 grid-template-columns:1fr;
+}
+.header{
+flex-direction:column;
+text-align:center;
 }
 }
 
@@ -305,212 +606,631 @@ grid-template-columns:1fr;
 
 <div class="container">
 
-<!-- HEADER -->
-<div class="header">
-<h1><i class="fa-solid fa-chart-line"></i> Stock AI Hybrid Dashboard</h1>
-</div>
+  <!-- ── HEADER ── -->
+  <div class="header">
+    <div class="header-left">
+      <h1><i class="fa-solid fa-chart-line"></i> Stock AI Dashboard</h1>
+      <p id="currentTime">Loading time...</p>
+    </div>
+    <div class="user-badge">
+      <span class="dot"></span>
+      <span>{{ session.get('user', 'User') | title }}</span>
+      <span style="color:#475569;font-size:12px;">•</span>
+      <span style="color:#475569;font-size:12px;">{{ session.get('role','user') | title }}</span>
+    </div>
+  </div>
 
-<!-- TICKER -->
-<div class="ticker">
-<div class="ticker-track">
-<span>AAPL ₹{{ live_price }}</span>
-<span>NASDAQ +0.45%</span>
-<span>AI Trend: BULLISH</span>
-<span>VOL: LOW</span>
+  <!-- ── STATS ROW ── -->
+  <div class="stats-row">
 
-<span>AAPL ₹{{ live_price }}</span>
-<span>NASDAQ +0.45%</span>
-<span>AI Trend: BULLISH</span>
-<span>VOL: LOW</span>
-</div>
-</div>
+    <div class="stat-card">
+      <div class="stat-icon blue">
+        <i class="fa-solid fa-dollar-sign"></i>
+      </div>
+      <div class="stat-info">
+        <p>Live Price</p>
+        <h3 id="statLivePrice">₹{{ live_price }}</h3>
+      </div>
+    </div>
 
-<!-- CARDS -->
-<div class="cards">
+    <div class="stat-card">
+      <div class="stat-icon cyan">
+        <i class="fa-solid fa-brain"></i>
+      </div>
+      <div class="stat-info">
+        <p>Predictions</p>
+        <h3 id="statPredictions">—</h3>
+      </div>
+    </div>
 
-<div class="card">
-<a href="/profile">
-<i class="fa-solid fa-user"></i>
-<h3>Profile</h3>
-<p>Account</p>
-</a>
-</div>
+    <div class="stat-card">
+      <div class="stat-icon green">
+        <i class="fa-solid fa-signal"></i>
+      </div>
+      <div class="stat-info">
+        <p>Market Status</p>
+        <h3 id="statMarket">—</h3>
+      </div>
+    </div>
 
-<div class="card">
-<a href="/live">
-<i class="fa-solid fa-bolt"></i>
-<h3>Live Feed</h3>
-<p>Real-time</p>
-</a>
-</div>
+    <div class="stat-card">
+      <div class="stat-icon purple">
+        <i class="fa-solid fa-chart-bar"></i>
+      </div>
+      <div class="stat-info">
+        <p>Watchlist</p>
+        <h3 id="statWatchlist">—</h3>
+      </div>
+    </div>
 
-<div class="card">
-<a href="/history">
-<i class="fa-solid fa-clock-rotate-left"></i>
-<h3>History</h3>
-<p>Predictions</p>
-</a>
-</div>
+  </div>
 
-<div class="card">
-<a href="/download_report">
-<i class="fa-solid fa-file"></i>
-<h3>Reports</h3>
-<p>Analytics</p>
-</a>
-</div>
+  <!-- ── TICKER ── -->
+  <div class="ticker">
+    <div class="ticker-track" id="tickerTrack">
+      <span>AAPL <span id="t-aapl">₹{{ live_price }}</span></span>
+      <span class="up">NASDAQ +0.45%</span>
+      <span>AI Trend: BULLISH</span>
+      <span>VOL: LOW</span>
+      <span id="t-tsla-wrap">TSLA <span id="t-tsla">Loading...</span></span>
+      <span id="t-msft-wrap">MSFT <span id="t-msft">Loading...</span></span>
+      <span id="t-googl-wrap">GOOGL <span id="t-googl">Loading...</span></span>
+      <span id="t-nvda-wrap">NVDA <span id="t-nvda">Loading...</span></span>
+      <!-- duplicate for seamless loop -->
+      <span>AAPL <span>₹{{ live_price }}</span></span>
+      <span class="up">NASDAQ +0.45%</span>
+      <span>AI Trend: BULLISH</span>
+      <span>VOL: LOW</span>
+      <span>TSLA <span id="t-tsla2">Loading...</span></span>
+      <span>MSFT <span id="t-msft2">Loading...</span></span>
+      <span>GOOGL <span id="t-googl2">Loading...</span></span>
+      <span>NVDA <span id="t-nvda2">Loading...</span></span>
+    </div>
+  </div>
 
-<div class="card">
-<i class="fa-solid fa-upload"></i>
-<h3>Upload</h3>
-<a href="/upload" class="upload-btn">Dataset</a>
-</div>
+  <!-- ── STOCK SWITCHER ── -->
+  <div class="switcher">
+    <button class="active" onclick="switchStock('AAPL',this)">AAPL</button>
+    <button onclick="switchStock('TSLA',this)">TSLA</button>
+    <button onclick="switchStock('MSFT',this)">MSFT</button>
+    <button onclick="switchStock('GOOGL',this)">GOOGL</button>
+    <button onclick="switchStock('NVDA',this)">NVDA</button>
+    <button onclick="switchStock('AMZN',this)">AMZN</button>
+  </div>
 
-</div>
+  <!-- ── CARDS ── -->
+  <div class="cards">
 
-<!-- MARKET -->
-<div class="market">
+    <div class="card">
+      <a href="/profile">
+        <i class="fa-solid fa-user"></i>
+        <h3>Profile</h3>
+        <p>Account</p>
+      </a>
+    </div>
 
-<!-- LEFT -->
-<div class="market-left">
+    <div class="card">
+      <a href="/live">
+        <i class="fa-solid fa-bolt"></i>
+        <h3>Live Feed</h3>
+        <p>Real-time</p>
+      </a>
+    </div>
 
-<h2><i class="fa-solid fa-globe"></i> Live Market (AAPL)</h2>
+    
 
-<p><b>Today:</b> ₹ {{ live_price }}</p>
+    
 
-<hr>
+    <div class="card">
+      <a href="/upload">
+        <i class="fa-solid fa-upload"></i>
+        <h3>Upload</h3>
+        <p>Dataset</p>
+      </a>
+    </div>
 
-<h4>Last 7 Days</h4>
+    <div class="card">
+      <a href="/stock-analysis">
+        <i class="fa-solid fa-rocket"></i>
+        <h3>Advanced AI</h3>
+        <p>Month Prediction</p>
+      </a>
+    </div>
 
-<ul>
-{% for d,p in last7 %}
-<li>
-<span>{{ d }}</span>
-<span>₹ {{ p }}</span>
-</li>
-{% endfor %}
-</ul>
+    <div class="card">
+      <a href="/watchlist">
+        <i class="fa-solid fa-star"></i>
+        <h3>Watchlist</h3>
+        <p>Track Stocks</p>
+      </a>
+    </div>
+    <div class="card">
+      <a href="/news">
+        <i class="fa-solid fa-newspaper"></i>
+        <h3>News Feed</h3>
+        <p>Live Market News</p>
+      </a>
+    </div>
+    <div class="card">
+      <a href="/compare">
+        <i class="fa-solid fa-code-compare"></i>
+        <h3>Compare</h3>
+        <p>Compare Stocks</p>
+      </a>
+    </div>
+    <div class="card">
+      <a href="/portfolio-advisor">
+        <i class="fa-solid fa-chart-pie"></i>
+        <h3>Portfolio Advisor</h3>
+        <p>AI Allocation</p>
+      </a>
+    </div>
 
-</div>
+    <div class="card">
+      <a href="/stock">
+        <i class="fa-solid fa-magnifying-glass-chart"></i>
+        <h3>Predict</h3>
+        <p>AI Prediction</p>
+      </a>
+    </div>
 
-<!-- RIGHT -->
-<div class="chart-box">
+    <div class="card">
+      <a href="/history">
+        <i class="fa-solid fa-file-arrow-down"></i>
+        <h3>Report</h3>
+        <p>View & Download</p>
+      </a>
+    </div>
 
-<h3>AI Trend</h3>
-<canvas id="marketChart" height="120"></canvas>
+    
 
-</div>
+  </div>
 
-</div>
+  <!-- ── MARKET ── -->
+  <div class="market">
 
-<!-- LOGOUT -->
-<div class="logout">
-<a href="/logout">
-<i class="fa-solid fa-right-from-bracket"></i> Logout
-</a>
-</div>
+    <!-- LEFT -->
+    <div class="market-left">
+
+      <div class="market-status open" id="marketStatusBadge">
+        <span class="live-dot"></span> Market Open
+      </div>
+
+      <h2>
+        <i class="fa-solid fa-globe"></i>
+        Live Market
+        <span id="currentSymbol" style="color:#38bdf8">AAPL</span>
+      </h2>
+
+      <div class="live-price-display">
+        <span class="price-big" id="livePriceBig">₹{{ live_price }}</span>
+        <span class="price-change up" id="priceChange">—</span>
+      </div>
+
+      <hr>
+
+      <h4 style="margin-bottom:8px;color:#94a3b8;font-size:13px;">
+        LAST 7 DAYS
+      </h4>
+
+      <ul id="last7List">
+        {% for d,p in last7 %}
+        <li>
+          <span>{{ d }}</span>
+          <span style="color:#38bdf8">₹ {{ p }}</span>
+        </li>
+        {% endfor %}
+      </ul>
+
+    </div>
+
+    <!-- RIGHT -->
+    <div class="chart-box">
+
+      <div class="chart-header">
+        <h3 id="chartTitle">AI Trend — AAPL</h3>
+        <div class="chart-toggle">
+          <button class="active" id="btnLine" onclick="setChartType('line',this)">Line</button>
+          <button id="btnBar" onclick="setChartType('bar',this)">Bar</button>
+        </div>
+      </div>
+
+      <canvas id="marketChart" height="120"></canvas>
+
+    </div>
+
+  </div>
+
+  <!-- ── WATCHLIST MINI ── -->
+  <div class="watchlist-mini">
+    <h3>
+      <i class="fa-solid fa-star" style="color:#fbbf24"></i>
+      Quick Watchlist
+    </h3>
+    <div class="watchlist-grid" id="watchlistGrid">
+      <div style="color:#64748b;font-size:13px;grid-column:1/-1">
+        Loading watchlist...
+      </div>
+    </div>
+  </div>
+
+  <!-- LOGOUT -->
+  <div class="logout">
+    <a href="/logout">
+      <i class="fa-solid fa-right-from-bracket"></i> Logout
+    </a>
+  </div>
 
 </div>
 
 
 <script>
 
-/* PARTICLES */
+/* ============================================================
+   PARTICLES
+============================================================ */
 
-const canvas=document.getElementById("bgCanvas");
-const ctx=canvas.getContext("2d");
+const canvas = document.getElementById("bgCanvas");
+const ctx    = canvas.getContext("2d");
 
 function resize(){
-canvas.width=innerWidth;
-canvas.height=innerHeight;
+  canvas.width  = innerWidth;
+  canvas.height = innerHeight;
 }
 resize();
-addEventListener("resize",resize);
+addEventListener("resize", resize);
 
-let dots=[];
+let dots = [];
 
-for(let i=0;i<100;i++){
-dots.push({
-x:Math.random()*canvas.width,
-y:Math.random()*canvas.height,
-dx:(Math.random()-.5)*.7,
-dy:(Math.random()-.5)*.7
-});
+for(let i = 0; i < 100; i++){
+  dots.push({
+    x:  Math.random() * canvas.width,
+    y:  Math.random() * canvas.height,
+    dx: (Math.random() - .5) * .7,
+    dy: (Math.random() - .5) * .7
+  });
 }
 
 function bgAnimate(){
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-ctx.clearRect(0,0,canvas.width,canvas.height);
+  dots.forEach(d => {
+    d.x += d.dx;
+    d.y += d.dy;
 
-dots.forEach(d=>{
+    if(d.x < 0 || d.x > canvas.width)  d.dx *= -1;
+    if(d.y < 0 || d.y > canvas.height) d.dy *= -1;
 
-d.x+=d.dx;
-d.y+=d.dy;
+    ctx.fillStyle = "rgba(56,189,248,.5)";
+    ctx.beginPath();
+    ctx.arc(d.x, d.y, 2, 0, Math.PI * 2);
+    ctx.fill();
 
-if(d.x<0||d.x>canvas.width) d.dx*=-1;
-if(d.y<0||d.y>canvas.height) d.dy*=-1;
+    dots.forEach(o => {
+      const dx   = d.x - o.x;
+      const dy   = d.y - o.y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
 
-ctx.fillStyle="rgba(56,189,248,.5)";
-ctx.beginPath();
-ctx.arc(d.x,d.y,2,0,Math.PI*2);
-ctx.fill();
+      if(dist < 130){
+        ctx.strokeStyle = `rgba(56,189,248,${1 - dist/130})`;
+        ctx.beginPath();
+        ctx.moveTo(d.x, d.y);
+        ctx.lineTo(o.x, o.y);
+        ctx.stroke();
+      }
+    });
+  });
 
-dots.forEach(o=>{
-
-const dx=d.x-o.x;
-const dy=d.y-o.y;
-const dist=Math.sqrt(dx*dx+dy*dy);
-
-if(dist<130){
-
-ctx.strokeStyle=`rgba(56,189,248,${1-dist/130})`;
-ctx.beginPath();
-ctx.moveTo(d.x,d.y);
-ctx.lineTo(o.x,o.y);
-ctx.stroke();
-
-}
-
-});
-
-});
-
-requestAnimationFrame(bgAnimate);
+  requestAnimationFrame(bgAnimate);
 }
 
 bgAnimate();
 
 
-/* CHART */
+/* ============================================================
+   CLOCK
+============================================================ */
 
-new Chart(
-document.getElementById("marketChart"),{
-type:'line',
-data:{
-labels: {{ chart_labels|safe }},
-datasets:[{
-data: {{ chart_data|safe }},
-borderColor:'#22d3ee',
-backgroundColor:'rgba(34,211,238,.2)',
-tension:.5,
-fill:true,
-pointRadius:3
-}]
-},
-options:{
-responsive:true,
-animation:{
-duration:2800,
-easing:'easeInOutQuart'
-},
-plugins:{legend:{display:false}},
-scales:{
-x:{ticks:{color:'#c7d2fe'},grid:{display:false}},
-y:{ticks:{color:'#c7d2fe'},grid:{color:'rgba(255,255,255,.05)'}}
+function updateClock(){
+  const now = new Date();
+  document.getElementById("currentTime").textContent =
+    now.toLocaleDateString("en-IN", {
+      weekday:"long", year:"numeric",
+      month:"long",  day:"numeric"
+    }) + "  " +
+    now.toLocaleTimeString("en-IN");
 }
+updateClock();
+setInterval(updateClock, 1000);
+
+
+/* ============================================================
+   MARKET STATUS
+============================================================ */
+
+function checkMarketStatus(){
+  const now   = new Date();
+  const day   = now.getDay();       // 0=Sun,6=Sat
+  const hours = now.getHours();
+  const mins  = now.getMinutes();
+  const badge = document.getElementById("marketStatusBadge");
+  const statEl = document.getElementById("statMarket");
+
+  const isWeekday  = day >= 1 && day <= 5;
+  const afterOpen  = hours > 9  || (hours === 9  && mins >= 30);
+  const beforeClose= hours < 16 || (hours === 16 && mins === 0);
+  const isOpen     = isWeekday && afterOpen && beforeClose;
+
+  if(isOpen){
+    badge.className    = "market-status open";
+    badge.innerHTML    = '<span class="live-dot"></span> Market Open';
+    statEl.textContent = "Open";
+    statEl.style.color = "#22c55e";
+  } else {
+    badge.className    = "market-status closed";
+    badge.innerHTML    = '● Market Closed';
+    statEl.textContent = "Closed";
+    statEl.style.color = "#f87171";
+  }
 }
+checkMarketStatus();
+
+
+/* ============================================================
+   CHART SETUP
+============================================================ */
+
+let chartLabels = {{ chart_labels|safe }};
+let chartData   = {{ chart_data|safe }};
+let currentType = "line";
+let myChart;
+
+function buildChart(labels, data, type){
+  if(myChart) myChart.destroy();
+
+  myChart = new Chart(
+    document.getElementById("marketChart"),
+    {
+      type: type,
+      data: {
+        labels: labels,
+        datasets:[{
+          data:            data,
+          borderColor:     '#22d3ee',
+          backgroundColor: type === 'bar'
+            ? 'rgba(34,211,238,.3)'
+            : 'rgba(34,211,238,.15)',
+          tension:      .5,
+          fill:         type === 'line',
+          pointRadius:  3,
+          borderWidth:  2
+        }]
+      },
+      options:{
+        responsive: true,
+        animation: {
+          duration: 1200,
+          easing:  'easeInOutQuart'
+        },
+        plugins:{ legend:{ display:false } },
+        scales:{
+          x:{ ticks:{color:'#c7d2fe'}, grid:{display:false} },
+          y:{ ticks:{color:'#c7d2fe'}, grid:{color:'rgba(255,255,255,.05)'} }
+        }
+      }
+    }
+  );
 }
-);
+
+buildChart(chartLabels, chartData, currentType);
+
+
+function setChartType(type, btn){
+  currentType = type;
+  document.getElementById("btnLine").classList.toggle("active", type === "line");
+  document.getElementById("btnBar").classList.toggle("active",  type === "bar");
+  buildChart(chartLabels, chartData, type);
+}
+
+
+/* ============================================================
+   SWITCH STOCK  ← FIXED
+============================================================ */
+
+function switchStock(symbol, btn){
+  // Update active button
+  document.querySelectorAll(".switcher button")
+    .forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+
+  document.getElementById("currentSymbol").textContent = symbol;
+  document.getElementById("chartTitle").textContent    = `AI Trend — ${symbol}`;
+  document.getElementById("livePriceBig").textContent  = "Loading...";
+  document.getElementById("priceChange").textContent   = "";
+  document.getElementById("last7List").innerHTML =
+    '<li style="color:#475569;font-size:13px;padding:6px 0;">Loading…</li>';
+
+  fetch(`/api/compare-full/${encodeURIComponent(symbol)}?period=1mo`)
+    .then(r => r.json())
+    .then(d => {
+      const isIN  = symbol.includes(".NS") || symbol.includes(".BO");
+      const cur   = isIN ? "₹" : "$";
+      const price = parseFloat(d.price) || 0;
+
+      // update price
+      document.getElementById("livePriceBig").textContent  = `${cur}${price.toFixed(2)}`;
+      document.getElementById("statLivePrice").textContent = `${cur}${price.toFixed(2)}`;
+
+      // update change %
+      const chgPct = parseFloat(d.change_pct) || 0;
+      const chgEl  = document.getElementById("priceChange");
+      chgEl.textContent = `${chgPct >= 0 ? "▲" : "▼"} ${Math.abs(chgPct).toFixed(2)}%`;
+      chgEl.className   = `price-change ${chgPct >= 0 ? "up" : "down"}`;
+
+      // update last 7 days list
+      const dates  = d.dates  || [];
+      const closes = d.closes || [];
+      const last7d = dates.slice(-7);
+      const last7p = closes.slice(-7);
+      document.getElementById("last7List").innerHTML = last7d.length
+        ? last7d.map((dt, i) => `
+            <li>
+              <span>${dt}</span>
+              <span style="color:#38bdf8">${cur} ${parseFloat(last7p[i]).toFixed(2)}</span>
+            </li>`).join("")
+        : '<li style="color:#475569">No data</li>';
+
+      // rebuild chart with new symbol data
+      chartLabels = dates;
+      chartData   = closes;
+      buildChart(chartLabels, chartData, currentType);
+    })
+    .catch(() => {
+      document.getElementById("livePriceBig").textContent = "N/A";
+      document.getElementById("last7List").innerHTML =
+        '<li style="color:#f87171;font-size:13px;">Failed to load</li>';
+    });
+}
+
+
+/* ============================================================
+   LOAD LIVE PRICES FOR TICKER
+============================================================ */
+
+const tickerSymbols = [
+  {sym:"TSLA",  ids:["t-tsla","t-tsla2"]},
+  {sym:"MSFT",  ids:["t-msft","t-msft2"]},
+  {sym:"GOOGL", ids:["t-googl","t-googl2"]},
+  {sym:"NVDA",  ids:["t-nvda","t-nvda2"]},
+];
+
+function loadTickerPrices(){
+  tickerSymbols.forEach(item => {
+    fetch(`/live-data/${item.sym}`)
+      .then(r => r.json())
+      .then(d => {
+        item.ids.forEach(id => {
+          const el = document.getElementById(id);
+          if(el) el.textContent = `₹${d.price}`;
+        });
+      })
+      .catch(() => {});
+  });
+}
+
+loadTickerPrices();
+setInterval(loadTickerPrices, 30000);   // refresh every 30s
+
+
+/* ============================================================
+   LOAD USER STATS
+============================================================ */
+
+fetch("/api/user-stats")
+  .then(r => {
+    if(!r.ok) throw new Error("stats fetch failed: " + r.status);
+    return r.json();
+  })
+  .then(d => {
+    const total = parseInt(d.total) || 0;
+    document.getElementById("statPredictions").textContent = total;
+
+    // also update buy/sell/hold badges if they exist on page
+    if(d.buy_count  !== undefined) {
+      const buyEl  = document.getElementById("statBuyCount");
+      const sellEl = document.getElementById("statSellCount");
+      if(buyEl)  buyEl.textContent  = d.buy_count;
+      if(sellEl) sellEl.textContent = d.sell_count;
+    }
+  })
+  .catch(err => {
+    console.error("user-stats error:", err);
+    document.getElementById("statPredictions").textContent = "0";
+  });
+
+
+/* ============================================================
+   LOAD WATCHLIST MINI
+============================================================ */
+
+fetch("/api/watchlist-prices")
+  .then(r => r.json())
+  .then(data => {
+    const grid = document.getElementById("watchlistGrid");
+
+    // API returns {SYM: {price, change}, ...}  — convert to array
+    const items = Object.entries(data || {}).map(([sym, v]) => ({
+      symbol: sym,
+      price:  v.price,
+      change: v.change
+    }));
+
+    if(items.length === 0){
+      grid.innerHTML = `
+        <div style="color:#64748b;font-size:13px;grid-column:1/-1">
+          No stocks in watchlist.
+          <a href="/watchlist" style="color:#38bdf8;margin-left:6px">Add some →</a>
+        </div>`;
+      document.getElementById("statWatchlist").textContent = "0";
+      return;
+    }
+
+    document.getElementById("statWatchlist").textContent = items.length;
+
+    grid.innerHTML = items.map(item => {
+      const isIN = item.symbol.includes(".NS") || item.symbol.includes(".BO");
+      const cur  = isIN ? "₹" : "$";
+      const chg  = parseFloat(item.change) || 0;
+      const pr   = item.price === "N/A" ? "N/A" : parseFloat(item.price).toFixed(2);
+      return `
+        <div class="watchlist-item" onclick="location.href='/watchlist'" style="cursor:pointer">
+          <div class="symbol">${item.symbol}</div>
+          <div class="w-price">${cur}${pr}</div>
+          <div class="w-change ${chg >= 0 ? 'up':'down'}">
+            ${chg >= 0 ? '▲':'▼'} ${Math.abs(chg).toFixed(2)}%
+          </div>
+        </div>`;
+    }).join("");
+  })
+  .catch(() => {
+    document.getElementById("watchlistGrid").innerHTML =
+      `<div style="color:#64748b;font-size:13px;grid-column:1/-1">
+        <a href="/watchlist" style="color:#38bdf8">Go to Watchlist →</a>
+      </div>`;
+    document.getElementById("statWatchlist").textContent = "—";
+  });
+
+
+/* ============================================================
+   AUTO REFRESH LIVE PRICE (every 30s)  ← FIXED
+============================================================ */
+
+setInterval(() => {
+  const activeSym = document.querySelector(".switcher button.active")?.textContent || "AAPL";
+  const isIN = activeSym.includes(".NS") || activeSym.includes(".BO");
+  const cur  = isIN ? "₹" : "$";
+
+  fetch(`/api/compare-full/${encodeURIComponent(activeSym)}?period=1mo`)
+    .then(r => r.json())
+    .then(d => {
+      const price  = parseFloat(d.price) || 0;
+      const chgPct = parseFloat(d.change_pct) || 0;
+
+      document.getElementById("livePriceBig").textContent  = `${cur}${price.toFixed(2)}`;
+      document.getElementById("statLivePrice").textContent = `${cur}${price.toFixed(2)}`;
+
+      const chgEl = document.getElementById("priceChange");
+      chgEl.textContent = `${chgPct >= 0 ? "▲" : "▼"} ${Math.abs(chgPct).toFixed(2)}%`;
+      chgEl.className   = `price-change ${chgPct >= 0 ? "up" : "down"}`;
+
+      if(d.dates && d.closes){
+        chartLabels = d.dates;
+        chartData   = d.closes;
+        buildChart(chartLabels, chartData, currentType);
+      }
+    })
+    .catch(() => {});
+}, 30000);
 
 </script>
 
