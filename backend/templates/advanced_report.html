@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Analysis Report | Stock AI</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+    background:#020617;
+    color:#e2e8f0;
+    font-family:'Inter',sans-serif;
+    min-height:100vh;
+}
+/* Background particles */
+body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background:radial-gradient(circle at top,#0f172a,#020617),
+               linear-gradient(-45deg,#020617,#0f172a,#020617);
+    z-index:-2;
+}
+body::after{
+    content:"";
+    position:fixed;
+    inset:0;
+    background:linear-gradient(rgba(56,189,248,.018) 1px,transparent 1px),
+               linear-gradient(90deg,rgba(56,189,248,.018) 1px,transparent 1px);
+    background-size:44px 44px;
+    pointer-events:none;
+    z-index:-1;
+}
+.container{
+    max-width:1200px;
+    margin:0 auto;
+    padding:30px;
+    position:relative;
+    z-index:1;
+}
+
+/* Header */
+.report-header{
+    background:linear-gradient(135deg,#0f172a,#1e293b);
+    border-radius:20px;
+    padding:30px;
+    margin-bottom:25px;
+    border:1px solid #38bdf8;
+    box-shadow:0 10px 30px rgba(0,0,0,.3);
+}
+.report-header h1{
+    font-size:28px;
+    color:#38bdf8;
+    margin-bottom:10px;
+}
+.report-meta{
+    display:flex;
+    gap:20px;
+    flex-wrap:wrap;
+    margin-top:15px;
+    color:#94a3b8;
+    font-size:13px;
+}
+
+/* Stats Cards */
+.stats-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+    margin-bottom:30px;
+}
+.stat-card{
+    background:#0f172a;
+    border-radius:16px;
+    padding:20px;
+    text-align:center;
+    border:1px solid #334155;
+    transition:transform 0.3s,box-shadow 0.3s;
+}
+.stat-card:hover{
+    transform:translateY(-5px);
+    box-shadow:0 10px 30px rgba(0,0,0,.3);
+    border-color:#38bdf8;
+}
+.stat-card .value{
+    font-size:28px;
+    font-weight:700;
+    color:#38bdf8;
+    margin-bottom:5px;
+}
+.stat-card .label{
+    font-size:12px;
+    color:#64748b;
+    text-transform:uppercase;
+    letter-spacing:1px;
+}
+.stat-card.up .value{color:#22c55e;}
+.stat-card.down .value{color:#ef4444;}
+
+/* Chart */
+.chart-container{
+    background:#0f172a;
+    border-radius:16px;
+    padding:20px;
+    margin-bottom:30px;
+    border:1px solid #334155;
+}
+.chart-container h3{
+    margin-bottom:15px;
+    color:#38bdf8;
+    font-size:16px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+canvas{
+    max-height:350px;
+    width:100%;
+}
+
+/* Insights Card */
+.insights-card{
+    background:rgba(34,197,94,.08);
+    border-radius:16px;
+    padding:20px;
+    margin-bottom:25px;
+    border:1px solid #22c55e;
+}
+.insights-card h3{
+    color:#22c55e;
+    margin-bottom:15px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:16px;
+}
+.insights-list{
+    list-style:none;
+}
+.insights-list li{
+    padding:10px 0;
+    border-bottom:1px solid rgba(34,197,94,.2);
+    display:flex;
+    gap:10px;
+    align-items:center;
+    font-size:14px;
+    line-height:1.5;
+}
+.insights-list li:last-child{border-bottom:none;}
+
+/* Metrics Grid */
+.metrics-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+    margin-bottom:30px;
+}
+.metric-card{
+    background:#0f172a;
+    border-radius:12px;
+    padding:15px;
+    text-align:center;
+    border:1px solid #334155;
+    transition:0.3s;
+}
+.metric-card:hover{
+    border-color:#38bdf8;
+    transform:translateY(-3px);
+}
+.metric-card .value{
+    font-size:18px;
+    font-weight:700;
+    color:#38bdf8;
+}
+.metric-card .label{
+    font-size:11px;
+    color:#64748b;
+    margin-top:5px;
+}
+
+/* Table Container */
+.table-container{
+    background:#0f172a;
+    border-radius:16px;
+    overflow:hidden;
+    margin-bottom:25px;
+    border:1px solid #334155;
+}
+.table-container h3{
+    padding:15px 20px;
+    border-bottom:1px solid #334155;
+    color:#38bdf8;
+    font-size:16px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+.forecast-table{
+    width:100%;
+    border-collapse:collapse;
+}
+.forecast-table th{
+    padding:12px;
+    background:#1e293b;
+    color:#38bdf8;
+    font-size:12px;
+    text-align:center;
+    font-weight:600;
+}
+.forecast-table td{
+    padding:10px;
+    text-align:center;
+    border-bottom:1px solid #334155;
+    font-size:13px;
+}
+.forecast-table tr:hover td{
+    background:rgba(56,189,248,.05);
+}
+
+/* Recommendation Card */
+.recommendation-card{
+    background:rgba(56,189,248,.08);
+    border-radius:16px;
+    padding:20px;
+    margin-bottom:25px;
+    border:1px solid #38bdf8;
+    text-align:center;
+}
+.recommendation-card h3{
+    color:#38bdf8;
+    margin-bottom:10px;
+    font-size:16px;
+}
+.recommendation-card .rec-text{
+    font-size:20px;
+    font-weight:700;
+    margin-bottom:10px;
+    color:#38bdf8;
+}
+.recommendation-card .rec-desc{
+    color:#94a3b8;
+    font-size:14px;
+    line-height:1.5;
+}
+
+/* Action Buttons */
+.action-buttons{
+    display:flex;
+    gap:15px;
+    justify-content:center;
+    margin-top:30px;
+    margin-bottom:20px;
+}
+.btn{
+    padding:12px 24px;
+    border-radius:30px;
+    font-weight:600;
+    cursor:pointer;
+    border:none;
+    font-size:14px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    transition:all 0.3s;
+}
+.btn-primary{
+    background:linear-gradient(135deg,#0288d1,#0097a7);
+    color:#fff;
+}
+.btn-primary:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 25px rgba(2,136,209,.4);
+}
+.btn-secondary{
+    background:#1e293b;
+    color:#fff;
+    border:1px solid #334155;
+}
+.btn-secondary:hover{
+    background:#334155;
+    transform:translateY(-2px);
+}
+
+/* Anomaly Card */
+.anomaly-card{
+    background:rgba(239,68,68,.08);
+    border-radius:16px;
+    padding:20px;
+    margin-bottom:25px;
+    border:1px solid #ef4444;
+}
+.anomaly-card h3{
+    color:#ef4444;
+    margin-bottom:15px;
+    font-size:16px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+/* RAG Chat Widget Styles */
+.rag-chat-widget {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 400px;
+    background: linear-gradient(145deg, #0f172a, #0a0f1a);
+    border-radius: 24px;
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(56, 189, 248, 0.1);
+    z-index: 1000;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+}
+.rag-chat-widget.minimized {
+    width: 320px;
+    height: 65px;
+    border-radius: 40px;
+    background: linear-gradient(135deg, #0288d1, #0097a7);
+    cursor: pointer;
+}
+.rag-chat-widget.minimized .rag-chat-body,
+.rag-chat-widget.minimized .chat-options {
+    display: none;
+}
+.rag-chat-widget.minimized .rag-chat-header {
+    background: transparent;
+    padding: 12px 20px;
+}
+.rag-chat-widget.minimized .rag-chat-header h4 {
+    color: white;
+}
+.rag-chat-widget.minimized .rag-chat-header p {
+    color: rgba(255,255,255,0.8);
+}
+.rag-chat-widget.minimized .header-actions i {
+    color: white;
+}
+.rag-chat-header {
+    background: linear-gradient(135deg, #0288d1, #0097a7);
+    padding: 14px 18px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    transition: all 0.3s;
+}
+.rag-chat-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.rag-avatar {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #38bdf8, #22d3ee);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    animation: avatarPulse 2s ease infinite;
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
+}
+.rag-avatar i {
+    font-size: 18px;
+    color: #020617;
+}
+.rag-avatar::before {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #38bdf8, #22d3ee);
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: -1;
+}
+.rag-avatar:hover::before {
+    opacity: 1;
+}
+.rag-avatar .pulse-ring {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: rgba(56, 189, 248, 0.4);
+    animation: pulseRing 1.5s ease infinite;
+    z-index: -2;
+}
+@keyframes pulseRing {
+    0% { transform: scale(1); opacity: 0.6; }
+    100% { transform: scale(1.5); opacity: 0; }
+}
+@keyframes avatarPulse {
+    0%, 100% { box-shadow: 0 0 15px rgba(56, 189, 248, 0.5); }
+    50% { box-shadow: 0 0 30px rgba(56, 189, 248, 0.8); }
+}
+.rag-chat-header h4 {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0;
+}
+.rag-chat-header p {
+    font-size: 10px;
+    opacity: 0.8;
+    margin: 2px 0 0;
+}
+.header-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+.header-actions i {
+    cursor: pointer;
+    transition: transform 0.2s;
+    font-size: 14px;
+}
+.header-actions i:hover {
+    transform: scale(1.1);
+}
+.rag-chat-body {
+    display: flex;
+    flex-direction: column;
+    height: 500px;
+}
+.rag-chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: rgba(2, 6, 23, 0.5);
+}
+.rag-message {
+    max-width: 85%;
+    padding: 10px 14px;
+    border-radius: 18px;
+    font-size: 13px;
+    line-height: 1.5;
+    animation: messageSlideIn 0.3s ease;
+}
+@keyframes messageSlideIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.rag-message.user {
+    background: linear-gradient(135deg, #0288d1, #0097a7);
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+}
+.rag-message.bot {
+    background: #1e293b;
+    border: 1px solid #334155;
+    color: #cbd5e1;
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+}
+.rag-message.bot strong {
+    color: #38bdf8;
+}
+.chat-options {
+    padding: 12px 16px;
+    background: #0f172a;
+    border-top: 1px solid #1e293b;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.option-btn {
+    background: rgba(56, 189, 248, 0.08);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    border-radius: 30px;
+    padding: 8px 14px;
+    font-size: 11px;
+    font-family: monospace;
+    color: #38bdf8;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.option-btn i {
+    font-size: 10px;
+}
+.option-btn:hover {
+    background: rgba(56, 189, 248, 0.2);
+    transform: translateY(-2px);
+    border-color: #38bdf8;
+    box-shadow: 0 4px 12px rgba(56, 189, 248, 0.2);
+}
+.rag-chat-input {
+    display: flex;
+    padding: 12px 16px;
+    border-top: 1px solid #1e293b;
+    gap: 10px;
+    background: #0f172a;
+}
+.rag-chat-input input {
+    flex: 1;
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 30px;
+    padding: 10px 16px;
+    color: white;
+    font-size: 12px;
+    outline: none;
+}
+.rag-chat-input input:focus {
+    border-color: #38bdf8;
+    box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.1);
+}
+.rag-chat-input button {
+    background: linear-gradient(135deg, #0288d1, #0097a7);
+    border: none;
+    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+    cursor: pointer;
+    color: white;
+    transition: transform 0.2s;
+}
+.rag-chat-input button:hover {
+    transform: scale(1.05);
+}
+.typing-indicator {
+    display: flex;
+    gap: 4px;
+    padding: 10px 14px;
+    background: #1e293b;
+    border-radius: 18px;
+    width: fit-content;
+}
+.typing-indicator span {
+    width: 8px;
+    height: 8px;
+    background: #38bdf8;
+    border-radius: 50%;
+    animation: typing 1.4s infinite;
+}
+.typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+.typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes typing {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+    30% { transform: translateY(-8px); opacity: 1; }
+}
+.rag-chat-messages::-webkit-scrollbar {
+    width: 4px;
+}
+.rag-chat-messages::-webkit-scrollbar-track {
+    background: transparent;
+}
+.rag-chat-messages::-webkit-scrollbar-thumb {
+    background: #38bdf8;
+    border-radius: 10px;
+}
+
+@media(max-width:768px){
+    .container{padding:15px;}
+    .stats-grid{grid-template-columns:1fr 1fr;gap:12px;}
+    .metrics-grid{grid-template-columns:1fr 1fr;}
+    .rag-chat-widget{width:calc(100% - 20px);right:10px;left:10px;bottom:10px;}
+    .action-buttons{flex-wrap:wrap;}
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<div class="report-header">
+    <h1><i class="fa-solid fa-chart-line"></i> Advanced Analysis Report</h1>
+    <div class="report-meta">
+        <span><i class="fa-regular fa-chart-line"></i> <strong>Column:</strong> {{ column }}</span>
+        <span><i class="fa-solid fa-microchip"></i> <strong>Model:</strong> {{ model_name }}</span>
+        <span><i class="fa-regular fa-calendar"></i> <strong>Forecast:</strong> {{ forecast_days }} days</span>
+        <span><i class="fa-regular fa-clock"></i> <strong>Generated:</strong> {{ generated_date }}</span>
+    </div>
+</div>
+
+<!-- Key Stats -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="value">{{ "%.2f"|format(result.current_value) }}</div>
+        <div class="label">Current Value</div>
+    </div>
+    <div class="stat-card {{ result.trend }}">
+        <div class="value">{{ "%.2f"|format(result.predicted_value) }}</div>
+        <div class="label">Predicted Value</div>
+    </div>
+    <div class="stat-card">
+        <div class="value">{{ result.trend_percent }}%</div>
+        <div class="label">Expected Change</div>
+    </div>
+    <div class="stat-card">
+        <div class="value">{{ result.confidence }}%</div>
+        <div class="label">Confidence Level</div>
+    </div>
+</div>
+
+<!-- Recommendation Card -->
+<div class="recommendation-card">
+    <h3><i class="fa-solid fa-clipboard-list"></i> AI Recommendation</h3>
+    <div class="rec-text">{{ result.recommendation }}</div>
+    <div class="rec-desc">
+        Based on {{ result.trend_text }} trend with {{ result.confidence }}% confidence.
+        {% if result.trend == 'up' %}
+        The data suggests growth potential. Consider increasing exposure with proper risk management.
+        {% elif result.trend == 'down' %}
+        The data suggests decline. Consider reducing exposure or implementing hedges.
+        {% else %}
+        The data suggests stable movement. Maintain current position and monitor for breakout.
+        {% endif %}
+    </div>
+</div>
+
+<!-- Chart -->
+<div class="chart-container">
+    <h3><i class="fa-solid fa-chart-line"></i> Forecast Visualization</h3>
+    <canvas id="forecastChart" height="300"></canvas>
+</div>
+
+<!-- AI Insights -->
+<div class="insights-card">
+    <h3><i class="fa-solid fa-lightbulb"></i> AI-Generated Insights</h3>
+    <ul class="insights-list">
+        {% for insight in result.insights %}
+        <li>{{ insight|safe }}</li>
+        {% endfor %}
+    </ul>
+</div>
+
+<!-- Metrics Summary -->
+<div class="metrics-grid">
+    <div class="metric-card">
+        <div class="value">R²: {{ result.metrics.r2 }}</div>
+        <div class="label">Model Accuracy (1.0 = perfect)</div>
+    </div>
+    <div class="metric-card">
+        <div class="value">MAE: {{ result.metrics.mae }}</div>
+        <div class="label">Avg Error Margin</div>
+    </div>
+    <div class="metric-card">
+        <div class="value">{{ result.metrics.data_points }}</div>
+        <div class="label">Data Points Analyzed</div>
+    </div>
+    <div class="metric-card">
+        <div class="value">{{ result.model_display_name }}</div>
+        <div class="label">Best Performing Model</div>
+    </div>
+</div>
+
+<!-- Statistics Summary -->
+<div class="metrics-grid">
+    <div class="metric-card">
+        <div class="value">{{ "%.2f"|format(result.statistics.mean) }}</div>
+        <div class="label">Average (Mean)</div>
+    </div>
+    <div class="metric-card">
+        <div class="value">{{ "%.2f"|format(result.statistics.median) }}</div>
+        <div class="label">Median</div>
+    </div>
+    <div class="metric-card">
+        <div class="value">{{ "%.2f"|format(result.statistics.min) }}</div>
+        <div class="label">Minimum Value</div>
+    </div>
+    <div class="metric-card">
+        <div class="value">{{ "%.2f"|format(result.statistics.max) }}</div>
+        <div class="label">Maximum Value</div>
+    </div>
+</div>
+
+<!-- Forecast Table -->
+<div class="table-container">
+    <h3><i class="fa-solid fa-table-list"></i> Detailed Forecast (Next 10 Periods)</h3>
+    <div style="overflow-x:auto;">
+        <table class="forecast-table">
+            <thead>
+                <tr><th>Date</th><th>Predicted Value</th><th>Change</th><th>Trend</th></tr>
+            </thead>
+            <tbody>
+                {% for i in range(result.predictions[:10]|length) %}
+                <tr>
+                    <td>{{ result.forecast_dates[i] }}</td>
+                    <td><strong>{{ "%.2f"|format(result.predictions[i]) }}</strong></td>
+                    <td>
+                        {% if i == 0 %}
+                            {{ "%.2f"|format(result.predictions[i] - result.current_value) }}
+                        {% else %}
+                            {{ "%.2f"|format(result.predictions[i] - result.predictions[i-1]) }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if i > 0 and result.predictions[i] > result.predictions[i-1] %}
+                            📈 UP
+                        {% elif i > 0 and result.predictions[i] < result.predictions[i-1] %}
+                            📉 DOWN
+                        {% else %}
+                            ➡️ STABLE
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Anomalies -->
+{% if result.anomalies and result.anomalies|length > 0 %}
+<div class="anomaly-card">
+    <h3><i class="fa-solid fa-triangle-exclamation"></i> Detected Anomalies ({{ result.anomalies|length }})</h3>
+    <ul class="insights-list">
+        {% for anomaly in result.anomalies[:10] %}
+        <li>📍 Position {{ anomaly.index }}: Value {{ "%.2f"|format(anomaly.value) }} | Z-Score: {{ anomaly.z_score }} | Severity: {{ anomaly.severity }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+<!-- Action Buttons -->
+<div class="action-buttons">
+    <button class="btn btn-primary" onclick="window.location.href='/advanced/export-report'">
+        <i class="fa-solid fa-file-pdf"></i> Export as PDF
+    </button>
+    <button class="btn btn-secondary" onclick="window.location.href='/advanced/analysis'">
+        <i class="fa-solid fa-chart-line"></i> New Analysis
+    </button>
+    <button class="btn btn-secondary" onclick="window.location.href='/upload'">
+        <i class="fa-solid fa-upload"></i> Upload New Data
+    </button>
+</div>
+
+</div>
+
+<!-- RAG Chat Widget - Closed by Default -->
+<div class="rag-chat-widget minimized" id="ragChatWidget">
+    <div class="rag-chat-header" onclick="toggleRagChat()">
+        <div class="rag-chat-header-left">
+            <div class="rag-avatar">
+                <i class="fa-solid fa-robot"></i>
+                <div class="pulse-ring"></div>
+            </div>
+            <div>
+                <h4>AI Analysis Assistant</h4>
+                <p>Powered by RAG • Click to open</p>
+            </div>
+        </div>
+        <div class="header-actions">
+            <i class="fa-regular fa-circle-xmark" id="minimizeBtn" onclick="event.stopPropagation(); toggleMinimize()"></i>
+        </div>
+    </div>
+    
+    <div class="rag-chat-body" id="ragChatBody" style="display: none;">
+        <div class="rag-chat-messages" id="ragMessages">
+            <div class="rag-message bot">
+                <strong>🤖 AI Analysis Assistant</strong><br>
+                I can help you understand this analysis report!<br><br>
+                <i class="fa-regular fa-lightbulb"></i> <strong>Quick Questions:</strong><br>
+                Click any button below or type your own question.
+            </div>
+        </div>
+        
+        <div class="chat-options">
+            <button class="option-btn" onclick="askQuickQuestion('trend')"><i class="fa-solid fa-chart-line"></i> 📈 Trend?</button>
+            <button class="option-btn" onclick="askQuickQuestion('buy')"><i class="fa-solid fa-cart-shopping"></i> 💰 Buy/Sell?</button>
+            <button class="option-btn" onclick="askQuickQuestion('confidence')"><i class="fa-solid fa-chart-simple"></i> 🎯 Confidence?</button>
+            <button class="option-btn" onclick="askQuickQuestion('anomaly')"><i class="fa-solid fa-triangle-exclamation"></i> ⚠️ Anomalies?</button>
+            <button class="option-btn" onclick="askQuickQuestion('explain')"><i class="fa-solid fa-circle-info"></i> 📖 Explain</button>
+            <button class="option-btn" onclick="askQuickQuestion('model')"><i class="fa-solid fa-microchip"></i> 🤖 How it works</button>
+            <button class="option-btn" onclick="askQuickQuestion('help')"><i class="fa-solid fa-question-circle"></i> ❓ Help</button>
+        </div>
+        
+        <div class="rag-chat-input">
+            <input type="text" id="ragQuestion" placeholder="Type your question..." onkeypress="if(event.key==='Enter') askRag()">
+            <button onclick="askRag()"><i class="fa-regular fa-paper-plane"></i></button>
+        </div>
+    </div>
+</div>
+
+<script>
+// FORECAST CHART - Single initialization
+document.addEventListener('DOMContentLoaded', function() {
+    try {
+        const dates = {{ result.forecast_dates|tojson }};
+        const predictions = {{ result.predictions|tojson }};
+        const currentValue = {{ result.current_value }};
+        
+        const ctx = document.getElementById('forecastChart').getContext('2d');
+        
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: dates,
+                datasets: [{
+                    label: 'Forecast',
+                    data: predictions,
+                    borderColor: '#38bdf8',
+                    backgroundColor: 'rgba(56,189,248,.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.3,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#38bdf8'
+                }, {
+                    label: 'Current Value (Reference)',
+                    data: Array(dates.length).fill(currentValue),
+                    borderColor: '#fbbf24',
+                    borderWidth: 1.5,
+                    borderDash: [5, 5],
+                    fill: false,
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: { 
+                        labels: { color: '#94a3b8', font: { size: 11 } } 
+                    },
+                    tooltip: { 
+                        mode: 'index', 
+                        intersect: false, 
+                        backgroundColor: '#1e293b', 
+                        titleColor: '#38bdf8' 
+                    }
+                },
+                scales: {
+                    x: { 
+                        ticks: { color: '#94a3b8', maxRotation: 45 }, 
+                        grid: { display: false } 
+                    },
+                    y: { 
+                        ticks: { color: '#94a3b8' }, 
+                        grid: { color: 'rgba(255,255,255,.05)' } 
+                    }
+                }
+            }
+        });
+        
+        console.log('Chart loaded successfully');
+    } catch(e) {
+        console.error('Chart error:', e);
+        document.getElementById('forecastChart').style.display = 'none';
+        document.querySelector('.chart-container').innerHTML += '<p style="color:#ef4444;">⚠️ Chart could not be loaded. Data available in table below.</p>';
+    }
+});
+
+// RAG CHAT FUNCTIONS
+let isMinimized = true;
+
+function toggleRagChat() {
+    const widget = document.getElementById('ragChatWidget');
+    const body = document.getElementById('ragChatBody');
+    const headerText = document.querySelector('.rag-chat-header p');
+    
+    if (isMinimized) {
+        widget.classList.remove('minimized');
+        body.style.display = 'flex';
+        isMinimized = false;
+        if(headerText) headerText.textContent = 'Powered by RAG • Ask me anything';
+    } else {
+        widget.classList.add('minimized');
+        body.style.display = 'none';
+        isMinimized = true;
+        if(headerText) headerText.textContent = 'Powered by RAG • Click to open';
+    }
+}
+
+function toggleMinimize() {
+    toggleRagChat();
+}
+
+function addTypingIndicator() {
+    const messagesDiv = document.getElementById('ragMessages');
+    const typingDiv = document.createElement('div');
+    typingDiv.className = 'rag-message bot typing-indicator';
+    typingDiv.id = 'typingIndicator';
+    typingDiv.innerHTML = '<span></span><span></span><span></span>';
+    messagesDiv.appendChild(typingDiv);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
+
+function removeTypingIndicator() {
+    const typingDiv = document.getElementById('typingIndicator');
+    if(typingDiv) typingDiv.remove();
+}
+
+function addMessage(role, content) {
+    const messagesDiv = document.getElementById('ragMessages');
+    const msgDiv = document.createElement('div');
+    msgDiv.className = `rag-message ${role}`;
+    if (role === 'bot') {
+        msgDiv.innerHTML = `<strong>🤖 AI Assistant</strong><br>${content.replace(/\n/g, '<br>')}`;
+    } else {
+        msgDiv.innerHTML = content;
+    }
+    messagesDiv.appendChild(msgDiv);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
+
+function sendQuickQuestion(type) {
+    let question = '';
+    switch(type) {
+        case 'trend': question = 'What is the trend direction?'; break;
+        case 'buy': question = 'Should I buy or sell based on this analysis?'; break;
+        case 'confidence': question = 'How confident is this prediction?'; break;
+        case 'anomaly': question = 'Are there any anomalies in this data?'; break;
+        case 'explain': question = 'Explain this analysis in simple terms'; break;
+        case 'model': question = 'How does the AI model work?'; break;
+        case 'help': question = 'help'; break;
+        default: return;
+    }
+    
+    addMessage('user', question);
+    addTypingIndicator();
+    
+    fetch('/advanced/rag-query', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question: question })
+    })
+    .then(response => response.json())
+    .then(data => {
+        removeTypingIndicator();
+        addMessage('bot', data.reply);
+    })
+    .catch(error => {
+        removeTypingIndicator();
+        addMessage('bot', 'Sorry, I had trouble. Please try again.');
+    });
+}
+
+function askQuickQuestion(type) {
+    if (isMinimized) {
+        toggleRagChat();
+        setTimeout(() => sendQuickQuestion(type), 300);
+    } else {
+        sendQuickQuestion(type);
+    }
+}
+
+async function askRag() {
+    if (isMinimized) {
+        toggleRagChat();
+        await new Promise(resolve => setTimeout(resolve, 300));
+    }
+    
+    const input = document.getElementById('ragQuestion');
+    const question = input.value.trim();
+    if(!question) return;
+    
+    addMessage('user', question);
+    input.value = '';
+    addTypingIndicator();
+    
+    try {
+        const response = await fetch('/advanced/rag-query', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ question: question })
+        });
+        const data = await response.json();
+        removeTypingIndicator();
+        addMessage('bot', data.reply);
+    } catch(error) {
+        removeTypingIndicator();
+        addMessage('bot', 'Sorry, I had trouble. Please try again.');
+    }
+}
+
+// Initialize chat state (closed by default)
+document.addEventListener('DOMContentLoaded', function() {
+    const widget = document.getElementById('ragChatWidget');
+    const body = document.getElementById('ragChatBody');
+    if(widget && body) {
+        widget.classList.add('minimized');
+        body.style.display = 'none';
+        isMinimized = true;
+    }
+});
+</script>
+
+</body>
+</html>

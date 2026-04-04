@@ -364,3 +364,365 @@
 [2026-03-15 20:56:00]   Fetching TCS.NS …
 [2026-03-15 20:56:00]   Training on 2,407 samples (after NaN cleanup) …
 [2026-03-15 20:56:00] ✅ Retrain complete — model saved to models/linear_model.pkl
+[2026-03-28 13:49:46] AutoTrain thread launched (runs in background)
+[2026-03-28 13:49:46] Starting model retrain …
+[2026-03-28 13:49:46]   Fetching AAPL …
+[2026-03-28 13:49:49] AutoTrain thread launched (runs in background)
+[2026-03-28 13:49:49] Lock file found — skipping (another train is running)
+[2026-03-28 13:49:50]   Fetching TSLA …
+[2026-03-28 13:49:50]   Fetching MSFT …
+[2026-03-28 13:49:50]   Fetching GOOGL …
+[2026-03-28 13:49:50]   Fetching AMZN …
+[2026-03-28 13:49:51]   Fetching NVDA …
+[2026-03-28 13:49:51]   Fetching META …
+[2026-03-28 13:49:51]   Fetching NFLX …
+[2026-03-28 13:49:51]   Fetching BABA …
+[2026-03-28 13:49:52]   Fetching TCS.NS …
+[2026-03-28 13:49:52]   Training on 2,407 samples (after NaN cleanup) …
+[2026-03-28 13:49:52] ✅ Retrain complete — model saved to models/linear_model.pkl
+[2026-03-28 14:07:31] AutoTrain thread launched (runs in background)
+[2026-03-28 14:07:31] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-03-28 14:07:33] AutoTrain thread launched (runs in background)
+[2026-03-28 14:07:33] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-03-28 14:17:33] AutoTrain thread launched (runs in background)
+[2026-03-28 14:17:33] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-03-28 14:17:36] AutoTrain thread launched (runs in background)
+[2026-03-28 14:17:36] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-03-28 18:33:02] AutoTrain thread launched (runs in background)
+[2026-03-28 18:33:02] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-03-28 18:33:09] AutoTrain thread launched (runs in background)
+[2026-03-28 18:33:09] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-03-28 18:35:55] AutoTrain thread launched (runs in background)
+[2026-03-28 18:35:55] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-03-28 18:44:15] AutoTrain thread launched (runs in background)
+[2026-03-28 18:44:15] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-03-28 18:44:22] AutoTrain thread launched (runs in background)
+[2026-03-28 18:44:22] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-03-28 18:56:12] AutoTrain thread launched (runs in background)
+[2026-03-28 18:56:12] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-03-28 18:56:19] AutoTrain thread launched (runs in background)
+[2026-03-28 18:56:19] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-03-28 19:47:48] AutoTrain thread launched (runs in background)
+[2026-03-28 19:47:48] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-03-29 12:50:55] AutoTrain thread launched (runs in background)
+[2026-03-29 12:50:55] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-03-29 12:50:58] AutoTrain thread launched (runs in background)
+[2026-03-29 12:50:58] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-03-29 20:29:49] AutoTrain thread launched (runs in background)
+[2026-03-29 20:29:49] Starting model retrain …
+[2026-03-29 20:29:49]   Fetching AAPL …
+[2026-03-29 20:29:52]   Fetching TSLA …
+[2026-03-29 20:29:52]   Fetching MSFT …
+[2026-03-29 20:29:52]   Fetching GOOGL …
+[2026-03-29 20:29:53]   Fetching AMZN …
+[2026-03-29 20:29:53]   Fetching NVDA …
+[2026-03-29 20:29:53]   Fetching META …
+[2026-03-29 20:29:53]   Fetching NFLX …
+[2026-03-29 20:29:53]   Fetching BABA …
+[2026-03-29 20:29:54]   Fetching TCS.NS …
+[2026-03-29 20:29:54]   Training on 2,407 samples (after NaN cleanup) …
+[2026-03-29 20:29:54] ✅ Retrain complete — model saved to models/linear_model.pkl
+[2026-03-29 20:29:56] AutoTrain thread launched (runs in background)
+[2026-03-29 20:29:56] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-03-29 20:48:31] AutoTrain thread launched (runs in background)
+[2026-03-29 20:48:31] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-03-29 20:49:14] AutoTrain thread launched (runs in background)
+[2026-03-29 20:49:14] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-03-29 20:49:22] AutoTrain thread launched (runs in background)
+[2026-03-29 20:49:22] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-03-29 20:50:54] AutoTrain thread launched (runs in background)
+[2026-03-29 20:50:54] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-03-29 21:03:07] AutoTrain thread launched (runs in background)
+[2026-03-29 21:03:07] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-03-29 21:03:14] AutoTrain thread launched (runs in background)
+[2026-03-29 21:03:14] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-03-30 09:27:32] AutoTrain thread launched (runs in background)
+[2026-03-30 09:27:32] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-03-30 09:27:38] AutoTrain thread launched (runs in background)
+[2026-03-30 09:27:38] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-03-30 09:46:46] AutoTrain thread launched (runs in background)
+[2026-03-30 09:46:46] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-03-30 09:46:52] AutoTrain thread launched (runs in background)
+[2026-03-30 09:46:52] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-03-30 10:02:51] AutoTrain thread launched (runs in background)
+[2026-03-30 10:02:51] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-03-30 10:02:58] AutoTrain thread launched (runs in background)
+[2026-03-30 10:02:58] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-03-30 14:12:53] AutoTrain thread launched (runs in background)
+[2026-03-30 14:12:53] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-03-30 14:12:59] AutoTrain thread launched (runs in background)
+[2026-03-30 14:12:59] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-03-30 14:17:54] AutoTrain thread launched (runs in background)
+[2026-03-30 14:17:54] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-03-30 14:20:25] AutoTrain thread launched (runs in background)
+[2026-03-30 14:20:25] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-03-31 11:05:46] AutoTrain thread launched (runs in background)
+[2026-03-31 11:05:46] Starting model retrain …
+[2026-03-31 11:05:46]   Fetching AAPL …
+[2026-03-31 11:05:52] AutoTrain thread launched (runs in background)
+[2026-03-31 11:05:52] Lock file found — skipping (another train is running)
+[2026-03-31 11:05:52]   Fetching TSLA …
+[2026-03-31 11:05:52]   Fetching MSFT …
+[2026-03-31 11:05:52]   Fetching GOOGL …
+[2026-03-31 11:05:53]   Fetching AMZN …
+[2026-03-31 11:05:53]   Fetching NVDA …
+[2026-03-31 11:05:53]   Fetching META …
+[2026-03-31 11:05:53]   Fetching NFLX …
+[2026-03-31 11:05:53]   Fetching BABA …
+[2026-03-31 11:05:53]   Fetching TCS.NS …
+[2026-03-31 11:05:53]   Training on 2,406 samples (after NaN cleanup) …
+[2026-03-31 11:05:53] ✅ Retrain complete — model saved to models/linear_model.pkl
+[2026-03-31 18:17:33] AutoTrain thread launched (runs in background)
+[2026-03-31 18:17:33] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-03-31 18:17:40] AutoTrain thread launched (runs in background)
+[2026-03-31 18:17:40] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-01 09:29:34] AutoTrain thread launched (runs in background)
+[2026-04-01 09:29:34] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-01 09:29:40] AutoTrain thread launched (runs in background)
+[2026-04-01 09:29:40] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-01 14:11:19] AutoTrain thread launched (runs in background)
+[2026-04-01 14:11:19] Starting model retrain …
+[2026-04-01 14:11:19]   Fetching AAPL …
+[2026-04-01 14:11:24]   Fetching TSLA …
+[2026-04-01 14:11:24]   Fetching MSFT …
+[2026-04-01 14:11:25]   Fetching GOOGL …
+[2026-04-01 14:11:25]   Fetching AMZN …
+[2026-04-01 14:11:25]   Fetching NVDA …
+[2026-04-01 14:11:26] AutoTrain thread launched (runs in background)
+[2026-04-01 14:11:26] Lock file found — skipping (another train is running)
+[2026-04-01 14:11:26]   Fetching META …
+[2026-04-01 14:11:26]   Fetching NFLX …
+[2026-04-01 14:11:26]   Fetching BABA …
+[2026-04-01 14:11:27]   Fetching TCS.NS …
+[2026-04-01 14:11:27]   Training on 2,407 samples (after NaN cleanup) …
+[2026-04-01 14:11:27] ✅ Retrain complete — model saved to models/linear_model.pkl
+[2026-04-01 14:39:09] AutoTrain thread launched (runs in background)
+[2026-04-01 14:39:09] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-01 14:39:14] AutoTrain thread launched (runs in background)
+[2026-04-01 14:39:14] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-01 15:01:55] AutoTrain thread launched (runs in background)
+[2026-04-01 15:01:55] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-01 15:02:00] AutoTrain thread launched (runs in background)
+[2026-04-01 15:02:00] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-01 20:50:17] AutoTrain thread launched (runs in background)
+[2026-04-01 20:50:17] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-01 20:50:24] AutoTrain thread launched (runs in background)
+[2026-04-01 20:50:24] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-02 09:35:45] AutoTrain thread launched (runs in background)
+[2026-04-02 09:35:45] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-02 09:35:51] AutoTrain thread launched (runs in background)
+[2026-04-02 09:35:51] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-02 10:15:47] AutoTrain thread launched (runs in background)
+[2026-04-02 10:15:47] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-02 10:15:50] AutoTrain thread launched (runs in background)
+[2026-04-02 10:15:50] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-02 10:36:31] AutoTrain thread launched (runs in background)
+[2026-04-02 10:36:31] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-02 10:36:34] AutoTrain thread launched (runs in background)
+[2026-04-02 10:36:34] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-02 11:19:03] AutoTrain thread launched (runs in background)
+[2026-04-02 11:19:03] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-02 11:19:05] AutoTrain thread launched (runs in background)
+[2026-04-02 11:19:05] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-02 15:02:45] AutoTrain thread launched (runs in background)
+[2026-04-02 15:02:45] Starting model retrain …
+[2026-04-02 15:02:45]   Fetching AAPL …
+[2026-04-02 15:02:49]   Fetching TSLA …
+[2026-04-02 15:02:49]   Fetching MSFT …
+[2026-04-02 15:02:49]   Fetching GOOGL …
+[2026-04-02 15:02:49]   Fetching AMZN …
+[2026-04-02 15:02:49]   Fetching NVDA …
+[2026-04-02 15:02:49]   Fetching META …
+[2026-04-02 15:02:49]   Fetching NFLX …
+[2026-04-02 15:02:49]   Fetching BABA …
+[2026-04-02 15:02:49]   Fetching TCS.NS …
+[2026-04-02 15:02:49]   Training on 2,407 samples (after NaN cleanup) …
+[2026-04-02 15:02:49] ✅ Retrain complete — model saved to models/linear_model.pkl
+[2026-04-02 15:02:51] AutoTrain thread launched (runs in background)
+[2026-04-02 15:02:52] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-02 15:20:29] AutoTrain thread launched (runs in background)
+[2026-04-02 15:20:29] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-02 15:20:36] AutoTrain thread launched (runs in background)
+[2026-04-02 15:20:36] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-02 15:22:49] AutoTrain thread launched (runs in background)
+[2026-04-02 15:22:49] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-02 16:00:45] AutoTrain thread launched (runs in background)
+[2026-04-02 16:00:45] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-02 16:00:47] AutoTrain thread launched (runs in background)
+[2026-04-02 16:00:47] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-02 16:07:02] AutoTrain thread launched (runs in background)
+[2026-04-02 16:07:02] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-02 16:07:35] AutoTrain thread launched (runs in background)
+[2026-04-02 16:07:35] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-02 16:08:36] AutoTrain thread launched (runs in background)
+[2026-04-02 16:08:36] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-02 16:08:54] AutoTrain thread launched (runs in background)
+[2026-04-02 16:08:54] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-02 16:08:56] AutoTrain thread launched (runs in background)
+[2026-04-02 16:08:56] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-03 11:01:49] AutoTrain thread launched (runs in background)
+[2026-04-03 11:01:49] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-03 11:01:56] AutoTrain thread launched (runs in background)
+[2026-04-03 11:01:56] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-03 11:42:38] AutoTrain thread launched (runs in background)
+[2026-04-03 11:42:38] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-03 11:44:21] AutoTrain thread launched (runs in background)
+[2026-04-03 11:44:21] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-03 11:44:28] AutoTrain thread launched (runs in background)
+[2026-04-03 11:44:28] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-03 11:47:44] AutoTrain thread launched (runs in background)
+[2026-04-03 11:47:44] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-03 11:49:43] AutoTrain thread launched (runs in background)
+[2026-04-03 11:49:43] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-03 11:49:50] AutoTrain thread launched (runs in background)
+[2026-04-03 11:49:50] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-03 17:34:24] AutoTrain thread launched (runs in background)
+[2026-04-03 17:34:24] Starting model retrain …
+[2026-04-03 17:34:24]   Fetching AAPL …
+[2026-04-03 17:34:26]   Fetching TSLA …
+[2026-04-03 17:34:26]   Fetching MSFT …
+[2026-04-03 17:34:26]   Fetching GOOGL …
+[2026-04-03 17:34:26]   Fetching AMZN …
+[2026-04-03 17:34:26]   Fetching NVDA …
+[2026-04-03 17:34:26]   Fetching META …
+[2026-04-03 17:34:26]   Fetching NFLX …
+[2026-04-03 17:34:26] AutoTrain thread launched (runs in background)
+[2026-04-03 17:34:26] Lock file found — skipping (another train is running)
+[2026-04-03 17:34:26]   Fetching BABA …
+[2026-04-03 17:34:26]   Fetching TCS.NS …
+[2026-04-03 17:34:26]   Training on 2,407 samples (after NaN cleanup) …
+[2026-04-03 17:34:26] ✅ Retrain complete — model saved to models/linear_model.pkl
+[2026-04-03 17:42:11] AutoTrain thread launched (runs in background)
+[2026-04-03 17:42:11] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-03 17:48:00] AutoTrain thread launched (runs in background)
+[2026-04-03 17:48:00] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-03 17:48:02] AutoTrain thread launched (runs in background)
+[2026-04-03 17:48:02] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-03 18:00:30] AutoTrain thread launched (runs in background)
+[2026-04-03 18:00:30] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-03 18:00:32] AutoTrain thread launched (runs in background)
+[2026-04-03 18:00:32] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-03 18:18:27] AutoTrain thread launched (runs in background)
+[2026-04-03 18:18:27] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-03 18:18:30] AutoTrain thread launched (runs in background)
+[2026-04-03 18:18:30] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-03 18:24:41] AutoTrain thread launched (runs in background)
+[2026-04-03 18:24:41] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-03 18:24:44] AutoTrain thread launched (runs in background)
+[2026-04-03 18:24:44] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-03 18:51:59] AutoTrain thread launched (runs in background)
+[2026-04-03 18:51:59] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-03 18:52:01] AutoTrain thread launched (runs in background)
+[2026-04-03 18:52:01] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-03 19:09:09] AutoTrain thread launched (runs in background)
+[2026-04-03 19:09:09] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-03 19:09:12] AutoTrain thread launched (runs in background)
+[2026-04-03 19:09:12] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-03 19:11:43] AutoTrain thread launched (runs in background)
+[2026-04-03 19:11:43] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-03 19:11:46] AutoTrain thread launched (runs in background)
+[2026-04-03 19:11:46] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 00:15:12] AutoTrain thread launched (runs in background)
+[2026-04-04 00:15:12] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 00:15:15] AutoTrain thread launched (runs in background)
+[2026-04-04 00:15:15] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 00:48:40] AutoTrain thread launched (runs in background)
+[2026-04-04 00:48:40] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 00:48:43] AutoTrain thread launched (runs in background)
+[2026-04-04 00:48:43] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 00:55:59] AutoTrain thread launched (runs in background)
+[2026-04-04 00:55:59] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 00:56:01] AutoTrain thread launched (runs in background)
+[2026-04-04 00:56:01] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 01:00:48] AutoTrain thread launched (runs in background)
+[2026-04-04 01:00:48] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 01:01:59] AutoTrain thread launched (runs in background)
+[2026-04-04 01:01:59] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 01:03:06] AutoTrain thread launched (runs in background)
+[2026-04-04 01:03:06] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 01:12:38] AutoTrain thread launched (runs in background)
+[2026-04-04 01:12:38] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 01:12:40] AutoTrain thread launched (runs in background)
+[2026-04-04 01:12:40] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 01:16:03] AutoTrain thread launched (runs in background)
+[2026-04-04 01:16:03] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 01:16:41] AutoTrain thread launched (runs in background)
+[2026-04-04 01:16:41] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 01:16:44] AutoTrain thread launched (runs in background)
+[2026-04-04 01:16:44] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 01:22:56] AutoTrain thread launched (runs in background)
+[2026-04-04 01:22:56] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 01:23:53] AutoTrain thread launched (runs in background)
+[2026-04-04 01:23:53] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 01:24:12] AutoTrain thread launched (runs in background)
+[2026-04-04 01:24:12] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 01:24:14] AutoTrain thread launched (runs in background)
+[2026-04-04 01:24:14] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 01:30:17] AutoTrain thread launched (runs in background)
+[2026-04-04 01:30:17] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 01:30:19] AutoTrain thread launched (runs in background)
+[2026-04-04 01:30:19] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 01:39:43] AutoTrain thread launched (runs in background)
+[2026-04-04 01:39:43] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 01:39:45] AutoTrain thread launched (runs in background)
+[2026-04-04 01:39:45] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 01:52:11] AutoTrain thread launched (runs in background)
+[2026-04-04 01:52:11] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 01:52:13] AutoTrain thread launched (runs in background)
+[2026-04-04 01:52:13] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 09:07:39] AutoTrain thread launched (runs in background)
+[2026-04-04 09:07:39] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 09:07:41] AutoTrain thread launched (runs in background)
+[2026-04-04 09:07:41] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 09:12:51] AutoTrain thread launched (runs in background)
+[2026-04-04 09:12:51] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 09:12:53] AutoTrain thread launched (runs in background)
+[2026-04-04 09:12:53] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 09:15:26] AutoTrain thread launched (runs in background)
+[2026-04-04 09:15:26] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 09:15:28] AutoTrain thread launched (runs in background)
+[2026-04-04 09:15:28] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 09:17:32] AutoTrain thread launched (runs in background)
+[2026-04-04 09:17:32] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 09:18:03] AutoTrain thread launched (runs in background)
+[2026-04-04 09:18:03] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 09:18:05] AutoTrain thread launched (runs in background)
+[2026-04-04 09:18:05] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 09:21:36] AutoTrain thread launched (runs in background)
+[2026-04-04 09:21:36] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 09:21:38] AutoTrain thread launched (runs in background)
+[2026-04-04 09:21:38] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 09:27:47] AutoTrain thread launched (runs in background)
+[2026-04-04 09:27:47] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 09:27:49] AutoTrain thread launched (runs in background)
+[2026-04-04 09:27:49] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 09:33:47] AutoTrain thread launched (runs in background)
+[2026-04-04 09:33:47] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 09:33:50] AutoTrain thread launched (runs in background)
+[2026-04-04 09:33:50] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 09:45:04] AutoTrain thread launched (runs in background)
+[2026-04-04 09:45:04] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 09:45:07] AutoTrain thread launched (runs in background)
+[2026-04-04 09:45:07] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 10:01:28] AutoTrain thread launched (runs in background)
+[2026-04-04 10:01:28] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 10:05:35] AutoTrain thread launched (runs in background)
+[2026-04-04 10:05:35] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 10:05:37] AutoTrain thread launched (runs in background)
+[2026-04-04 10:05:37] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 10:24:17] AutoTrain thread launched (runs in background)
+[2026-04-04 10:24:17] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 10:24:20] AutoTrain thread launched (runs in background)
+[2026-04-04 10:24:20] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 10:33:33] AutoTrain thread launched (runs in background)
+[2026-04-04 10:33:33] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 10:33:36] AutoTrain thread launched (runs in background)
+[2026-04-04 10:33:36] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 10:44:14] AutoTrain thread launched (runs in background)
+[2026-04-04 10:44:14] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 10:44:20] AutoTrain thread launched (runs in background)
+[2026-04-04 10:44:20] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 10:46:38] AutoTrain thread launched (runs in background)
+[2026-04-04 10:46:38] Model is up-to-date (< 24 h old) — skipping retrain
+[2026-04-04 11:01:41] AutoTrain thread launched (runs in background)
+[2026-04-04 11:01:41] Model is up-to-date (< 24 h old) — skipping retrain

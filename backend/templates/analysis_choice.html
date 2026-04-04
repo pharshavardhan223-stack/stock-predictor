@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Choose Analysis Type | Stock AI</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#020917;--s1:rgba(6,14,35,.95);
+  --bd:rgba(56,189,248,.12);--bdh:rgba(56,189,248,.3);
+  --cy:#38bdf8;--cy2:#22d3ee;--gr:#4ade80;--rd:#fb7185;--am:#fbbf24;--pu:#a78bfa;
+  --tx:#e2e8f0;--mt:#64748b;
+  --mono:'Space Mono',monospace;--sans:'Syne',sans-serif;
+}
+body{min-height:100vh;background:var(--bg);color:var(--tx);font-family:var(--sans);}
+#bgc{position:fixed;inset:0;z-index:0;pointer-events:none;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+
+.nav{position:sticky;top:0;z-index:200;height:60px;background:rgba(2,9,23,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;padding:0 26px;}
+.nav-brand{display:flex;align-items:center;gap:9px;text-decoration:none;}
+.nav-brand i{color:var(--cy);font-size:18px;}
+.nav-brand span{font-size:17px;font-weight:800;background:linear-gradient(90deg,var(--cy),var(--cy2));-webkit-background-clip:text;color:transparent;}
+.nav-links{display:flex;gap:4px;flex-wrap:wrap;}
+.nl{display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:8px;color:var(--mt);font-size:12.5px;font-weight:600;text-decoration:none;transition:.2s;}
+.nl:hover{background:rgba(56,189,248,.08);color:var(--cy);}
+.nl.out{color:var(--rd);}
+.nav-user{display:flex;align-items:center;gap:7px;padding:5px 13px;border-radius:40px;background:rgba(255,255,255,.04);font-size:12px;color:var(--mt);}
+.udot{width:6px;height:6px;background:var(--gr);border-radius:50%;animation:pulse 2s infinite;}
+
+.page{max-width:900px;margin:0 auto;padding:50px 22px;position:relative;z-index:1;text-align:center;}
+
+.choice-header{margin-bottom:40px;}
+.choice-header .tag{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:.62rem;color:var(--cy);background:rgba(56,189,248,.07);border:1px solid rgba(56,189,248,.18);padding:4px 11px;border-radius:20px;margin-bottom:15px;}
+.choice-header h1{font-size:2rem;background:linear-gradient(90deg,#fff,var(--cy));-webkit-background-clip:text;color:transparent;margin-bottom:10px;}
+.choice-header p{color:var(--mt);font-size:.9rem;}
+
+.choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:25px;margin-bottom:40px;}
+.choice-card{background:var(--s1);border:1px solid var(--bd);border-radius:20px;padding:35px 25px;cursor:pointer;transition:.3s;text-decoration:none;display:block;}
+.choice-card:hover{transform:translateY(-8px);border-color:var(--bdh);box-shadow:0 25px 50px rgba(0,0,0,.4);}
+.choice-icon{width:70px;height:70px;border-radius:20px;background:rgba(56,189,248,.1);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;}
+.choice-icon i{font-size:2rem;color:var(--cy);}
+.choice-card h3{font-size:1.3rem;margin-bottom:10px;}
+.choice-card p{color:var(--mt);font-size:.8rem;line-height:1.5;}
+.choice-badge{display:inline-block;margin-top:15px;padding:5px 12px;border-radius:20px;font-family:var(--mono);font-size:.65rem;}
+.choice-card:first-child .choice-badge{background:rgba(56,189,248,.1);color:var(--cy);}
+.choice-card:last-child .choice-badge{background:rgba(167,139,250,.1);color:var(--pu);}
+
+.info-box{background:rgba(0,0,0,.3);border-radius:16px;padding:20px;margin-top:20px;}
+.info-box p{font-size:.75rem;color:var(--mt);line-height:1.5;}
+.info-box strong{color:var(--cy);}
+
+.back-link{display:inline-flex;align-items:center;gap:6px;margin-top:25px;color:var(--mt);text-decoration:none;font-size:.8rem;}
+.back-link:hover{color:var(--cy);}
+
+@media(max-width:768px){.choice-grid{grid-template-columns:1fr;}.nl span{display:none;}}
+</style>
+</head>
+<body>
+<canvas id="bgc"></canvas>
+
+<nav class="nav">
+  <a href="/dashboard" class="nav-brand"><i class="fa-solid fa-chart-line"></i><span>Stock AI</span></a>
+  <div class="nav-links">
+    <a href="/dashboard" class="nl"><i class="fa-solid fa-house"></i><span>Dashboard</span></a>
+    <a href="/upload" class="nl"><i class="fa-solid fa-upload"></i><span>Upload</span></a>
+    <a href="/logout" class="nl out"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a>
+  </div>
+  <div class="nav-user"><span class="udot"></span><span>{{ username | title }}</span></div>
+</nav>
+
+<div class="page">
+  <div class="choice-header">
+    <div class="tag"><span class="tag-dot"></span>Dataset Ready</div>
+    <h1>Choose Analysis Type</h1>
+    <p>Your dataset has been uploaded. Select how you want to analyze it.</p>
+  </div>
+
+  <div class="choice-grid">
+    <a href="/advanced/analysis" class="choice-card">
+      <div class="choice-icon"><i class="fa-solid fa-chart-line"></i></div>
+      <h3>📊 Basic Charts</h3>
+      <p>Quick visualization with line/bar charts.<br>Simple and fast analysis.</p>
+      <div class="choice-badge">⚡ Fast & Simple</div>
+    </a>
+
+    <a href="/advanced/analysis" class="choice-card">
+      <div class="choice-icon"><i class="fa-solid fa-brain"></i></div>
+      <h3>🧠 Advanced AI Analysis</h3>
+      <p>Multiple ML models (Linear, Random Forest, LSTM).<br>Get predictions, trends, and comprehensive reports.</p>
+      <div class="choice-badge">🚀 AI-Powered</div>
+    </a>
+  </div>
+
+  <div class="info-box">
+    <p><i class="fa-solid fa-circle-info"></i> <strong>Selected Column:</strong> {{ selected_column }} &nbsp;|&nbsp; <strong>Dataset:</strong> {{ rows }} rows, {{ cols }} columns</p>
+  </div>
+
+  <a href="/preview" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Preview</a>
+</div>
+
+<script>
+const cv=document.getElementById("bgc"),cx=cv.getContext("2d");
+function rsz(){cv.width=innerWidth;cv.height=innerHeight;}rsz();addEventListener("resize",rsz);
+const pts=Array.from({length:50},()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,dx:(Math.random()-.5)*.32,dy:(Math.random()-.5)*.32}));
+(function loop(){cx.clearRect(0,0,cv.width,cv.height);pts.forEach(p=>{p.x+=p.dx;p.y+=p.dy;if(p.x<0||p.x>cv.width)p.dx*=-1;if(p.y<0||p.y>cv.height)p.dy*=-1;cx.fillStyle="rgba(56,189,248,.22)";cx.beginPath();cx.arc(p.x,p.y,1.2,0,Math.PI*2);cx.fill();pts.forEach(q=>{const dx=p.x-q.x,dy=p.y-q.y,r=Math.sqrt(dx*dx+dy*dy);if(r<85){cx.strokeStyle=`rgba(56,189,248,${.4*(1-r/85)})`;cx.lineWidth=.22;cx.beginPath();cx.moveTo(p.x,p.y);cx.lineTo(q.x,q.y);cx.stroke();}});});requestAnimationFrame(loop);})();
+</script>
+</body>
+</html>

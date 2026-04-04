@@ -53,3 +53,14 @@ admin,payment amount,SELL,97.9,13-03-2026 09:37
 admin,item,SELL,98.0,13-03-2026 09:39
 admin,payment amount,SELL,97.9,13-03-2026 14:47
 admin,payment amount,SELL,97.9,13-03-2026 14:52
+admin,Aggregate rating,HOLD,0,02-04-2026 10:19
+admin,Count,HOLD,0,02-04-2026 10:20
+admin,Percentage,HOLD,0,02-04-2026 10:20
+admin,Vehicle Count,SELL,42.8,02-04-2026 10:21
+admin,Vehicle Count,SELL,42.8,02-04-2026 10:21
+admin,RELIANCE.NS,SELL,99.1,02-04-2026 16:10
+user,INFY.NS,BUY,99.5,03-04-2026 11:52
+admin,Location,HOLD,0,04-04-2026 00:50
+admin,Vehicle Count,HOLD,0,04-04-2026 00:50
+admin,State,HOLD,0,04-04-2026 00:50
+admin,INFY.NS,BUY,99.5,04-04-2026 01:19

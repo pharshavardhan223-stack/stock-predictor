@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Advanced Analysis | Stock AI</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#020917;--s1:rgba(6,14,35,.95);--s2:rgba(8,18,42,.9);
+  --bd:rgba(56,189,248,.12);--bdh:rgba(56,189,248,.3);
+  --cy:#38bdf8;--cy2:#22d3ee;--gr:#4ade80;--rd:#fb7185;--am:#fbbf24;--pu:#a78bfa;
+  --tx:#e2e8f0;--mt:#64748b;--mt2:#334155;
+  --mono:'Space Mono',monospace;--sans:'Syne',sans-serif;
+}
+body{min-height:100vh;background:var(--bg);color:var(--tx);font-family:var(--sans);overflow-x:hidden;}
+body::before{content:"";position:fixed;inset:0;background:linear-gradient(rgba(56,189,248,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(56,189,248,.018) 1px,transparent 1px);background-size:52px 52px;pointer-events:none;z-index:0;}
+#bgc{position:fixed;inset:0;z-index:0;pointer-events:none;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(200%)}}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:200;height:60px;background:rgba(2,9,23,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;padding:0 26px;gap:10px;}
+.nav-brand{display:flex;align-items:center;gap:9px;text-decoration:none;flex-shrink:0;}
+.nav-brand i{color:var(--cy);font-size:18px;}
+.nav-brand span{font-size:17px;font-weight:800;background:linear-gradient(90deg,var(--cy),var(--cy2));-webkit-background-clip:text;color:transparent;}
+.nav-links{display:flex;align-items:center;gap:4px;flex-wrap:wrap;}
+.nl{display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:8px;border:1px solid transparent;color:var(--mt);font-size:12.5px;font-weight:600;text-decoration:none;transition:.2s;}
+.nl:hover{background:rgba(56,189,248,.08);border-color:rgba(56,189,248,.2);color:var(--cy);}
+.nl.on{background:rgba(56,189,248,.12);border-color:rgba(56,189,248,.35);color:var(--cy);}
+.nl.out{color:var(--rd);}
+.nav-user{display:flex;align-items:center;gap:7px;padding:5px 13px;border-radius:40px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);font-size:12px;color:var(--mt);}
+.udot{width:6px;height:6px;background:var(--gr);border-radius:50%;animation:pulse 2s infinite;}
+
+/* TICKER */
+.ticker{height:30px;background:rgba(4,10,26,.98);border-bottom:1px solid var(--bd);overflow:hidden;display:flex;align-items:center;}
+.tick-wrap{display:flex;white-space:nowrap;animation:tickScroll 50s linear infinite;}
+@keyframes tickScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.tick-item{font-family:var(--mono);font-size:.68rem;padding:0 22px;display:flex;align-items:center;gap:7px;border-right:1px solid rgba(255,255,255,.04);}
+.ts{color:var(--cy);font-weight:700;}
+.tu{color:var(--gr);}
+.td{color:var(--rd);}
+
+/* PAGE */
+.page{max-width:1100px;margin:0 auto;padding:36px 22px 90px;position:relative;z-index:1;}
+
+/* PAGE HEADER */
+.page-hd{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:28px;animation:fadeUp .5s ease both;}
+.page-hd-left .tag{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:.62rem;color:var(--cy);background:rgba(56,189,248,.07);border:1px solid rgba(56,189,248,.18);padding:4px 11px;border-radius:20px;margin-bottom:10px;}
+.tag-dot{width:5px;height:5px;background:var(--cy);border-radius:50%;animation:pulse 1.5s infinite;}
+.page-hd h1{font-size:clamp(1.6rem,3.5vw,2.2rem);font-weight:800;background:linear-gradient(135deg,#f1f5f9 0%,var(--cy) 60%);-webkit-background-clip:text;color:transparent;}
+.page-hd p{color:var(--mt);font-size:.84rem;margin-top:6px;}
+.hd-actions{display:flex;gap:8px;flex-wrap:wrap;}
+.btn-sm{display:flex;align-items:center;gap:6px;padding:9px 16px;border-radius:10px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:var(--mt);font-size:.8rem;font-weight:600;text-decoration:none;transition:.2s;cursor:pointer;}
+.btn-sm:hover{border-color:rgba(56,189,248,.25);color:var(--cy);}
+.btn-sm.cy{background:linear-gradient(135deg,#0369a1,#0891b2);border-color:transparent;color:#fff;box-shadow:0 4px 16px rgba(3,105,161,.3);}
+.btn-sm.cy:hover{transform:translateY(-1px);box-shadow:0 7px 22px rgba(3,105,161,.45);}
+
+/* DATA PREVIEW */
+.preview-card{background:var(--s1);border:1px solid var(--bd);border-radius:14px;margin-bottom:25px;overflow:hidden;}
+.preview-header{padding:14px 20px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:10px;}
+.preview-header i{color:var(--cy);font-size:1rem;}
+.preview-header h3{font-size:.9rem;font-weight:600;}
+.preview-content{overflow-x:auto;padding:16px;}
+.preview-content table{width:100%;border-collapse:collapse;}
+.preview-content th{padding:8px 12px;background:rgba(56,189,248,.05);color:var(--cy);font-family:var(--mono);font-size:.7rem;text-align:left;}
+.preview-content td{padding:6px 12px;border-bottom:1px solid rgba(255,255,255,.05);font-family:var(--mono);font-size:.7rem;}
+.shape-badge{font-family:var(--mono);font-size:.65rem;color:var(--mt);margin-top:10px;padding:0 16px 16px;}
+
+/* MODEL SELECTION */
+.model-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-bottom:25px;}
+.model-card{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:16px;cursor:pointer;transition:.2s;position:relative;}
+.model-card:hover{border-color:var(--bdh);transform:translateY(-2px);}
+.model-card.selected{border-color:var(--cy);background:rgba(56,189,248,.05);}
+.model-card.selected::before{content:"✓";position:absolute;top:12px;right:16px;color:var(--gr);font-size:1rem;font-weight:700;}
+.model-icon{width:44px;height:44px;border-radius:12px;background:rgba(56,189,248,.1);display:flex;align-items:center;justify-content:center;margin-bottom:12px;}
+.model-icon i{font-size:1.3rem;color:var(--cy);}
+.model-name{font-size:.9rem;font-weight:700;margin-bottom:4px;}
+.model-type{font-size:.65rem;color:var(--mt);font-family:var(--mono);margin-bottom:8px;}
+.model-desc{font-size:.7rem;color:var(--mt);line-height:1.4;}
+
+/* SETTINGS PANEL */
+.settings-panel{background:var(--s1);border:1px solid var(--bd);border-radius:14px;margin-bottom:25px;overflow:hidden;}
+.settings-header{padding:14px 20px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:10px;}
+.settings-header i{color:var(--am);font-size:1rem;}
+.settings-header h3{font-size:.9rem;font-weight:600;}
+.settings-body{padding:20px;}
+.setting-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:15px;margin-bottom:15px;}
+.setting-row label{font-family:var(--mono);font-size:.75rem;color:var(--mt);}
+.forecast-select{padding:8px 15px;background:rgba(255,255,255,.05);border:1px solid var(--bd);border-radius:8px;color:var(--tx);font-family:var(--mono);font-size:.75rem;cursor:pointer;}
+.checkbox-group{display:flex;align-items:center;gap:8px;}
+.checkbox-group input{width:16px;height:16px;cursor:pointer;}
+.checkbox-group label{font-family:var(--mono);font-size:.7rem;cursor:pointer;}
+
+/* ACTION BUTTONS */
+.action-buttons{display:flex;gap:15px;margin-top:20px;}
+.btn-primary{background:linear-gradient(135deg,#0369a1,#0891b2);color:#fff;border:none;border-radius:12px;padding:14px 28px;font-size:.9rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px;transition:.2s;}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(3,105,161,.4);}
+.btn-primary:disabled{opacity:.5;cursor:not-allowed;}
+.btn-secondary{background:rgba(255,255,255,.05);border:1px solid var(--bd);border-radius:12px;padding:14px 28px;font-size:.9rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;transition:.2s;color:var(--tx);}
+.btn-secondary:hover{border-color:var(--cy);color:var(--cy);}
+
+/* LOADER */
+.loader-overlay{display:none;position:fixed;inset:0;z-index:1000;background:rgba(2,9,23,.95);backdrop-filter:blur(16px);flex-direction:column;align-items:center;justify-content:center;gap:20px;}
+.loader-overlay.show{display:flex;}
+.loader-ring{width:60px;height:60px;border:3px solid rgba(56,189,248,.2);border-top:3px solid var(--cy);border-radius:50%;animation:spin 1s linear infinite;}
+.loader-text{font-family:var(--mono);font-size:.8rem;color:var(--cy);}
+
+/* TOAST */
+.toast{position:fixed;bottom:20px;right:20px;z-index:1100;padding:12px 20px;border-radius:10px;font-family:var(--mono);font-size:.75rem;transform:translateX(400px);transition:.3s;background:rgba(0,0,0,.9);border-left:3px solid var(--gr);color:var(--gr);}
+.toast.show{transform:translateX(0);}
+.toast.error{border-left-color:var(--rd);color:var(--rd);}
+
+@media(max-width:768px){.nl span{display:none;}.model-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<canvas id="bgc"></canvas>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="/dashboard" class="nav-brand"><i class="fa-solid fa-chart-line"></i><span>Stock AI</span></a>
+  <div class="nav-links">
+    <a href="/dashboard" class="nl"><i class="fa-solid fa-house"></i><span>Dashboard</span></a>
+    <a href="/stock" class="nl"><i class="fa-solid fa-magnifying-glass-chart"></i><span>Predict</span></a>
+    <a href="/watchlist" class="nl"><i class="fa-solid fa-star"></i><span>Watchlist</span></a>
+    <a href="/compare" class="nl"><i class="fa-solid fa-code-compare"></i><span>Compare</span></a>
+    <a href="/portfolio-advisor" class="nl"><i class="fa-solid fa-chart-pie"></i><span>Advisor</span></a>
+    <a href="/history" class="nl"><i class="fa-solid fa-clock-rotate-left"></i><span>History</span></a>
+    <a href="/stock-analysis" class="nl"><i class="fa-solid fa-rocket"></i><span>Advanced AI</span></a>
+    <a href="/upload" class="nl"><i class="fa-solid fa-upload"></i><span>Upload</span></a>
+    <a href="/logout" class="nl out"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a>
+  </div>
+  <div class="nav-user"><span class="udot"></span><span>{{ username | title }}</span></div>
+</nav>
+
+<!-- TICKER -->
+<div class="ticker"><div class="tick-wrap" id="tw"></div></div>
+
+<div class="page">
+
+  <div class="page-hd">
+    <div class="page-hd-left">
+      <div class="tag"><span class="tag-dot"></span>Step 3 of 3 · Advanced Analysis</div>
+      <h1>Advanced AI Prediction</h1>
+      <p>Select a model, configure settings, and generate a comprehensive forecast report</p>
+    </div>
+    <div class="hd-actions">
+      <a href="/charts" class="btn-sm"><i class="fa-solid fa-chart-line"></i>Basic Charts</a>
+      <a href="/preview" class="btn-sm"><i class="fa-solid fa-arrow-left"></i>Back to Preview</a>
+    </div>
+  </div>
+
+  <!-- Data Preview Summary -->
+  <div class="preview-card">
+    <div class="preview-header">
+      <i class="fa-solid fa-database"></i>
+      <h3>Dataset Overview</h3>
+    </div>
+    <div class="preview-content">
+      <div style="overflow-x:auto;">
+        {{ preview_data | safe }}
+      </div>
+    </div>
+    <div class="shape-badge">
+      <i class="fa-regular fa-rectangle-list"></i> Shape: {{ data_shape[0] }} rows × {{ data_shape[1] }} columns
+      | Selected column: <strong style="color:var(--cy)">{{ selected_column }}</strong>
+    </div>
+  </div>
+
+  <!-- Model Selection -->
+  <div class="settings-header" style="margin-bottom:12px;">
+    <i class="fa-solid fa-microchip"></i>
+    <h3>Choose AI Model</h3>
+  </div>
+  <div class="model-grid" id="modelGrid">
+    {% for model in models %}
+    <div class="model-card" data-model="{{ model.id }}" onclick="selectModel('{{ model.id }}')">
+      <div class="model-icon"><i class="fa-solid {{ model.icon }}"></i></div>
+      <div class="model-name">{{ model.name }}</div>
+      <div class="model-type">{{ model.type }}</div>
+      <div class="model-desc">{{ model.description }}</div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Settings Panel -->
+  <div class="settings-panel">
+    <div class="settings-header">
+      <i class="fa-solid fa-sliders-h"></i>
+      <h3>Prediction Settings</h3>
+    </div>
+    <div class="settings-body">
+      <div class="setting-row">
+        <label><i class="fa-regular fa-calendar"></i> Forecast Period</label>
+        <select class="forecast-select" id="forecastDays">
+          {% for period in forecast_periods %}
+          <option value="{{ period.days }}" {% if period.days == 30 %}selected{% endif %}>{{ period.label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="setting-row">
+        <div class="checkbox-group">
+          <input type="checkbox" id="enableAnomaly">
+          <label for="enableAnomaly">🔍 Detect Anomalies (find unusual patterns in data)</label>
+        </div>
+        <div class="checkbox-group">
+          <input type="checkbox" id="generateInsights" checked>
+          <label for="generateInsights">💡 Generate AI Insights (natural language analysis)</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="action-buttons">
+    <button class="btn-primary" id="runPredictionBtn" onclick="runPrediction()">
+      <i class="fa-solid fa-play"></i> Run Advanced Prediction
+    </button>
+    <button class="btn-secondary" onclick="location.href='/upload'">
+      <i class="fa-solid fa-upload"></i> Upload New Dataset
+    </button>
+  </div>
+
+</div>
+
+<!-- Loader -->
+<div class="loader-overlay" id="loaderOverlay">
+  <div class="loader-ring"></div>
+  <div class="loader-text">AI is analyzing your data...</div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="toast"></div>
+
+<script>
+// BG PARTICLES
+const cv=document.getElementById("bgc"),cx=cv.getContext("2d");
+function rsz(){cv.width=innerWidth;cv.height=innerHeight;}rsz();addEventListener("resize",rsz);
+const pts=Array.from({length:50},()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,dx:(Math.random()-.5)*.32,dy:(Math.random()-.5)*.32}));
+(function loop(){cx.clearRect(0,0,cv.width,cv.height);pts.forEach(p=>{p.x+=p.dx;p.y+=p.dy;if(p.x<0||p.x>cv.width)p.dx*=-1;if(p.y<0||p.y>cv.height)p.dy*=-1;cx.fillStyle="rgba(56,189,248,.22)";cx.beginPath();cx.arc(p.x,p.y,1.2,0,Math.PI*2);cx.fill();pts.forEach(q=>{const dx=p.x-q.x,dy=p.y-q.y,r=Math.sqrt(dx*dx+dy*dy);if(r<85){cx.strokeStyle=`rgba(56,189,248,${.4*(1-r/85)})`;cx.lineWidth=.22;cx.beginPath();cx.moveTo(p.x,p.y);cx.lineTo(q.x,q.y);cx.stroke();}});});requestAnimationFrame(loop);})();
+
+// TICKER
+const TK=[{s:"AAPL",p:"$213.49",c:"+0.82%",u:1},{s:"TSLA",p:"$248.05",c:"-1.34%",u:0},{s:"NVDA",p:"$875.40",c:"+2.11%",u:1},{s:"MSFT",p:"$415.32",c:"+0.47%",u:1},{s:"INFY",p:"₹1548",c:"+1.22%",u:1},{s:"TCS",p:"₹3821",c:"-0.41%",u:0},{s:"RELIANCE",p:"₹2940",c:"+0.93%",u:1}];
+document.getElementById("tw").innerHTML=[...TK,...TK].map(t=>`<div class="tick-item"><span class="ts">${t.s}</span><span>${t.p}</span><span class="${t.u?'tu':'td'}">${t.c}</span></div>`).join("");
+
+// Model Selection
+let selectedModel = "ensemble";
+
+function selectModel(modelId) {
+  selectedModel = modelId;
+  document.querySelectorAll('.model-card').forEach(card => {
+    if(card.dataset.model === modelId) {
+      card.classList.add('selected');
+    } else {
+      card.classList.remove('selected');
+    }
+  });
+}
+
+// Toast function
+function showToast(message, type = 'success') {
+  const toast = document.getElementById('toast');
+  toast.textContent = message;
+  toast.className = `toast ${type} show`;
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+// Run Prediction
+async function runPrediction() {
+  const forecastDays = document.getElementById('forecastDays').value;
+  const enableAnomaly = document.getElementById('enableAnomaly').checked;
+  const generateInsights = document.getElementById('generateInsights').checked;
+  const column = "{{ selected_column }}";
+  
+  if(!column) {
+    showToast('No column selected. Please go back and select a column.', 'error');
+    return;
+  }
+  
+  const loader = document.getElementById('loaderOverlay');
+  loader.classList.add('show');
+  
+  const formData = new FormData();
+  formData.append('model', selectedModel);
+  formData.append('forecast_days', forecastDays);
+  formData.append('column', column);
+  formData.append('enable_anomaly', enableAnomaly);
+  formData.append('generate_insights', generateInsights);
+  
+  try {
+    const response = await fetch('/advanced/run-prediction', {
+      method: 'POST',
+      body: formData
+    });
+    
+    const data = await response.json();
+    
+    if(data.success) {
+      window.location.href = data.redirect;
+    } else {
+      loader.classList.remove('show');
+      showToast(data.error || 'Prediction failed', 'error');
+    }
+  } catch(error) {
+    loader.classList.remove('show');
+    showToast('Network error. Please try again.', 'error');
+    console.error('Error:', error);
+  }
+}
+
+// Initialize - select default model
+document.addEventListener('DOMContentLoaded', () => {
+  selectModel('ensemble');
+});
+</script>
+
+
+</body>
+</html>

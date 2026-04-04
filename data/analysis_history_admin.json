@@ -1,0 +1,22 @@
+[
+  {
+    "date": "2026-04-04T00:57:43.811589",
+    "column": "Vehicle Count",
+    "model": "gradient_boosting",
+    "forecast_days": 30,
+    "trend": "up",
+    "confidence": 50,
+    "current_value": 3.0,
+    "predicted_value": 3.0228637619201506
+  },
+  {
+    "date": "2026-04-04T00:57:35.908804",
+    "column": "Vehicle Count",
+    "model": "ensemble",
+    "forecast_days": 30,
+    "trend": "down",
+    "confidence": 50,
+    "current_value": 3.0,
+    "predicted_value": 2.933024667587038
+  }
+]

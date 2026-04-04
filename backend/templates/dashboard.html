@@ -8,6 +8,7 @@
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation"></script>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 
@@ -34,7 +35,6 @@ overflow-x:hidden;
 }
 
 /* Animated Grid */
-
 body::before{
 content:"";
 position:fixed;
@@ -58,7 +58,6 @@ to{transform:translate(45px,45px)}
 }
 
 /* ================= PARTICLES ================= */
-
 #bgCanvas{
 position:fixed;
 inset:0;
@@ -66,45 +65,37 @@ z-index:-2;
 }
 
 /* ================= CONTAINER ================= */
-
 .container{
-width:92%;
-margin:25px auto;
-perspective:1200px;
+max-width:1400px;
+width:95%;
+margin:20px auto;
+padding:0 15px;
 }
 
 /* ================= HEADER ================= */
-
 .header{
 display:flex;
 align-items:center;
 justify-content:space-between;
-margin-bottom:35px;
+margin-bottom:30px;
 flex-wrap:wrap;
 gap:15px;
 }
 
 .header-left h1{
-font-size:30px;
+font-size:28px;
 background:linear-gradient(90deg,#38bdf8,#22d3ee,#7dd3fc);
 -webkit-background-clip:text;
 color:transparent;
 letter-spacing:1px;
-animation:textGlow 4s infinite alternate;
 }
 
 .header-left p{
 color:#64748b;
-font-size:13px;
-margin-top:4px;
+font-size:12px;
+margin-top:5px;
 }
 
-@keyframes textGlow{
-from{opacity:.7}
-to{opacity:1}
-}
-
-/* User badge */
 .user-badge{
 display:flex;
 align-items:center;
@@ -112,8 +103,8 @@ gap:10px;
 background:rgba(255,255,255,.05);
 border:1px solid rgba(255,255,255,.08);
 border-radius:50px;
-padding:8px 18px;
-font-size:14px;
+padding:8px 20px;
+font-size:13px;
 }
 
 .user-badge .dot{
@@ -130,11 +121,10 @@ animation:pulse 2s infinite;
 }
 
 /* ================= STATS ROW ================= */
-
 .stats-row{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-gap:16px;
+grid-template-columns:repeat(4,1fr);
+gap:20px;
 margin-bottom:25px;
 }
 
@@ -145,19 +135,8 @@ border-radius:16px;
 padding:18px 20px;
 display:flex;
 align-items:center;
-gap:14px;
+gap:15px;
 transition:.3s;
-animation:fadeUp .6s ease both;
-}
-
-.stat-card:nth-child(1){animation-delay:.1s}
-.stat-card:nth-child(2){animation-delay:.2s}
-.stat-card:nth-child(3){animation-delay:.3s}
-.stat-card:nth-child(4){animation-delay:.4s}
-
-@keyframes fadeUp{
-from{opacity:0;transform:translateY(20px)}
-to{opacity:1;transform:translateY(0)}
 }
 
 .stat-card:hover{
@@ -167,13 +146,13 @@ transform:translateY(-3px);
 }
 
 .stat-icon{
-width:44px;
-height:44px;
-border-radius:12px;
+width:48px;
+height:48px;
+border-radius:14px;
 display:flex;
 align-items:center;
 justify-content:center;
-font-size:18px;
+font-size:20px;
 flex-shrink:0;
 }
 
@@ -187,22 +166,21 @@ font-size:11px;
 color:#64748b;
 text-transform:uppercase;
 letter-spacing:.5px;
+margin-bottom:4px;
 }
 
 .stat-info h3{
-font-size:20px;
+font-size:24px;
 font-weight:700;
 color:#f1f5f9;
-margin-top:2px;
 }
 
 /* ================= TICKER ================= */
-
 .ticker{
 background:rgba(15,23,42,.85);
 backdrop-filter:blur(12px);
 border-radius:14px;
-padding:10px 0;
+padding:12px 0;
 margin-bottom:25px;
 overflow:hidden;
 box-shadow:0 10px 30px rgba(0,0,0,.4);
@@ -219,26 +197,26 @@ animation:ticker 25s linear infinite;
 to{transform:translateX(-50%)}
 }
 
-.ticker span{
+.ticker-track span{
 color:#38bdf8;
 font-weight:600;
 font-size:13px;
 }
 
-.ticker span.up{color:#22c55e}
-.ticker span.down{color:#f87171}
+.ticker-track span.up{color:#22c55e}
+.ticker-track span.down{color:#f87171}
 
 /* ================= STOCK SWITCHER ================= */
-
 .switcher{
 display:flex;
-gap:10px;
-margin-bottom:20px;
+gap:12px;
+margin-bottom:25px;
 flex-wrap:wrap;
+justify-content:center;
 }
 
 .switcher button{
-padding:7px 18px;
+padding:8px 22px;
 border-radius:50px;
 border:1px solid rgba(255,255,255,.1);
 background:rgba(255,255,255,.04);
@@ -246,7 +224,7 @@ color:#94a3b8;
 font-size:13px;
 cursor:pointer;
 transition:.3s;
-font-family:'Inter',sans-serif;
+font-weight:500;
 }
 
 .switcher button:hover{
@@ -261,26 +239,23 @@ color:#38bdf8;
 font-weight:600;
 }
 
-/* ================= CARDS ================= */
-
+/* ================= CARDS GRID ================= */
 .cards{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-gap:25px;
-margin-bottom:35px;
+grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+gap:20px;
+margin-bottom:30px;
 }
 
 .card{
 background:rgba(255,255,255,.05);
 border-radius:18px;
-padding:0;
 text-align:center;
 backdrop-filter:blur(15px);
 border:1px solid rgba(255,255,255,.08);
 position:relative;
 overflow:hidden;
 transition:.4s;
-transform-style:preserve-3d;
 cursor:pointer;
 }
 
@@ -298,11 +273,8 @@ z-index:0;
 .card:hover::before{opacity:1}
 
 .card:hover{
-transform:
-rotateX(10deg)
-rotateY(-10deg)
-translateY(-10px);
-box-shadow:0 25px 50px rgba(56,189,248,.35);
+transform:translateY(-5px);
+box-shadow:0 25px 50px rgba(56,189,248,.25);
 }
 
 .card *{
@@ -311,74 +283,126 @@ z-index:2;
 }
 
 .card i{
-font-size:32px;
+font-size:28px;
 color:#38bdf8;
 margin-bottom:10px;
+margin-top:20px;
+display:block;
+}
+
+.card h3{
+font-size:16px;
+color:#f1f5f9;
+margin-bottom:5px;
 }
 
 .card p{
-font-size:14px;
-color:#cbd5f5;
+font-size:12px;
+color:#64748b;
+margin-bottom:20px;
 }
 
 .card a{
 text-decoration:none;
 color:inherit;
-display:flex;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-width:100%;
-height:100%;
-padding:25px;
-position:relative;
-z-index:3;
+display:block;
 }
 
-/* ================= MARKET ================= */
+/* ================= MARKET SECTION ================= */
+.market-section{
+display:grid;
+grid-template-columns:1fr 1.5fr;
+gap:25px;
+margin-bottom:30px;
+}
 
-.market{
+.market-left{
 background:rgba(2,6,23,.9);
 border-radius:22px;
-padding:30px;
-display:grid;
-grid-template-columns:1fr 1.7fr;
-gap:30px;
+padding:25px;
 backdrop-filter:blur(20px);
-box-shadow:0 30px 80px rgba(0,0,0,.7);
+border:1px solid rgba(56,189,248,.1);
 position:relative;
 overflow:hidden;
-margin-bottom:25px;
 }
 
-/* Pulse + Ring */
-
-.market::before{
+.market-left::before{
 content:"";
 position:absolute;
-width:380px;
-height:380px;
-background:radial-gradient(circle,#38bdf844,transparent 70%);
-top:-120px;
-right:-120px;
-animation:ring 10s linear infinite;
+width:300px;
+height:300px;
+background:radial-gradient(circle,#38bdf822,transparent 70%);
+top:-100px;
+right:-100px;
+border-radius:50%;
 }
 
-@keyframes ring{
-to{transform:rotate(360deg)}
+.market-status{
+display:inline-flex;
+align-items:center;
+gap:6px;
+font-size:12px;
+padding:5px 12px;
+border-radius:20px;
+margin-bottom:15px;
 }
 
-/* LEFT */
+.market-status.open{
+background:rgba(34,197,94,.1);
+color:#22c55e;
+border:1px solid rgba(34,197,94,.2);
+}
+
+.market-status.closed{
+background:rgba(248,113,113,.1);
+color:#f87171;
+border:1px solid rgba(248,113,113,.2);
+}
+
+.live-dot{
+display:inline-block;
+width:6px;
+height:6px;
+background:#22c55e;
+border-radius:50%;
+margin-right:6px;
+animation:pulse 1.5s infinite;
+}
 
 .market-left h2{
 color:#7dd3fc;
-margin-bottom:10px;
+font-size:18px;
+margin-bottom:15px;
 }
+
+.live-price-display{
+margin:15px 0;
+}
+
+.price-big{
+font-size:36px;
+font-weight:700;
+color:#38bdf8;
+}
+
+.price-change{
+font-size:14px;
+margin-left:10px;
+}
+
+.price-change.up{color:#22c55e}
+.price-change.down{color:#f87171}
 
 .market-left hr{
 border:none;
-border-top:1px solid rgba(255,255,255,.12);
-margin:12px 0;
+border-top:1px solid rgba(255,255,255,.08);
+margin:15px 0;
+}
+
+.market-left h4{
+color:#64748b;
+font-size:12px;
+margin-bottom:10px;
 }
 
 .market-left ul{
@@ -388,72 +412,21 @@ list-style:none;
 .market-left li{
 display:flex;
 justify-content:space-between;
-padding:6px 0;
-transition:.3s;
-font-size:14px;
-}
-
-.market-left li:hover{
-color:#22d3ee;
-transform:translateX(6px);
-}
-
-/* Live price big display */
-.live-price-display{
-margin:12px 0;
-}
-
-.live-price-display .price-big{
-font-size:32px;
-font-weight:700;
-color:#38bdf8;
-}
-
-.live-price-display .price-change{
+padding:8px 0;
 font-size:13px;
-margin-left:8px;
+border-bottom:1px solid rgba(255,255,255,.04);
 }
 
-.price-change.up{color:#22c55e}
-.price-change.down{color:#f87171}
+.market-left li span:first-child{color:#94a3b8}
+.market-left li span:last-child{color:#38bdf8;font-weight:500}
 
-/* Live dot */
-.live-dot{
-display:inline-block;
-width:8px;
-height:8px;
-background:#22c55e;
-border-radius:50%;
-margin-right:6px;
-animation:pulse 1.5s infinite;
-}
-
-/* ================= CHART ================= */
-
+/* ================= ADVANCED CHART BOX ================= */
 .chart-box{
-background:rgba(255,255,255,.03);
-border-radius:16px;
+background:rgba(2,6,23,.9);
+border-radius:22px;
 padding:20px;
-position:relative;
-overflow:hidden;
-}
-
-.chart-box::after{
-content:"";
-position:absolute;
-inset:0;
-background:linear-gradient(
-120deg,
-transparent,
-rgba(255,255,255,.06),
-transparent
-);
-animation:shine 6s infinite;
-pointer-events:none;
-}
-
-@keyframes shine{
-to{transform:translateX(100%);}
+backdrop-filter:blur(20px);
+border:1px solid rgba(56,189,248,.1);
 }
 
 .chart-header{
@@ -461,6 +434,90 @@ display:flex;
 align-items:center;
 justify-content:space-between;
 margin-bottom:15px;
+flex-wrap:wrap;
+gap:10px;
+}
+
+.chart-title-section h3{
+color:#7dd3fc;
+font-size:16px;
+margin-bottom:5px;
+}
+
+.chart-subtitle{
+font-size:11px;
+color:#64748b;
+}
+
+/* Timeframe Selector */
+.timeframe-selector{
+display:flex;
+gap:6px;
+flex-wrap:wrap;
+}
+
+.time-btn{
+padding:4px 12px;
+border-radius:20px;
+border:1px solid rgba(255,255,255,.1);
+background:transparent;
+color:#64748b;
+font-size:11px;
+cursor:pointer;
+transition:.2s;
+}
+
+.time-btn:hover{
+border-color:#38bdf8;
+color:#38bdf8;
+}
+
+.time-btn.active{
+background:rgba(56,189,248,.15);
+border-color:#38bdf8;
+color:#38bdf8;
+}
+
+/* Indicator Panel */
+.indicator-panel{
+display:flex;
+gap:10px;
+margin-bottom:15px;
+flex-wrap:wrap;
+padding:10px;
+background:rgba(0,0,0,.3);
+border-radius:12px;
+}
+
+.indicator-btn{
+padding:5px 12px;
+border-radius:20px;
+border:1px solid rgba(255,255,255,.1);
+background:transparent;
+color:#94a3b8;
+font-size:11px;
+cursor:pointer;
+transition:.2s;
+display:flex;
+align-items:center;
+gap:5px;
+}
+
+.indicator-btn.active{
+background:rgba(34,197,94,.15);
+border-color:#22c55e;
+color:#22c55e;
+}
+
+.indicator-btn i{
+font-size:10px;
+}
+
+/* Chart Controls */
+.chart-controls{
+display:flex;
+gap:8px;
+align-items:center;
 }
 
 .chart-toggle{
@@ -477,7 +534,6 @@ color:#64748b;
 font-size:12px;
 cursor:pointer;
 transition:.2s;
-font-family:'Inter',sans-serif;
 }
 
 .chart-toggle button.active{
@@ -486,70 +542,138 @@ border-color:#38bdf8;
 color:#38bdf8;
 }
 
-/* ================= WATCHLIST MINI ================= */
+.reset-btn{
+padding:4px 12px;
+border-radius:20px;
+border:1px solid rgba(239,68,68,.3);
+background:rgba(239,68,68,.1);
+color:#f87171;
+font-size:11px;
+cursor:pointer;
+transition:.2s;
+}
 
+.reset-btn:hover{
+background:rgba(239,68,68,.2);
+}
+
+/* Chart Canvas */
+#marketChart{
+max-height:350px;
+width:100%;
+cursor:crosshair;
+}
+
+/* Indicator Values Display */
+.indicator-values{
+display:flex;
+gap:20px;
+margin-top:12px;
+padding:10px;
+background:rgba(0,0,0,.3);
+border-radius:10px;
+flex-wrap:wrap;
+}
+
+.indicator-value{
+display:flex;
+align-items:center;
+gap:8px;
+font-size:11px;
+}
+
+.indicator-label{
+color:#64748b;
+}
+
+.indicator-number{
+font-weight:600;
+font-family:monospace;
+}
+
+.indicator-number.rsi-bull{color:#22c55e}
+.indicator-number.rsi-bear{color:#f87171}
+.indicator-number.rsi-neu{color:#fbbf24}
+
+/* Tooltip for Chart */
+.chart-tooltip{
+position:fixed;
+background:rgba(0,0,0,.9);
+border:1px solid #38bdf8;
+border-radius:8px;
+padding:8px 12px;
+font-size:11px;
+z-index:100;
+pointer-events:none;
+display:none;
+font-family:monospace;
+}
+
+/* ================= WATCHLIST MINI ================= */
 .watchlist-mini{
 background:rgba(2,6,23,.9);
 border-radius:22px;
 padding:25px;
 backdrop-filter:blur(20px);
-box-shadow:0 30px 80px rgba(0,0,0,.7);
-margin-bottom:25px;
+border:1px solid rgba(56,189,248,.1);
+margin-bottom:30px;
 }
 
 .watchlist-mini h3{
 color:#7dd3fc;
-margin-bottom:15px;
+font-size:16px;
+margin-bottom:20px;
 display:flex;
 align-items:center;
-gap:8px;
+gap:10px;
 }
 
 .watchlist-grid{
 display:grid;
-grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
-gap:12px;
+grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+gap:15px;
 }
 
 .watchlist-item{
 background:rgba(255,255,255,.04);
 border:1px solid rgba(255,255,255,.07);
-border-radius:12px;
-padding:12px;
+border-radius:14px;
+padding:15px;
 text-align:center;
 transition:.3s;
+cursor:pointer;
 }
 
 .watchlist-item:hover{
 border-color:#38bdf8;
 background:rgba(56,189,248,.06);
+transform:translateY(-2px);
 }
 
 .watchlist-item .symbol{
 font-weight:700;
-font-size:15px;
+font-size:16px;
 color:#f1f5f9;
+margin-bottom:5px;
 }
 
 .watchlist-item .w-price{
-font-size:13px;
+font-size:14px;
 color:#38bdf8;
-margin-top:4px;
+margin:5px 0;
 }
 
 .watchlist-item .w-change{
-font-size:11px;
-margin-top:2px;
+font-size:12px;
 }
 
 .w-change.up{color:#22c55e}
 .w-change.down{color:#f87171}
 
 /* ================= LOGOUT ================= */
-
 .logout{
 text-align:center;
-margin:30px;
+margin:30px 0 20px;
 }
 
 .logout a{
@@ -557,680 +681,1525 @@ color:#fb7185;
 font-weight:600;
 text-decoration:none;
 transition:.3s;
+padding:10px 20px;
+display:inline-block;
+border-radius:30px;
+background:rgba(251,113,133,.1);
 }
 
 .logout a:hover{
-text-shadow:0 0 12px #fb7185;
+background:rgba(251,113,133,.2);
+text-shadow:0 0 8px #fb7185;
 }
 
-/* ================= MARKET STATUS ================= */
-.market-status{
-display:inline-flex;
-align-items:center;
-gap:6px;
-font-size:12px;
-padding:3px 10px;
-border-radius:20px;
-margin-bottom:8px;
-}
-.market-status.open{
-background:rgba(34,197,94,.1);
-color:#22c55e;
-border:1px solid rgba(34,197,94,.2);
-}
-.market-status.closed{
-background:rgba(248,113,113,.1);
-color:#f87171;
-border:1px solid rgba(248,113,113,.2);
+/* ================= CHATGPT STYLE CHAT WIDGET ================= */
+.chatgpt-widget {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 400px;
+    height: 580px;
+    z-index: 1000;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+    transition: all 0.3s ease;
+    background: rgba(32, 33, 35, 0.98);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(56, 189, 248, 0.2);
 }
 
-/* ================= RESPONSIVE ================= */
-
-@media(max-width:900px){
-.market{
-grid-template-columns:1fr;
-}
-.header{
-flex-direction:column;
-text-align:center;
-}
+.chatgpt-widget.minimized {
+    height: 65px;
+    width: 360px;
 }
 
+.chat-header {
+    background: linear-gradient(135deg, #1a1a2e, #0f0f23);
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+}
+
+.chat-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.ai-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #0288d1, #0097a7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    border: 2px solid rgba(56, 189, 248, 0.5);
+}
+
+.ai-avatar:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.5);
+}
+
+.ai-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.ai-info h4 {
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.ai-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    color: #22c55e;
+}
+
+.ai-status .status-dot {
+    width: 6px;
+    height: 6px;
+    background: #22c55e;
+    border-radius: 50%;
+    animation: pulse 1.5s infinite;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header-actions i {
+    color: #64748b;
+    cursor: pointer;
+    transition: 0.2s;
+    font-size: 14px;
+}
+
+.trust-badge {
+    background: rgba(34, 197, 94, 0.15);
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 600;
+    font-family: monospace;
+}
+
+.chat-messages {
+    height: calc(100% - 130px);
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    background: rgba(32, 33, 35, 0.95);
+}
+
+.message {
+    display: flex;
+    gap: 10px;
+    animation: messageSlideIn 0.3s ease;
+}
+
+@keyframes messageSlideIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.message-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.message-avatar.user {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.message-avatar.ai {
+    background: linear-gradient(135deg, #0288d1, #0097a7);
+    cursor: pointer;
+}
+
+.message-avatar img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.message-avatar i {
+    font-size: 13px;
+    color: white;
+}
+
+.message-content {
+    flex: 1;
+    max-width: calc(100% - 40px);
+}
+
+.message-bubble {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    padding: 10px 14px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: #e5e7eb;
+}
+
+.message.user .message-bubble {
+    background: linear-gradient(135deg, #0288d1, #0097a7);
+}
+
+.message-bubble strong {
+    color: #38bdf8;
+}
+
+.message-time {
+    font-size: 9px;
+    color: #64748b;
+    margin-top: 4px;
+    padding-left: 8px;
+}
+
+.typing-indicator {
+    display: flex;
+    gap: 6px;
+    padding: 10px 14px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    width: fit-content;
+}
+
+.typing-indicator span {
+    width: 6px;
+    height: 6px;
+    background: #38bdf8;
+    border-radius: 50%;
+    animation: typing 1.4s infinite;
+}
+
+@keyframes typing {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+    30% { transform: translateY(-6px); opacity: 1; }
+}
+
+.chat-input-area {
+    padding: 14px 18px;
+    background: rgba(32, 33, 35, 0.98);
+    border-top: 1px solid rgba(56, 189, 248, 0.1);
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.chat-input-area input {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    border-radius: 24px;
+    padding: 10px 16px;
+    color: white;
+    font-size: 12px;
+    outline: none;
+}
+
+.chat-input-area input:focus {
+    border-color: #38bdf8;
+    box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.1);
+}
+
+.send-btn {
+    background: linear-gradient(135deg, #0288d1, #0097a7);
+    border: none;
+    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.send-btn:hover {
+    transform: scale(1.05);
+}
+
+.send-btn i {
+    color: white;
+    font-size: 14px;
+}
+
+.welcome-message {
+    text-align: center;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 14px;
+}
+
+.welcome-message h4 {
+    color: #38bdf8;
+    margin-bottom: 6px;
+    font-size: 13px;
+}
+
+.welcome-message p {
+    font-size: 11px;
+    color: #94a3b8;
+}
+
+.suggestion-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+    justify-content: center;
+}
+
+.suggestion-chip {
+    background: rgba(56, 189, 248, 0.1);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 10px;
+    color: #38bdf8;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.suggestion-chip:hover {
+    background: rgba(56, 189, 248, 0.2);
+}
+
+/* Avatar Modal */
+.avatar-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(20px);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s;
+}
+
+.avatar-modal.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    background: linear-gradient(135deg, #1a1a2e, #0f0f23);
+    border-radius: 28px;
+    padding: 30px;
+    max-width: 360px;
+    width: 90%;
+    text-align: center;
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    animation: modalPop 0.3s ease;
+}
+
+@keyframes modalPop {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.modal-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin: 0 auto 20px;
+    background: linear-gradient(135deg, #0288d1, #0097a7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 3px solid #38bdf8;
+}
+
+.modal-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.modal-content h3 {
+    color: white;
+    margin-bottom: 8px;
+    font-size: 18px;
+}
+
+.modal-content p {
+    color: #94a3b8;
+    font-size: 12px;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.modal-close {
+    background: linear-gradient(135deg, #0288d1, #0097a7);
+    border: none;
+    border-radius: 30px;
+    padding: 10px 24px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.modal-close:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(2, 136, 209, 0.4);
+}
+
+/* Scrollbar */
+.chat-messages::-webkit-scrollbar {
+    width: 4px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+    background: rgba(56, 189, 248, 0.3);
+    border-radius: 10px;
+}
+
+/* Responsive */
+@media(max-width:1100px){
+    .market-section{
+        grid-template-columns:1fr;
+    }
+    .stats-row{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:768px){
+    .container{
+        width:98%;
+    }
+    .stats-row{
+        grid-template-columns:1fr;
+    }
+    .cards{
+        grid-template-columns:repeat(2,1fr);
+    }
+    .chatgpt-widget{
+        width: calc(100% - 20px);
+        right: 10px;
+        left: 10px;
+        bottom: 10px;
+    }
+    .header{
+        flex-direction:column;
+        text-align:center;
+    }
+    .indicator-panel{
+        justify-content:center;
+    }
+    .timeframe-selector{
+        justify-content:center;
+    }
+}
+/* Memory Widget Styles - Add to existing CSS */
+.memory-widget {
+    transition: all 0.3s ease;
+}
+
+.memory-widget:hover {
+    border-color: rgba(56,189,248,.2);
+    box-shadow: 0 10px 30px rgba(56,189,248,.08);
+}
+
+.memory-controls button:hover {
+    background: rgba(56,189,248,.2);
+    transform: translateY(-1px);
+}
+
+#dailyTipContainer, #marketSummaryContainer {
+    transition: all 0.3s ease;
+}
+
+#dailyTipContainer:hover, #marketSummaryContainer:hover {
+    transform: translateX(4px);
+}
+
+.memory-status-dot {
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.2); }
+}
+.notification-bell:hover div{
+    background:rgba(56,189,248,.2);
+    transform:scale(1.05);
+}
 </style>
 </head>
 
 <body>
 
-<!-- Particle Background -->
 <canvas id="bgCanvas"></canvas>
 
 <div class="container">
 
-  <!-- ── HEADER ── -->
-  <div class="header">
+    <!-- HEADER -->
+    <!-- HEADER -->
+<div class="header">
     <div class="header-left">
-      <h1><i class="fa-solid fa-chart-line"></i> Stock AI Dashboard</h1>
-      <p id="currentTime">Loading time...</p>
+        <h1><i class="fa-solid fa-chart-line"></i> Stock AI Dashboard</h1>
+        <p id="currentTime">Loading time...</p>
     </div>
-    <div class="user-badge">
-      <span class="dot"></span>
-      <span>{{ session.get('user', 'User') | title }}</span>
-      <span style="color:#475569;font-size:12px;">•</span>
-      <span style="color:#475569;font-size:12px;">{{ session.get('role','user') | title }}</span>
-    </div>
-  </div>
-
-  <!-- ── STATS ROW ── -->
-  <div class="stats-row">
-
-    <div class="stat-card">
-      <div class="stat-icon blue">
-        <i class="fa-solid fa-dollar-sign"></i>
-      </div>
-      <div class="stat-info">
-        <p>Live Price</p>
-        <h3 id="statLivePrice">₹{{ live_price }}</h3>
-      </div>
-    </div>
-
-    <div class="stat-card">
-      <div class="stat-icon cyan">
-        <i class="fa-solid fa-brain"></i>
-      </div>
-      <div class="stat-info">
-        <p>Predictions</p>
-        <h3 id="statPredictions">—</h3>
-      </div>
-    </div>
-
-    <div class="stat-card">
-      <div class="stat-icon green">
-        <i class="fa-solid fa-signal"></i>
-      </div>
-      <div class="stat-info">
-        <p>Market Status</p>
-        <h3 id="statMarket">—</h3>
-      </div>
-    </div>
-
-    <div class="stat-card">
-      <div class="stat-icon purple">
-        <i class="fa-solid fa-chart-bar"></i>
-      </div>
-      <div class="stat-info">
-        <p>Watchlist</p>
-        <h3 id="statWatchlist">—</h3>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- ── TICKER ── -->
-  <div class="ticker">
-    <div class="ticker-track" id="tickerTrack">
-      <span>AAPL <span id="t-aapl">₹{{ live_price }}</span></span>
-      <span class="up">NASDAQ +0.45%</span>
-      <span>AI Trend: BULLISH</span>
-      <span>VOL: LOW</span>
-      <span id="t-tsla-wrap">TSLA <span id="t-tsla">Loading...</span></span>
-      <span id="t-msft-wrap">MSFT <span id="t-msft">Loading...</span></span>
-      <span id="t-googl-wrap">GOOGL <span id="t-googl">Loading...</span></span>
-      <span id="t-nvda-wrap">NVDA <span id="t-nvda">Loading...</span></span>
-      <!-- duplicate for seamless loop -->
-      <span>AAPL <span>₹{{ live_price }}</span></span>
-      <span class="up">NASDAQ +0.45%</span>
-      <span>AI Trend: BULLISH</span>
-      <span>VOL: LOW</span>
-      <span>TSLA <span id="t-tsla2">Loading...</span></span>
-      <span>MSFT <span id="t-msft2">Loading...</span></span>
-      <span>GOOGL <span id="t-googl2">Loading...</span></span>
-      <span>NVDA <span id="t-nvda2">Loading...</span></span>
-    </div>
-  </div>
-
-  <!-- ── STOCK SWITCHER ── -->
-  <div class="switcher">
-    <button class="active" onclick="switchStock('AAPL',this)">AAPL</button>
-    <button onclick="switchStock('TSLA',this)">TSLA</button>
-    <button onclick="switchStock('MSFT',this)">MSFT</button>
-    <button onclick="switchStock('GOOGL',this)">GOOGL</button>
-    <button onclick="switchStock('NVDA',this)">NVDA</button>
-    <button onclick="switchStock('AMZN',this)">AMZN</button>
-  </div>
-
-  <!-- ── CARDS ── -->
-  <div class="cards">
-
-    <div class="card">
-      <a href="/profile">
-        <i class="fa-solid fa-user"></i>
-        <h3>Profile</h3>
-        <p>Account</p>
-      </a>
-    </div>
-
-    <div class="card">
-      <a href="/live">
-        <i class="fa-solid fa-bolt"></i>
-        <h3>Live Feed</h3>
-        <p>Real-time</p>
-      </a>
-    </div>
-
-    
-
-    
-
-    <div class="card">
-      <a href="/upload">
-        <i class="fa-solid fa-upload"></i>
-        <h3>Upload</h3>
-        <p>Dataset</p>
-      </a>
-    </div>
-
-    <div class="card">
-      <a href="/stock-analysis">
-        <i class="fa-solid fa-rocket"></i>
-        <h3>Advanced AI</h3>
-        <p>Month Prediction</p>
-      </a>
-    </div>
-
-    <div class="card">
-      <a href="/watchlist">
-        <i class="fa-solid fa-star"></i>
-        <h3>Watchlist</h3>
-        <p>Track Stocks</p>
-      </a>
-    </div>
-    <div class="card">
-      <a href="/news">
-        <i class="fa-solid fa-newspaper"></i>
-        <h3>News Feed</h3>
-        <p>Live Market News</p>
-      </a>
-    </div>
-    <div class="card">
-      <a href="/compare">
-        <i class="fa-solid fa-code-compare"></i>
-        <h3>Compare</h3>
-        <p>Compare Stocks</p>
-      </a>
-    </div>
-    <div class="card">
-      <a href="/portfolio-advisor">
-        <i class="fa-solid fa-chart-pie"></i>
-        <h3>Portfolio Advisor</h3>
-        <p>AI Allocation</p>
-      </a>
-    </div>
-
-    <div class="card">
-      <a href="/stock">
-        <i class="fa-solid fa-magnifying-glass-chart"></i>
-        <h3>Predict</h3>
-        <p>AI Prediction</p>
-      </a>
-    </div>
-
-    <div class="card">
-      <a href="/history">
-        <i class="fa-solid fa-file-arrow-down"></i>
-        <h3>Report</h3>
-        <p>View & Download</p>
-      </a>
-    </div>
-
-    
-
-  </div>
-
-  <!-- ── MARKET ── -->
-  <div class="market">
-
-    <!-- LEFT -->
-    <div class="market-left">
-
-      <div class="market-status open" id="marketStatusBadge">
-        <span class="live-dot"></span> Market Open
-      </div>
-
-      <h2>
-        <i class="fa-solid fa-globe"></i>
-        Live Market
-        <span id="currentSymbol" style="color:#38bdf8">AAPL</span>
-      </h2>
-
-      <div class="live-price-display">
-        <span class="price-big" id="livePriceBig">₹{{ live_price }}</span>
-        <span class="price-change up" id="priceChange">—</span>
-      </div>
-
-      <hr>
-
-      <h4 style="margin-bottom:8px;color:#94a3b8;font-size:13px;">
-        LAST 7 DAYS
-      </h4>
-
-      <ul id="last7List">
-        {% for d,p in last7 %}
-        <li>
-          <span>{{ d }}</span>
-          <span style="color:#38bdf8">₹ {{ p }}</span>
-        </li>
-        {% endfor %}
-      </ul>
-
-    </div>
-
-    <!-- RIGHT -->
-    <div class="chart-box">
-
-      <div class="chart-header">
-        <h3 id="chartTitle">AI Trend — AAPL</h3>
-        <div class="chart-toggle">
-          <button class="active" id="btnLine" onclick="setChartType('line',this)">Line</button>
-          <button id="btnBar" onclick="setChartType('bar',this)">Bar</button>
+    <div style="display:flex; align-items:center; gap:15px;">
+        <!-- Notification Bell -->
+        <a href="/notifications" class="notification-bell" style="position:relative; text-decoration:none;">
+            <div style="width:40px; height:40px; border-radius:50%; background:rgba(56,189,248,.1); border:1px solid rgba(56,189,248,.2); display:flex; align-items:center; justify-content:center; transition:.3s;">
+                <i class="fa-regular fa-bell" style="font-size:18px; color:#38bdf8;"></i>
+            </div>
+            <span id="notificationBadge" style="position:absolute; top:-5px; right:-5px; background:#ef4444; color:white; font-size:10px; font-weight:bold; padding:2px 6px; border-radius:50%; display:none; min-width:18px; text-align:center;">0</span>
+        </a>
+        <!-- User Badge -->
+        <div class="user-badge">
+            <span class="dot"></span>
+            <span>{{ session.get('user', 'User') | title }}</span>
+            <span style="color:#475569;">•</span>
+            <span style="color:#475569;">{{ session.get('role','user') | title }}</span>
         </div>
-      </div>
-
-      <canvas id="marketChart" height="120"></canvas>
-
+    </div>
+</div>
+    
+    <!-- STATS ROW -->
+    <div class="stats-row">
+        <div class="stat-card">
+            <div class="stat-icon blue"><i class="fa-solid fa-dollar-sign"></i></div>
+            <div class="stat-info">
+                <p>LIVE PRICE</p>
+                <h3 id="statLivePrice">₹{{ live_price }}</h3>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon cyan"><i class="fa-solid fa-brain"></i></div>
+            <div class="stat-info">
+                <p>PREDICTIONS</p>
+                <h3 id="statPredictions">—</h3>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon green"><i class="fa-solid fa-signal"></i></div>
+            <div class="stat-info">
+                <p>MARKET STATUS</p>
+                <h3 id="statMarket">—</h3>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon purple"><i class="fa-solid fa-chart-bar"></i></div>
+            <div class="stat-info">
+                <p>WATCHLIST</p>
+                <h3 id="statWatchlist">—</h3>
+            </div>
+        </div>
     </div>
 
-  </div>
+    <!-- TICKER -->
+    <div class="ticker">
+        <div class="ticker-track" id="tickerTrack">
+            <span>AAPL <span id="t-aapl">₹{{ live_price }}</span></span>
+            <span class="up">NASDAQ +0.45%</span>
+            <span>AI Trend: BULLISH</span>
+            <span>VOL: LOW</span>
+            <span>TSLA <span id="t-tsla">Loading...</span></span>
+            <span>MSFT <span id="t-msft">Loading...</span></span>
+            <span>GOOGL <span id="t-googl">Loading...</span></span>
+            <span>NVDA <span id="t-nvda">Loading...</span></span>
+            <!-- Duplicate for seamless loop -->
+            <span>AAPL <span>₹{{ live_price }}</span></span>
+            <span class="up">NASDAQ +0.45%</span>
+            <span>AI Trend: BULLISH</span>
+            <span>VOL: LOW</span>
+            <span>TSLA <span>Loading...</span></span>
+            <span>MSFT <span>Loading...</span></span>
+            <span>GOOGL <span>Loading...</span></span>
+            <span>NVDA <span>Loading...</span></span>
+        </div>
+    </div>
 
-  <!-- ── WATCHLIST MINI ── -->
-  <div class="watchlist-mini">
-    <h3>
-      <i class="fa-solid fa-star" style="color:#fbbf24"></i>
-      Quick Watchlist
-    </h3>
-    <div class="watchlist-grid" id="watchlistGrid">
-      <div style="color:#64748b;font-size:13px;grid-column:1/-1">
-        Loading watchlist...
+    <!-- STOCK SWITCHER -->
+    <div class="switcher">
+        <button class="active" onclick="switchStock('AAPL',this)">AAPL</button>
+        <button onclick="switchStock('TSLA',this)">TSLA</button>
+        <button onclick="switchStock('MSFT',this)">MSFT</button>
+        <button onclick="switchStock('GOOGL',this)">GOOGL</button>
+        <button onclick="switchStock('NVDA',this)">NVDA</button>
+        <button onclick="switchStock('AMZN',this)">AMZN</button>
+    </div>
+
+    <!-- CARDS GRID -->
+    <div class="cards">
+        <div class="card"><a href="/profile"><i class="fa-solid fa-user"></i><h3>Profile</h3><p>Account</p></a></div>
+        <div class="card"><a href="/live"><i class="fa-solid fa-bolt"></i><h3>Live Feed</h3><p>Real-time</p></a></div>
+        <div class="card"><a href="/trader"><i class="fa-solid fa-arrow-trend-up"></i><h3>Trader</h3><p>Daily Trade</p></a></div>
+        <div class="card"><a href="/finance-tracker"><i class="fa-solid fa-wallet"></i><h3>Finance</h3><p>Finance Planner</p></a></div>
+        <div class="card"><a href="/upload"><i class="fa-solid fa-upload"></i><h3>Upload</h3><p>Dataset</p></a></div>
+        <div class="card"><a href="/stock-analysis"><i class="fa-solid fa-rocket"></i><h3>Advanced AI</h3><p>Month Prediction</p></a></div>
+        <div class="card"><a href="/watchlist"><i class="fa-solid fa-star"></i><h3>Watchlist</h3><p>Track Stocks</p></a></div>
+        <div class="card"><a href="/news"><i class="fa-solid fa-newspaper"></i><h3>News Feed</h3><p>Live Market News</p></a></div>
+        <div class="card"><a href="/compare"><i class="fa-solid fa-code-compare"></i><h3>Compare</h3><p>Compare Stocks</p></a></div>
+        <div class="card"><a href="/portfolio-advisor"><i class="fa-solid fa-chart-pie"></i><h3>Portfolio Advisor</h3><p>AI Allocation</p></a></div>
+        <div class="card"><a href="/stock"><i class="fa-solid fa-magnifying-glass-chart"></i><h3>Predict</h3><p>AI Prediction</p></a></div>
+        <div class="card"><a href="/history"><i class="fa-solid fa-file-arrow-down"></i><h3>Report</h3><p>View & Download</p></a></div>
+    </div>
+
+    <!-- MARKET SECTION WITH ADVANCED CHART -->
+    <div class="market-section">
+        <div class="market-left">
+            <div class="market-status open" id="marketStatusBadge">
+                <span class="live-dot"></span> Market Open
+            </div>
+            <h2><i class="fa-solid fa-globe"></i> Live Market <span id="currentSymbol" style="color:#38bdf8">AAPL</span></h2>
+            <div class="live-price-display">
+                <span class="price-big" id="livePriceBig">₹{{ live_price }}</span>
+                <span class="price-change up" id="priceChange">—</span>
+            </div>
+            <hr>
+            <h4>LAST 7 DAYS</h4>
+            <ul id="last7List">
+                {% for d,p in last7 %}
+                <li><span>{{ d }}</span><span>₹{{ p }}</span></li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="chart-box">
+            <div class="chart-header">
+                <div class="chart-title-section">
+                    <h3 id="chartTitle">AI Trend — AAPL</h3>
+                    <div class="chart-subtitle" id="chartSubtitle">Price Chart with Indicators</div>
+                </div>
+                <div class="chart-controls">
+                    <div class="chart-toggle">
+                        <button class="active" id="btnLine" onclick="setChartType('line',this)">Line</button>
+                        <button id="btnCandle" onclick="setChartType('candle',this)">Candlestick</button>
+                    </div>
+                    <button class="reset-btn" onclick="resetChartView()"><i class="fa-solid fa-arrow-rotate-left"></i> Reset</button>
+                </div>
+            </div>
+
+            <!-- Timeframe Selector -->
+            <div class="timeframe-selector">
+                <button class="time-btn" data-period="1d" onclick="changeTimeframe('1d',this)">1D</button>
+                <button class="time-btn" data-period="5d" onclick="changeTimeframe('5d',this)">5D</button>
+                <button class="time-btn active" data-period="1mo" onclick="changeTimeframe('1mo',this)">1M</button>
+                <button class="time-btn" data-period="3mo" onclick="changeTimeframe('3mo',this)">3M</button>
+                <button class="time-btn" data-period="6mo" onclick="changeTimeframe('6mo',this)">6M</button>
+                <button class="time-btn" data-period="1y" onclick="changeTimeframe('1y',this)">1Y</button>
+                <button class="time-btn" data-period="5y" onclick="changeTimeframe('5y',this)">5Y</button>
+            </div>
+
+            <!-- Indicator Panel -->
+            <div class="indicator-panel">
+                <button class="indicator-btn" id="indicatorRSI" onclick="toggleIndicator('rsi')">
+                    <i class="fa-solid fa-chart-line"></i> RSI
+                </button>
+                <button class="indicator-btn" id="indicatorMACD" onclick="toggleIndicator('macd')">
+                    <i class="fa-solid fa-chart-line"></i> MACD
+                </button>
+                <button class="indicator-btn" id="indicatorBB" onclick="toggleIndicator('bb')">
+                    <i class="fa-solid fa-chart-line"></i> Bollinger Bands
+                </button>
+                <button class="indicator-btn" id="indicatorMA" onclick="toggleIndicator('ma')">
+                    <i class="fa-solid fa-chart-line"></i> Moving Averages
+                </button>
+            </div>
+
+            <!-- Chart Canvas -->
+            <canvas id="marketChart" height="280"></canvas>
+
+            <!-- Indicator Values Display -->
+            <div class="indicator-values" id="indicatorValues">
+                <div class="indicator-value">
+                    <span class="indicator-label">📊 Current Price:</span>
+                    <span class="indicator-number" id="currentPriceVal">--</span>
+                </div>
+                <div class="indicator-value">
+                    <span class="indicator-label">📈 RSI (14):</span>
+                    <span class="indicator-number" id="rsiValue">--</span>
+                </div>
+                <div class="indicator-value">
+                    <span class="indicator-label">📉 MACD:</span>
+                    <span class="indicator-number" id="macdValue">--</span>
+                </div>
+                <div class="indicator-value">
+                    <span class="indicator-label">📊 Bollinger Bands:</span>
+                    <span class="indicator-number" id="bbValue">--</span>
+                </div>
+                <div class="indicator-value">
+                    <span class="indicator-label">📈 MA(7) / MA(25):</span>
+                    <span class="indicator-number" id="maValue">--</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+      <!-- ── MEMORY FEATURES WIDGET (AI Memory) ── -->
+  <div class="memory-widget" style="background:rgba(2,6,23,.9); border-radius:22px; padding:25px; margin-bottom:25px; backdrop-filter:blur(20px); border:1px solid rgba(56,189,248,.1);">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:10px;">
+      <h3 style="color:#38bdf8; font-size:16px;">
+        <i class="fa-solid fa-brain"></i> AI Memory Features
+      </h3>
+      <div class="memory-controls" style="display:flex; gap:8px;">
+        <button onclick="toggleDailyTips()" style="background:rgba(56,189,248,.1); border:1px solid rgba(56,189,248,.3); border-radius:20px; padding:5px 14px; color:#38bdf8; cursor:pointer; font-size:11px; font-family:monospace; transition:.2s;">
+          <i class="fa-regular fa-bell"></i> Daily Tips
+        </button>
+        <button onclick="refreshMemoryWidget()" style="background:rgba(56,189,248,.1); border:1px solid rgba(56,189,248,.3); border-radius:20px; padding:5px 14px; color:#38bdf8; cursor:pointer; font-size:11px; font-family:monospace; transition:.2s;">
+          <i class="fa-solid fa-rotate-right"></i> Refresh
+        </button>
       </div>
     </div>
-  </div>
-
-  <!-- LOGOUT -->
-  <div class="logout">
-    <a href="/logout">
-      <i class="fa-solid fa-right-from-bracket"></i> Logout
-    </a>
+    
+    <!-- Daily Tip Container -->
+    <div id="dailyTipContainer" style="background:rgba(56,189,248,.05); border-radius:16px; padding:18px; margin-bottom:18px; border:1px solid rgba(56,189,248,.08);">
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:10px;">
+        <i class="fa-solid fa-lightbulb" style="color:#fbbf24; font-size:20px;"></i>
+        <strong style="color:#38bdf8; font-family:monospace; font-size:12px;">💡 DAILY TRADING TIP</strong>
+      </div>
+      <p id="dailyTipText" style="color:#cbd5e1; font-size:13px; line-height:1.6; margin:0;">Loading tip...</p>
+      <div style="margin-top:10px; font-size:10px; color:#64748b; display:flex; justify-content:space-between;">
+        <span><i class="fa-regular fa-clock"></i> New tip every day</span>
+        <span><i class="fa-regular fa-lightbulb"></i> Pro trading advice</span>
+      </div>
+    </div>
+    
+    <!-- Market Summary Container -->
+    <div id="marketSummaryContainer" style="background:rgba(0,0,0,.3); border-radius:16px; padding:18px; border:1px solid rgba(34,197,94,.08);">
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:10px;">
+        <i class="fa-solid fa-chart-line" style="color:#22c55e; font-size:20px;"></i>
+        <strong style="color:#22c55e; font-family:monospace; font-size:12px;">📊 MARKET SUMMARY</strong>
+      </div>
+      <p id="marketSummaryText" style="color:#cbd5e1; font-size:13px; line-height:1.6; margin:0;">Loading market summary...</p>
+      <div style="margin-top:10px; font-size:10px; color:#64748b; display:flex; justify-content:space-between;">
+        <span><i class="fa-regular fa-calendar"></i> Today's overview</span>
+        <span><i class="fa-regular fa-chart-line"></i> AI generated</span>
+      </div>
+    </div>
+    
+    <!-- Conversation Memory Indicator -->
+    <div style="margin-top:15px; display:flex; align-items:center; justify-content:space-between; padding-top:12px; border-top:1px solid rgba(56,189,248,.08);">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <i class="fa-solid fa-microchip" style="color:#a78bfa; font-size:12px;"></i>
+        <span style="font-family:monospace; font-size:10px; color:#64748b;">RAG Memory Active</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <div class="memory-status-dot" style="width:6px; height:6px; background:#22c55e; border-radius:50%; animation:pulse 1.5s infinite;"></div>
+        <span style="font-family:monospace; font-size:10px; color:#22c55e;">Learning from conversations</span>
+      </div>
+    </div>
   </div>
 
 </div>
 
+<!-- CHATGPT STYLE CHAT WIDGET -->
+<div class="chatgpt-widget" id="chatWidget">
+    <div class="chat-header" onclick="toggleChat()">
+        <div class="chat-header-left">
+            <div class="ai-avatar" id="aiAvatarBtn" style="cursor: pointer; display: flex; align-items: center; justify-content: center;">
+            <img src="/static/image/logo.png" alt="AI" style="width:100%; height:100%; object-fit:cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <i class="fa-solid fa-robot" style="display:none; font-size:20px; color:#38bdf8;"></i>
+        </div>
+            <div class="ai-info">
+                <h4>Stock AI Assistant</h4>
+                <div class="ai-status"><span class="status-dot"></span> Ready to help</div>
+            </div>
+        </div>
+        <div class="header-actions">
+            <span class="trust-badge" id="trustBadge">Trust: --</span>
+            <i class="fa-regular fa-circle-xmark" id="minimizeChatBtn" style="cursor: pointer;"></i>
+        </div>
+    </div>
+    <div class="chat-messages" id="chatMessages">
+        <div class="welcome-message">
+            <h4>👋 Welcome to Stock AI Assistant</h4>
+            <p>I'm your RAG-powered trading assistant. I remember your past predictions!</p>
+            <div class="suggestion-chips">
+                <div class="suggestion-chip" onclick="sendSuggestion('What is my trust score?')">📊 Trust Score</div>
+                <div class="suggestion-chip" onclick="sendSuggestion('Should I buy AAPL?')">📈 Trading Advice</div>
+                <div class="suggestion-chip" onclick="sendSuggestion('Predict NVDA for next week')">🔮 Prediction</div>
+                <div class="suggestion-chip" onclick="sendSuggestion('Review my portfolio risk')">📊 Portfolio Risk</div>
+            </div>
+        </div>
+    </div>
+    <div class="chat-input-area">
+        <input type="text" id="chatInput" placeholder="Ask me anything about stocks..." onkeypress="if(event.key==='Enter') sendChatMessage()">
+        <button class="send-btn" onclick="sendChatMessage()"><i class="fa-regular fa-paper-plane"></i></button>
+    </div>
+</div>
+
+<!-- AVATAR MODAL -->
+<div class="avatar-modal" id="avatarModal">
+    <div class="modal-content">
+        <div class="modal-avatar">
+            <img src="/static/image/logo.png" alt="Stock AI" style="width:100%; height:100%; object-fit:cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <i class="fa-solid fa-chart-line" style="display:none; font-size:40px; color:#38bdf8;"></i>
+        </div>
+        <h3>Stock AI Assistant</h3>
+        <p>Powered by RAG (Retrieval-Augmented Generation)<br>Your personalized trading assistant with memory of your past predictions.</p>
+        <p style="font-size: 11px; color: #64748b;">Trust Score updates based on prediction accuracy</p>
+        <button class="modal-close" id="closeModalBtn">Close</button>
+    </div>
+</div>
 
 <script>
 
-/* ============================================================
-   PARTICLES
-============================================================ */
-
+/* ================= PARTICLES ================= */
 const canvas = document.getElementById("bgCanvas");
-const ctx    = canvas.getContext("2d");
+const ctx = canvas.getContext("2d");
 
 function resize(){
-  canvas.width  = innerWidth;
-  canvas.height = innerHeight;
+    canvas.width = innerWidth;
+    canvas.height = innerHeight;
 }
 resize();
 addEventListener("resize", resize);
 
 let dots = [];
-
-for(let i = 0; i < 100; i++){
-  dots.push({
-    x:  Math.random() * canvas.width,
-    y:  Math.random() * canvas.height,
-    dx: (Math.random() - .5) * .7,
-    dy: (Math.random() - .5) * .7
-  });
+for(let i = 0; i < 80; i++){
+    dots.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        dx: (Math.random() - .5) * .5,
+        dy: (Math.random() - .5) * .5
+    });
 }
 
 function bgAnimate(){
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  dots.forEach(d => {
-    d.x += d.dx;
-    d.y += d.dy;
-
-    if(d.x < 0 || d.x > canvas.width)  d.dx *= -1;
-    if(d.y < 0 || d.y > canvas.height) d.dy *= -1;
-
-    ctx.fillStyle = "rgba(56,189,248,.5)";
-    ctx.beginPath();
-    ctx.arc(d.x, d.y, 2, 0, Math.PI * 2);
-    ctx.fill();
-
-    dots.forEach(o => {
-      const dx   = d.x - o.x;
-      const dy   = d.y - o.y;
-      const dist = Math.sqrt(dx*dx + dy*dy);
-
-      if(dist < 130){
-        ctx.strokeStyle = `rgba(56,189,248,${1 - dist/130})`;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    dots.forEach(d => {
+        d.x += d.dx;
+        d.y += d.dy;
+        if(d.x < 0 || d.x > canvas.width) d.dx *= -1;
+        if(d.y < 0 || d.y > canvas.height) d.dy *= -1;
+        ctx.fillStyle = "rgba(56,189,248,.3)";
         ctx.beginPath();
-        ctx.moveTo(d.x, d.y);
-        ctx.lineTo(o.x, o.y);
-        ctx.stroke();
-      }
+        ctx.arc(d.x, d.y, 1.5, 0, Math.PI * 2);
+        ctx.fill();
     });
-  });
-
-  requestAnimationFrame(bgAnimate);
+    requestAnimationFrame(bgAnimate);
 }
-
 bgAnimate();
 
-
-/* ============================================================
-   CLOCK
-============================================================ */
-
+/* ================= CLOCK ================= */
 function updateClock(){
-  const now = new Date();
-  document.getElementById("currentTime").textContent =
-    now.toLocaleDateString("en-IN", {
-      weekday:"long", year:"numeric",
-      month:"long",  day:"numeric"
-    }) + "  " +
-    now.toLocaleTimeString("en-IN");
+    const now = new Date();
+    document.getElementById("currentTime").textContent =
+        now.toLocaleDateString("en-IN", { weekday:"long", year:"numeric", month:"long", day:"numeric" }) +
+        " • " + now.toLocaleTimeString("en-IN");
 }
 updateClock();
 setInterval(updateClock, 1000);
 
-
-/* ============================================================
-   MARKET STATUS
-============================================================ */
-
+/* ================= MARKET STATUS ================= */
 function checkMarketStatus(){
-  const now   = new Date();
-  const day   = now.getDay();       // 0=Sun,6=Sat
-  const hours = now.getHours();
-  const mins  = now.getMinutes();
-  const badge = document.getElementById("marketStatusBadge");
-  const statEl = document.getElementById("statMarket");
+    const now = new Date();
+    const day = now.getDay();
+    const hours = now.getHours();
+    const mins = now.getMinutes();
+    const badge = document.getElementById("marketStatusBadge");
+    const statEl = document.getElementById("statMarket");
 
-  const isWeekday  = day >= 1 && day <= 5;
-  const afterOpen  = hours > 9  || (hours === 9  && mins >= 30);
-  const beforeClose= hours < 16 || (hours === 16 && mins === 0);
-  const isOpen     = isWeekday && afterOpen && beforeClose;
+    const isWeekday = day >= 1 && day <= 5;
+    const afterOpen = hours > 9 || (hours === 9 && mins >= 15);
+    const beforeClose = hours < 15 || (hours === 15 && mins <= 30);
+    const isOpen = isWeekday && afterOpen && beforeClose;
 
-  if(isOpen){
-    badge.className    = "market-status open";
-    badge.innerHTML    = '<span class="live-dot"></span> Market Open';
-    statEl.textContent = "Open";
-    statEl.style.color = "#22c55e";
-  } else {
-    badge.className    = "market-status closed";
-    badge.innerHTML    = '● Market Closed';
-    statEl.textContent = "Closed";
-    statEl.style.color = "#f87171";
-  }
+    if(isOpen){
+        badge.className = "market-status open";
+        badge.innerHTML = '<span class="live-dot"></span> Market Open';
+        statEl.textContent = "Open";
+        statEl.style.color = "#22c55e";
+    } else {
+        badge.className = "market-status closed";
+        badge.innerHTML = '● Market Closed';
+        statEl.textContent = "Closed";
+        statEl.style.color = "#f87171";
+    }
 }
 checkMarketStatus();
 
-
-/* ============================================================
-   CHART SETUP
-============================================================ */
-
-let chartLabels = {{ chart_labels|safe }};
-let chartData   = {{ chart_data|safe }};
+/* ================= ADVANCED CHART VARIABLES ================= */
+let chartLabels = [];
+let chartData = [];
+let chartOHLC = [];
 let currentType = "line";
 let myChart;
+let currentPeriod = "1mo";
+let currentSymbol = "AAPL";
+let activeIndicators = { rsi: false, macd: false, bb: false, ma: false };
+let fullChartData = {};
 
-function buildChart(labels, data, type){
-  if(myChart) myChart.destroy();
+/* ================= TECHNICAL INDICATORS CALCULATIONS ================= */
 
-  myChart = new Chart(
-    document.getElementById("marketChart"),
-    {
-      type: type,
-      data: {
-        labels: labels,
-        datasets:[{
-          data:            data,
-          borderColor:     '#22d3ee',
-          backgroundColor: type === 'bar'
-            ? 'rgba(34,211,238,.3)'
-            : 'rgba(34,211,238,.15)',
-          tension:      .5,
-          fill:         type === 'line',
-          pointRadius:  3,
-          borderWidth:  2
-        }]
-      },
-      options:{
-        responsive: true,
-        animation: {
-          duration: 1200,
-          easing:  'easeInOutQuart'
-        },
-        plugins:{ legend:{ display:false } },
-        scales:{
-          x:{ ticks:{color:'#c7d2fe'}, grid:{display:false} },
-          y:{ ticks:{color:'#c7d2fe'}, grid:{color:'rgba(255,255,255,.05)'} }
-        }
-      }
+// Calculate RSI (Relative Strength Index)
+function calculateRSI(closes, period = 14) {
+    if (closes.length < period + 1) return [];
+    let gains = [];
+    let losses = [];
+    for (let i = 1; i < closes.length; i++) {
+        let diff = closes[i] - closes[i-1];
+        gains.push(diff > 0 ? diff : 0);
+        losses.push(diff < 0 ? -diff : 0);
     }
-  );
+    let avgGain = gains.slice(0, period).reduce((a,b) => a + b, 0) / period;
+    let avgLoss = losses.slice(0, period).reduce((a,b) => a + b, 0) / period;
+    let rsi = [null];
+    for (let i = period; i < gains.length; i++) {
+        avgGain = (avgGain * (period - 1) + gains[i]) / period;
+        avgLoss = (avgLoss * (period - 1) + losses[i]) / period;
+        let rs = avgGain / (avgLoss === 0 ? 1 : avgLoss);
+        rsi.push(100 - (100 / (1 + rs)));
+    }
+    while (rsi.length < closes.length) rsi.unshift(null);
+    return rsi;
 }
 
-buildChart(chartLabels, chartData, currentType);
+// Calculate MACD
+function calculateMACD(closes, fast = 12, slow = 26, signal = 9) {
+    if (closes.length < slow) return { macd: [], signal: [], histogram: [] };
+    let emaFast = [];
+    let emaSlow = [];
+    let macdLine = [];
+    let signalLine = [];
+    let histogram = [];
+    
+    // Calculate EMAs
+    let kFast = 2 / (fast + 1);
+    let kSlow = 2 / (slow + 1);
+    let kSignal = 2 / (signal + 1);
+    
+    emaFast[0] = closes[0];
+    emaSlow[0] = closes[0];
+    for (let i = 1; i < closes.length; i++) {
+        emaFast[i] = closes[i] * kFast + emaFast[i-1] * (1 - kFast);
+        emaSlow[i] = closes[i] * kSlow + emaSlow[i-1] * (1 - kSlow);
+        macdLine[i] = emaFast[i] - emaSlow[i];
+    }
+    
+    // Signal line
+    signalLine[slow-1] = macdLine[slow-1];
+    for (let i = slow; i < macdLine.length; i++) {
+        signalLine[i] = macdLine[i] * kSignal + signalLine[i-1] * (1 - kSignal);
+        histogram[i] = macdLine[i] - signalLine[i];
+    }
+    
+    return { macd: macdLine, signal: signalLine, histogram: histogram };
+}
 
+// Calculate Bollinger Bands
+function calculateBollingerBands(closes, period = 20, stdDev = 2) {
+    let upper = [];
+    let middle = [];
+    let lower = [];
+    for (let i = 0; i < closes.length; i++) {
+        if (i < period - 1) {
+            upper.push(null);
+            middle.push(null);
+            lower.push(null);
+            continue;
+        }
+        let slice = closes.slice(i - period + 1, i + 1);
+        let mean = slice.reduce((a,b) => a + b, 0) / period;
+        let variance = slice.map(x => Math.pow(x - mean, 2)).reduce((a,b) => a + b, 0) / period;
+        let std = Math.sqrt(variance);
+        middle.push(mean);
+        upper.push(mean + (stdDev * std));
+        lower.push(mean - (stdDev * std));
+    }
+    return { upper, middle, lower };
+}
+
+// Calculate Moving Averages
+function calculateMA(closes, period) {
+    let ma = [];
+    for (let i = 0; i < closes.length; i++) {
+        if (i < period - 1) {
+            ma.push(null);
+            continue;
+        }
+        let slice = closes.slice(i - period + 1, i + 1);
+        let avg = slice.reduce((a,b) => a + b, 0) / period;
+        ma.push(avg);
+    }
+    return ma;
+}
+
+/* ================= BUILD ADVANCED CHART ================= */
+function buildAdvancedChart(labels, data, ohlcData = null) {
+    if(myChart) myChart.destroy();
+    
+    const datasets = [{
+        label: 'Price',
+        data: data,
+        borderColor: '#22d3ee',
+        backgroundColor: currentType === 'line' ? 'rgba(34,211,238,.15)' : 'rgba(34,211,238,.3)',
+        tension: 0.4,
+        fill: currentType === 'line',
+        pointRadius: currentType === 'line' ? 2 : 0,
+        borderWidth: 2,
+        yAxisID: 'y'
+    }];
+    
+    // Add Bollinger Bands
+    if (activeIndicators.bb && fullChartData.bb) {
+        datasets.push({
+            label: 'BB Upper',
+            data: fullChartData.bb.upper,
+            borderColor: 'rgba(251,191,36,0.7)',
+            borderWidth: 1,
+            fill: false,
+            pointRadius: 0,
+            tension: 0.1
+        });
+        datasets.push({
+            label: 'BB Middle (SMA20)',
+            data: fullChartData.bb.middle,
+            borderColor: 'rgba(251,191,36,0.5)',
+            borderWidth: 1,
+            fill: false,
+            pointRadius: 0,
+            tension: 0.1
+        });
+        datasets.push({
+            label: 'BB Lower',
+            data: fullChartData.bb.lower,
+            borderColor: 'rgba(251,191,36,0.7)',
+            borderWidth: 1,
+            fill: '+1',
+            backgroundColor: 'rgba(251,191,36,0.05)',
+            pointRadius: 0,
+            tension: 0.1
+        });
+    }
+    
+    // Add Moving Averages
+    if (activeIndicators.ma && fullChartData.ma7 && fullChartData.ma25) {
+        datasets.push({
+            label: 'MA (7)',
+            data: fullChartData.ma7,
+            borderColor: '#a855f7',
+            borderWidth: 1.5,
+            fill: false,
+            pointRadius: 0,
+            tension: 0.1
+        });
+        datasets.push({
+            label: 'MA (25)',
+            data: fullChartData.ma25,
+            borderColor: '#f97316',
+            borderWidth: 1.5,
+            fill: false,
+            pointRadius: 0,
+            tension: 0.1
+        });
+    }
+    
+    // Add RSI as separate dataset on second y-axis
+    if (activeIndicators.rsi && fullChartData.rsi) {
+        datasets.push({
+            label: 'RSI (14)',
+            data: fullChartData.rsi,
+            borderColor: '#22c55e',
+            borderWidth: 1.5,
+            fill: false,
+            pointRadius: 0,
+            tension: 0.1,
+            yAxisID: 'y1'
+        });
+    }
+    
+    myChart = new Chart(document.getElementById("marketChart"), {
+        type: 'line',
+        data: { labels: labels, datasets: datasets },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+                legend: { labels: { color: '#94a3b8', font: { size: 10 } }, position: 'top' },
+                tooltip: { mode: 'index', intersect: false, backgroundColor: 'rgba(0,0,0,0.8)', titleColor: '#38bdf8' }
+            },
+            scales: {
+                x: { ticks: { color: '#c7d2fe', maxRotation: 45 }, grid: { display: false } },
+                y: { 
+                    position: 'left',
+                    ticks: { color: '#22d3ee' }, 
+                    grid: { color: 'rgba(255,255,255,.05)' },
+                    title: { display: true, text: 'Price', color: '#94a3b8' }
+                },
+                y1: {
+                    position: 'right',
+                    ticks: { color: '#22c55e' },
+                    grid: { display: false },
+                    title: { display: true, text: 'RSI', color: '#94a3b8' },
+                    min: 0,
+                    max: 100
+                }
+            }
+        }
+    });
+    
+    updateIndicatorDisplay();
+}
+
+function updateIndicatorDisplay() {
+    const lastPrice = chartData[chartData.length - 1];
+    document.getElementById('currentPriceVal').textContent = lastPrice ? lastPrice.toFixed(2) : '--';
+    
+    if (fullChartData.rsi) {
+        const lastRSI = fullChartData.rsi[fullChartData.rsi.length - 1];
+        const rsiEl = document.getElementById('rsiValue');
+        if (lastRSI) {
+            rsiEl.textContent = lastRSI.toFixed(1);
+            rsiEl.className = `indicator-number ${lastRSI > 70 ? 'rsi-bear' : lastRSI < 30 ? 'rsi-bull' : 'rsi-neu'}`;
+        }
+    }
+    
+    if (fullChartData.macd && fullChartData.macd.macd) {
+        const lastMACD = fullChartData.macd.macd[fullChartData.macd.macd.length - 1];
+        document.getElementById('macdValue').textContent = lastMACD ? lastMACD.toFixed(4) : '--';
+    }
+    
+    if (fullChartData.bb && fullChartData.bb.upper) {
+        const lastUpper = fullChartData.bb.upper[fullChartData.bb.upper.length - 1];
+        const lastLower = fullChartData.bb.lower[fullChartData.bb.lower.length - 1];
+        document.getElementById('bbValue').textContent = lastUpper && lastLower ? `${lastLower.toFixed(2)} - ${lastUpper.toFixed(2)}` : '--';
+    }
+    
+    if (fullChartData.ma7 && fullChartData.ma25) {
+        const lastMA7 = fullChartData.ma7[fullChartData.ma7.length - 1];
+        const lastMA25 = fullChartData.ma25[fullChartData.ma25.length - 1];
+        document.getElementById('maValue').textContent = lastMA7 && lastMA25 ? `${lastMA7.toFixed(2)} / ${lastMA25.toFixed(2)}` : '--';
+    }
+}
+
+function toggleIndicator(indicator) {
+    activeIndicators[indicator] = !activeIndicators[indicator];
+    const btn = document.getElementById(`indicator${indicator.toUpperCase()}`);
+    if (activeIndicators[indicator]) {
+        btn.classList.add('active');
+    } else {
+        btn.classList.remove('active');
+    }
+    recalculateIndicators();
+    buildAdvancedChart(chartLabels, chartData);
+}
+
+function recalculateIndicators() {
+    if (!chartData.length) return;
+    
+    if (activeIndicators.rsi) {
+        fullChartData.rsi = calculateRSI(chartData);
+    }
+    if (activeIndicators.macd) {
+        fullChartData.macd = calculateMACD(chartData);
+    }
+    if (activeIndicators.bb) {
+        fullChartData.bb = calculateBollingerBands(chartData);
+    }
+    if (activeIndicators.ma) {
+        fullChartData.ma7 = calculateMA(chartData, 7);
+        fullChartData.ma25 = calculateMA(chartData, 25);
+    }
+}
 
 function setChartType(type, btn){
-  currentType = type;
-  document.getElementById("btnLine").classList.toggle("active", type === "line");
-  document.getElementById("btnBar").classList.toggle("active",  type === "bar");
-  buildChart(chartLabels, chartData, type);
+    currentType = type;
+    document.getElementById("btnLine").classList.toggle("active", type === "line");
+    document.getElementById("btnCandle").classList.toggle("active", type === "candle");
+    buildAdvancedChart(chartLabels, chartData);
 }
 
+function resetChartView() {
+    Object.keys(activeIndicators).forEach(key => {
+        activeIndicators[key] = false;
+        const btn = document.getElementById(`indicator${key.toUpperCase()}`);
+        if (btn) btn.classList.remove('active');
+    });
+    recalculateIndicators();
+    buildAdvancedChart(chartLabels, chartData);
+}
 
-/* ============================================================
-   SWITCH STOCK  ← FIXED
-============================================================ */
+/* ================= CHANGE TIMEFRAME ================= */
+function changeTimeframe(period, btn) {
+    document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentPeriod = period;
+    
+    fetch(`/api/compare-full/${encodeURIComponent(currentSymbol)}?period=${period}`)
+        .then(r => r.json())
+        .then(d => {
+            chartLabels = d.dates || [];
+            chartData = d.closes || [];
+            recalculateIndicators();
+            buildAdvancedChart(chartLabels, chartData);
+            
+            const isIN = currentSymbol.includes(".NS") || currentSymbol.includes(".BO");
+            const cur = isIN ? "₹" : "$";
+            const price = parseFloat(d.price) || 0;
+            document.getElementById("livePriceBig").textContent = `${cur}${price.toFixed(2)}`;
+            document.getElementById("statLivePrice").textContent = `${cur}${price.toFixed(2)}`;
+            document.getElementById("chartSubtitle").textContent = `Price Chart - ${period.toUpperCase()} | Indicators: ${Object.keys(activeIndicators).filter(k => activeIndicators[k]).join(', ') || 'None'}`;
+        })
+        .catch(() => {});
+}
 
+/* ================= SWITCH STOCK ================= */
 function switchStock(symbol, btn){
-  // Update active button
-  document.querySelectorAll(".switcher button")
-    .forEach(b => b.classList.remove("active"));
-  btn.classList.add("active");
+    currentSymbol = symbol;
+    document.querySelectorAll(".switcher button").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    document.getElementById("currentSymbol").textContent = symbol;
+    document.getElementById("chartTitle").textContent = `AI Trend — ${symbol}`;
+    document.getElementById("livePriceBig").textContent = "Loading...";
+    document.getElementById("priceChange").textContent = "";
+    document.getElementById("last7List").innerHTML = '<li style="color:#475569;">Loading...</li>';
 
-  document.getElementById("currentSymbol").textContent = symbol;
-  document.getElementById("chartTitle").textContent    = `AI Trend — ${symbol}`;
-  document.getElementById("livePriceBig").textContent  = "Loading...";
-  document.getElementById("priceChange").textContent   = "";
-  document.getElementById("last7List").innerHTML =
-    '<li style="color:#475569;font-size:13px;padding:6px 0;">Loading…</li>';
+    fetch(`/api/compare-full/${encodeURIComponent(symbol)}?period=${currentPeriod}`)
+        .then(r => r.json())
+        .then(d => {
+            const isIN = symbol.includes(".NS") || symbol.includes(".BO");
+            const cur = isIN ? "₹" : "$";
+            const price = parseFloat(d.price) || 0;
+            
+            chartLabels = d.dates || [];
+            chartData = d.closes || [];
+            
+            recalculateIndicators();
+            buildAdvancedChart(chartLabels, chartData);
+            
+            document.getElementById("livePriceBig").textContent = `${cur}${price.toFixed(2)}`;
+            document.getElementById("statLivePrice").textContent = `${cur}${price.toFixed(2)}`;
+            
+            const chgPct = parseFloat(d.change_pct) || 0;
+            const chgEl = document.getElementById("priceChange");
+            chgEl.textContent = `${chgPct >= 0 ? "▲" : "▼"} ${Math.abs(chgPct).toFixed(2)}%`;
+            chgEl.className = `price-change ${chgPct >= 0 ? "up" : "down"}`;
+            
+            const dates = d.dates || [];
+            const closes = d.closes || [];
+            const last7d = dates.slice(-7);
+            const last7p = closes.slice(-7);
+            document.getElementById("last7List").innerHTML = last7d.length ? last7d.map((dt, i) => `<li><span>${dt}</span><span>${cur} ${parseFloat(last7p[i]).toFixed(2)}</span></li>`).join("") : '<li>No data</li>';
+            
+            document.getElementById("chartSubtitle").textContent = `Price Chart - ${currentPeriod.toUpperCase()} | Indicators: ${Object.keys(activeIndicators).filter(k => activeIndicators[k]).join(', ') || 'None'}`;
+        })
+        .catch(() => { document.getElementById("livePriceBig").textContent = "N/A"; });
+}
 
-  fetch(`/api/compare-full/${encodeURIComponent(symbol)}?period=1mo`)
-    .then(r => r.json())
-    .then(d => {
-      const isIN  = symbol.includes(".NS") || symbol.includes(".BO");
-      const cur   = isIN ? "₹" : "$";
-      const price = parseFloat(d.price) || 0;
-
-      // update price
-      document.getElementById("livePriceBig").textContent  = `${cur}${price.toFixed(2)}`;
-      document.getElementById("statLivePrice").textContent = `${cur}${price.toFixed(2)}`;
-
-      // update change %
-      const chgPct = parseFloat(d.change_pct) || 0;
-      const chgEl  = document.getElementById("priceChange");
-      chgEl.textContent = `${chgPct >= 0 ? "▲" : "▼"} ${Math.abs(chgPct).toFixed(2)}%`;
-      chgEl.className   = `price-change ${chgPct >= 0 ? "up" : "down"}`;
-
-      // update last 7 days list
-      const dates  = d.dates  || [];
-      const closes = d.closes || [];
-      const last7d = dates.slice(-7);
-      const last7p = closes.slice(-7);
-      document.getElementById("last7List").innerHTML = last7d.length
-        ? last7d.map((dt, i) => `
-            <li>
-              <span>${dt}</span>
-              <span style="color:#38bdf8">${cur} ${parseFloat(last7p[i]).toFixed(2)}</span>
-            </li>`).join("")
-        : '<li style="color:#475569">No data</li>';
-
-      // rebuild chart with new symbol data
-      chartLabels = dates;
-      chartData   = closes;
-      buildChart(chartLabels, chartData, currentType);
-    })
-    .catch(() => {
-      document.getElementById("livePriceBig").textContent = "N/A";
-      document.getElementById("last7List").innerHTML =
-        '<li style="color:#f87171;font-size:13px;">Failed to load</li>';
+/* ================= LOAD TICKER PRICES ================= */
+function loadTickerPrices(){
+    const symbols = ["TSLA", "MSFT", "GOOGL", "NVDA"];
+    symbols.forEach(sym => {
+        fetch(`/live-data/${sym}`)
+            .then(r => r.json())
+            .then(d => { document.getElementById(`t-${sym.toLowerCase()}`).textContent = `₹${d.price}`; })
+            .catch(() => {});
     });
 }
+loadTickerPrices();
+setInterval(loadTickerPrices, 30000);
 
+/* ================= LOAD USER STATS ================= */
+fetch("/api/user-stats")
+    .then(r => r.json())
+    .then(d => { document.getElementById("statPredictions").textContent = d.total || "0"; })
+    .catch(() => { document.getElementById("statPredictions").textContent = "0"; });
 
-/* ============================================================
-   LOAD LIVE PRICES FOR TICKER
-============================================================ */
+/* ================= LOAD WATCHLIST ================= */
+fetch("/api/watchlist-prices")
+    .then(r => r.json())
+    .then(data => {
+        const items = Object.entries(data || {}).map(([sym, v]) => ({ symbol: sym, price: v.price, change: v.change }));
+        const grid = document.getElementById("watchlistGrid");
+        if(items.length === 0){
+            grid.innerHTML = '<div style="color:#64748b;text-align:center;">No stocks in watchlist. <a href="/watchlist" style="color:#38bdf8">Add some →</a></div>';
+            document.getElementById("statWatchlist").textContent = "0";
+            return;
+        }
+        document.getElementById("statWatchlist").textContent = items.length;
+        grid.innerHTML = items.map(item => {
+            const cur = item.symbol.includes(".NS") ? "₹" : "$";
+            const chg = parseFloat(item.change) || 0;
+            const pr = item.price === "N/A" ? "N/A" : parseFloat(item.price).toFixed(2);
+            return `<div class="watchlist-item" onclick="location.href='/watchlist'"><div class="symbol">${item.symbol}</div><div class="w-price">${cur}${pr}</div><div class="w-change ${chg >= 0 ? 'up' : 'down'}">${chg >= 0 ? '▲' : '▼'} ${Math.abs(chg).toFixed(2)}%</div></div>`;
+        }).join("");
+    })
+    .catch(() => { document.getElementById("watchlistGrid").innerHTML = '<div style="color:#64748b;text-align:center;"><a href="/watchlist" style="color:#38bdf8">Go to Watchlist →</a></div>'; });
 
-const tickerSymbols = [
-  {sym:"TSLA",  ids:["t-tsla","t-tsla2"]},
-  {sym:"MSFT",  ids:["t-msft","t-msft2"]},
-  {sym:"GOOGL", ids:["t-googl","t-googl2"]},
-  {sym:"NVDA",  ids:["t-nvda","t-nvda2"]},
-];
+/* ================= AUTO REFRESH ================= */
+setInterval(() => {
+    fetch(`/api/compare-full/${encodeURIComponent(currentSymbol)}?period=${currentPeriod}`)
+        .then(r => r.json())
+        .then(d => {
+            const cur = currentSymbol.includes(".NS") ? "₹" : "$";
+            const price = parseFloat(d.price) || 0;
+            document.getElementById("livePriceBig").textContent = `${cur}${price.toFixed(2)}`;
+            document.getElementById("statLivePrice").textContent = `${cur}${price.toFixed(2)}`;
+            if(d.dates && d.closes){
+                chartLabels = d.dates;
+                chartData = d.closes;
+                recalculateIndicators();
+                buildAdvancedChart(chartLabels, chartData);
+            }
+        })
+        .catch(() => {});
+}, 60000);
 
-function loadTickerPrices(){
-  tickerSymbols.forEach(item => {
-    fetch(`/live-data/${item.sym}`)
-      .then(r => r.json())
-      .then(d => {
-        item.ids.forEach(id => {
-          const el = document.getElementById(id);
-          if(el) el.textContent = `₹${d.price}`;
-        });
-      })
-      .catch(() => {});
-  });
+/* ================= CHAT FUNCTIONS ================= */
+let chatMinimized = false;
+
+function toggleChat(){
+    const widget = document.getElementById('chatWidget');
+    const messages = document.getElementById('chatMessages');
+    const inputArea = document.querySelector('.chat-input-area');
+    if(chatMinimized){
+        widget.classList.remove('minimized');
+        messages.style.display = 'flex';
+        inputArea.style.display = 'flex';
+        chatMinimized = false;
+    } else {
+        widget.classList.add('minimized');
+        messages.style.display = 'none';
+        inputArea.style.display = 'none';
+        chatMinimized = true;
+    }
 }
 
-loadTickerPrices();
-setInterval(loadTickerPrices, 30000);   // refresh every 30s
+function openAvatarModal(){
+    document.getElementById('avatarModal').classList.add('active');
+}
 
+function closeAvatarModal(){
+    document.getElementById('avatarModal').classList.remove('active');
+}
 
-/* ============================================================
-   LOAD USER STATS
-============================================================ */
-
-fetch("/api/user-stats")
-  .then(r => {
-    if(!r.ok) throw new Error("stats fetch failed: " + r.status);
-    return r.json();
-  })
-  .then(d => {
-    const total = parseInt(d.total) || 0;
-    document.getElementById("statPredictions").textContent = total;
-
-    // also update buy/sell/hold badges if they exist on page
-    if(d.buy_count  !== undefined) {
-      const buyEl  = document.getElementById("statBuyCount");
-      const sellEl = document.getElementById("statSellCount");
-      if(buyEl)  buyEl.textContent  = d.buy_count;
-      if(sellEl) sellEl.textContent = d.sell_count;
+document.addEventListener('DOMContentLoaded', function() {
+    const avatarBtn = document.getElementById('aiAvatarBtn');
+    if(avatarBtn){
+        avatarBtn.addEventListener('click', function(e){
+            e.stopPropagation();
+            openAvatarModal();
+        });
     }
-  })
-  .catch(err => {
-    console.error("user-stats error:", err);
-    document.getElementById("statPredictions").textContent = "0";
-  });
-
-
-/* ============================================================
-   LOAD WATCHLIST MINI
-============================================================ */
-
-fetch("/api/watchlist-prices")
-  .then(r => r.json())
-  .then(data => {
-    const grid = document.getElementById("watchlistGrid");
-
-    // API returns {SYM: {price, change}, ...}  — convert to array
-    const items = Object.entries(data || {}).map(([sym, v]) => ({
-      symbol: sym,
-      price:  v.price,
-      change: v.change
-    }));
-
-    if(items.length === 0){
-      grid.innerHTML = `
-        <div style="color:#64748b;font-size:13px;grid-column:1/-1">
-          No stocks in watchlist.
-          <a href="/watchlist" style="color:#38bdf8;margin-left:6px">Add some →</a>
-        </div>`;
-      document.getElementById("statWatchlist").textContent = "0";
-      return;
+    
+    const minimizeBtn = document.getElementById('minimizeChatBtn');
+    if(minimizeBtn){
+        minimizeBtn.addEventListener('click', function(e){
+            e.stopPropagation();
+            toggleChat();
+        });
     }
+    
+    const closeBtn = document.getElementById('closeModalBtn');
+    if(closeBtn){
+        closeBtn.addEventListener('click', closeAvatarModal);
+    }
+    
+    document.addEventListener('keydown', function(e){
+        if(e.key === 'Escape'){
+            closeAvatarModal();
+        }
+    });
+    
+    const modal = document.getElementById('avatarModal');
+    if(modal){
+        modal.addEventListener('click', function(e){
+            if(e.target === modal){
+                closeAvatarModal();
+            }
+        });
+    }
+});
 
-    document.getElementById("statWatchlist").textContent = items.length;
+async function loadTrustScore(){
+    try{
+        const res = await fetch('/api/trust-score');
+        const data = await res.json();
+        const badge = document.getElementById('trustBadge');
+        if(data.trust_score){
+            const score = Math.round(data.trust_score);
+            badge.textContent = `Trust: ${score}/100`;
+            badge.style.background = score >= 70 ? 'rgba(34,197,94,0.15)' : score >= 40 ? 'rgba(251,191,36,0.15)' : 'rgba(239,68,68,0.15)';
+            badge.style.color = score >= 70 ? '#22c55e' : score >= 40 ? '#fbbf24' : '#f87171';
+        }
+    } catch(e){ console.log('Trust score error:', e); }
+}
 
-    grid.innerHTML = items.map(item => {
-      const isIN = item.symbol.includes(".NS") || item.symbol.includes(".BO");
-      const cur  = isIN ? "₹" : "$";
-      const chg  = parseFloat(item.change) || 0;
-      const pr   = item.price === "N/A" ? "N/A" : parseFloat(item.price).toFixed(2);
-      return `
-        <div class="watchlist-item" onclick="location.href='/watchlist'" style="cursor:pointer">
-          <div class="symbol">${item.symbol}</div>
-          <div class="w-price">${cur}${pr}</div>
-          <div class="w-change ${chg >= 0 ? 'up':'down'}">
-            ${chg >= 0 ? '▲':'▼'} ${Math.abs(chg).toFixed(2)}%
-          </div>
-        </div>`;
-    }).join("");
-  })
-  .catch(() => {
-    document.getElementById("watchlistGrid").innerHTML =
-      `<div style="color:#64748b;font-size:13px;grid-column:1/-1">
-        <a href="/watchlist" style="color:#38bdf8">Go to Watchlist →</a>
-      </div>`;
-    document.getElementById("statWatchlist").textContent = "—";
-  });
+function addMessage(role, content, isUser = false){
+    const messagesDiv = document.getElementById('chatMessages');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${role}`;
+    const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    if(isUser){
+        messageDiv.innerHTML = `<div class="message-avatar user"><i class="fa-regular fa-user"></i></div><div class="message-content"><div class="message-bubble">${escapeHtml(content)}</div><div class="message-time">${time}</div></div>`;
+    } else {
+        messageDiv.innerHTML = `<div class="message-avatar ai" onclick="openAvatarModal()" style="display:flex; align-items:center; justify-content:center;">
+            <img src="/static/image/logo.png" alt="AI" style="width:100%; height:100%; border-radius:50%; object-fit:cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <i class="fa-solid fa-robot" style="display:none; font-size:14px; color:white;"></i>
+        </div>...`;
+    }
+    messagesDiv.appendChild(messageDiv);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
 
+function addTypingIndicator(){
+    const messagesDiv = document.getElementById('chatMessages');
+    const typingDiv = document.createElement('div');
+    typingDiv.className = 'message ai';
+    typingDiv.id = 'typingIndicator';
+    typingDiv.innerHTML = `<div class="message-avatar ai" onclick="openAvatarModal()"><img src="/static/image/logo.png" alt="AI" onerror="this.src='https://via.placeholder.com/30?text=AI'"></div><div class="message-content"><div class="typing-indicator"><span></span><span></span><span></span></div></div>`;
+    messagesDiv.appendChild(typingDiv);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
 
+function removeTypingIndicator(){ const typingDiv = document.getElementById('typingIndicator'); if(typingDiv) typingDiv.remove(); }
+function escapeHtml(text){ const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
+function formatBotResponse(text){ return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>'); }
+
+async function sendChatMessage(){
+    const input = document.getElementById('chatInput');
+    const message = input.value.trim();
+    if(!message) return;
+    addMessage('user', message, true);
+    input.value = '';
+    addTypingIndicator();
+    try{
+        const response = await fetch('/api/rag-chatbot', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: message }) });
+        const data = await response.json();
+        removeTypingIndicator();
+        addMessage('ai', data.reply, false);
+        loadTrustScore();
+    } catch(error){
+        removeTypingIndicator();
+        addMessage('ai', '⚠️ Sorry, I\'m having trouble connecting. Please try again.', false);
+    }
+}
+
+function sendSuggestion(text){ document.getElementById('chatInput').value = text; sendChatMessage(); }
+
+// Initialize chart with sample data
+setTimeout(() => {
+    switchStock('AAPL', document.querySelector('.switcher button.active'));
+    loadTrustScore();
+}, 1000);
 /* ============================================================
-   AUTO REFRESH LIVE PRICE (every 30s)  ← FIXED
+   MEMORY FEATURES FUNCTIONS (Add these to existing script)
 ============================================================ */
 
-setInterval(() => {
-  const activeSym = document.querySelector(".switcher button.active")?.textContent || "AAPL";
-  const isIN = activeSym.includes(".NS") || activeSym.includes(".BO");
-  const cur  = isIN ? "₹" : "$";
+// Load Daily Trading Tip
+async function loadDailyTip() {
+    try {
+        const res = await fetch('/api/daily-tip');
+        const data = await res.json();
+        const tipElement = document.getElementById('dailyTipText');
+        if (tipElement) {
+            tipElement.innerHTML = data.tip;
+        }
+    } catch(e) {
+        console.error('Daily tip error:', e);
+        const tipElement = document.getElementById('dailyTipText');
+        if (tipElement) {
+            tipElement.innerHTML = '💡 Always use stop-loss orders to protect your capital. Never risk more than 2% on a single trade.';
+        }
+    }
+}
 
-  fetch(`/api/compare-full/${encodeURIComponent(activeSym)}?period=1mo`)
-    .then(r => r.json())
-    .then(d => {
-      const price  = parseFloat(d.price) || 0;
-      const chgPct = parseFloat(d.change_pct) || 0;
+// Load Market Summary
+async function loadMarketSummary() {
+    try {
+        const res = await fetch('/api/market-summary');
+        const data = await res.json();
+        const summaryElement = document.getElementById('marketSummaryText');
+        if (summaryElement) {
+            summaryElement.innerHTML = data.summary;
+        }
+    } catch(e) {
+        console.error('Market summary error:', e);
+        const summaryElement = document.getElementById('marketSummaryText');
+        if (summaryElement) {
+            summaryElement.innerHTML = '📊 Markets are currently active. Check back for personalized analysis!';
+        }
+    }
+}
 
-      document.getElementById("livePriceBig").textContent  = `${cur}${price.toFixed(2)}`;
-      document.getElementById("statLivePrice").textContent = `${cur}${price.toFixed(2)}`;
+// Refresh Memory Widget
+function refreshMemoryWidget() {
+    showToast('Refreshing market data...', 'info');
+    loadDailyTip();
+    loadMarketSummary();
+}
 
-      const chgEl = document.getElementById("priceChange");
-      chgEl.textContent = `${chgPct >= 0 ? "▲" : "▼"} ${Math.abs(chgPct).toFixed(2)}%`;
-      chgEl.className   = `price-change ${chgPct >= 0 ? "up" : "down"}`;
+// Toggle Daily Tips Settings
+function toggleDailyTips() {
+    showToast('Daily tips feature active! Check back every day for new trading insights.', 'success');
+}
 
-      if(d.dates && d.closes){
-        chartLabels = d.dates;
-        chartData   = d.closes;
-        buildChart(chartLabels, chartData, currentType);
-      }
-    })
-    .catch(() => {});
-}, 30000);
+// Load memory features when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    loadDailyTip();
+    loadMarketSummary();
+    
+    // Auto-refresh market summary every 30 minutes
+    setInterval(loadMarketSummary, 1800000);
+    // Refresh daily tip every 24 hours
+    setInterval(loadDailyTip, 86400000);
+});
+
+// Add to dashboard.html script section
+async function updateNotificationBadge() {
+    try {
+        const response = await fetch('/api/notifications/unread-count');
+        const data = await response.json();
+        const badge = document.getElementById('notificationBadge');
+        if(data.count > 0) {
+            badge.textContent = data.count > 99 ? '99+' : data.count;
+            badge.style.display = 'block';
+        } else {
+            badge.style.display = 'none';
+        }
+    } catch(e) {}
+}
+
+// Call on page load
+updateNotificationBadge();
+setInterval(updateNotificationBadge, 30000);
 
 </script>
 

@@ -5,337 +5,288 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Create Account | Stock AI</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=Clash+Display:wght@400;500;600;700&family=Cabinet+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{
-  --bg:#030a14;
-  --panel:#070f1d;
-  --border:rgba(56,189,248,.1);
-  --border-h:rgba(56,189,248,.35);
-  --cy:#38bdf8;--cy2:#22d3ee;--pu:#818cf8;
-  --gr:#34d399;--rd:#f87171;--am:#fbbf24;
-  --tx:#e2e8f0;--mt:#64748b;--mt2:#1e293b;
-  --mono:'DM Mono',monospace;
-  --display:'Cabinet Grotesk',sans-serif;
+  --bg:#020917;--s1:#040e1f;--s2:#061324;
+  --bd:rgba(56,189,248,.12);--bdh:rgba(56,189,248,.36);
+  --cy:#38bdf8;--cy2:#22d3ee;
+  --gr:#4ade80;--rd:#fb7185;--am:#fbbf24;--pu:#a78bfa;
+  --tx:#e2e8f0;--mt:#64748b;--mt2:#1e293b;--mt3:#0f172a;
+  --mono:'Space Mono',monospace;--sans:'Syne',sans-serif;
 }
-
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
 body{
-  min-height:100vh;background:var(--bg);
-  display:flex;overflow:hidden;font-family:var(--display);
+  min-height:100vh;background:var(--bg);color:var(--tx);
+  font-family:var(--sans);overflow-x:hidden;display:flex;
+}
+body::before{
+  content:"";position:fixed;inset:0;
+  background:linear-gradient(rgba(56,189,248,.016) 1px,transparent 1px),
+             linear-gradient(90deg,rgba(56,189,248,.016) 1px,transparent 1px);
+  background-size:44px 44px;pointer-events:none;z-index:0;
 }
 
-/* ── LEFT PANEL (branding) ── */
+/* ══ LEFT PANEL - IMPROVED SPACING ══ */
 .left{
-  flex:0 0 42%;position:relative;
-  background:linear-gradient(135deg,#030d1a 0%,#040f20 50%,#050d1c 100%);
-  overflow:hidden;display:flex;flex-direction:column;
-  padding:48px 52px;border-right:1px solid var(--border);
+  flex:0 0 44%;position:relative;
+  background:linear-gradient(145deg,#030d1a 0%,#04101f 55%,#050d1c 100%);
+  overflow-y:auto;
+  display:flex;
+  flex-direction:column;
+  padding:40px 40px;
+  border-right:1px solid var(--bd);
 }
+.left::-webkit-scrollbar{width:3px;}
+.left::-webkit-scrollbar-thumb{background:rgba(56,189,248,.2);}
 
-/* grid overlay */
 .left::before{
   content:"";position:absolute;inset:0;
-  background:linear-gradient(rgba(56,189,248,.025) 1px,transparent 1px),
-             linear-gradient(90deg,rgba(56,189,248,.025) 1px,transparent 1px);
-  background-size:40px 40px;pointer-events:none;
+  background:linear-gradient(rgba(56,189,248,.022) 1px,transparent 1px),
+             linear-gradient(90deg,rgba(56,189,248,.022) 1px,transparent 1px);
+  background-size:42px 42px;pointer-events:none;
 }
-
-/* diagonal accent line */
 .left::after{
-  content:"";position:absolute;
-  top:-10%;right:-1px;width:2px;height:120%;
-  background:linear-gradient(to bottom,transparent,rgba(56,189,248,.6),rgba(129,140,248,.4),transparent);
+  content:"";position:absolute;top:-10%;right:-1px;width:2px;height:120%;
+  background:linear-gradient(to bottom,transparent,rgba(56,189,248,.55),rgba(167,139,250,.4),transparent);
 }
-
-/* floating orbs */
 .orb{position:absolute;border-radius:50%;pointer-events:none;}
-.orb1{width:320px;height:320px;top:-80px;left:-80px;
-  background:radial-gradient(circle,rgba(56,189,248,.07) 0%,transparent 65%);}
-.orb2{width:240px;height:240px;bottom:60px;right:-40px;
-  background:radial-gradient(circle,rgba(129,140,248,.09) 0%,transparent 65%);}
-.orb3{width:160px;height:160px;top:45%;left:40%;
-  background:radial-gradient(circle,rgba(34,211,238,.06) 0%,transparent 65%);}
+.orb1{width:320px;height:320px;top:-80px;left:-80px;background:radial-gradient(circle,rgba(56,189,248,.07) 0%,transparent 65%);}
+.orb2{width:240px;height:240px;bottom:60px;right:-40px;background:radial-gradient(circle,rgba(167,139,250,.08) 0%,transparent 65%);}
+.orb3{width:160px;height:160px;top:44%;left:38%;background:radial-gradient(circle,rgba(34,211,238,.06) 0%,transparent 65%);}
+#pcanvas{position:absolute;inset:0;pointer-events:none;z-index:1;}
 
-/* brand logo area */
-.brand{position:relative;z-index:2;display:flex;align-items:center;gap:12px;margin-bottom:auto;}
-.brand-icon{
-  width:44px;height:44px;border-radius:12px;
-  background:linear-gradient(135deg,rgba(56,189,248,.15),rgba(129,140,248,.1));
-  border:1px solid rgba(56,189,248,.3);
-  display:flex;align-items:center;justify-content:center;
-}
-.brand-icon img{width:26px;height:26px;object-fit:contain;}
-.brand-icon i{color:var(--cy);font-size:18px;}
-.brand-name{font-size:20px;font-weight:800;color:var(--tx);letter-spacing:-.5px;}
-.brand-sub{font-size:11px;color:var(--mt);font-family:var(--mono);letter-spacing:1px;}
+.brand{position:relative;z-index:2;display:flex;align-items:center;gap:10px;margin-bottom:30px;flex-shrink:0;}
+.brand-ico{width:40px;height:40px;border-radius:10px;background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.28);display:flex;align-items:center;justify-content:center;}
+.brand-ico img{width:22px;object-fit:contain;}
+.brand-ico i{color:var(--cy);font-size:16px;}
+.brand-name{font-family:var(--mono);font-size:15px;font-weight:700;color:var(--tx);letter-spacing:1px;}
+.brand-name span{color:var(--cy);}
+.brand-sub{font-family:var(--mono);font-size:10px;color:var(--mt);letter-spacing:1.2px;}
 
-/* hero content */
-.hero{position:relative;z-index:2;margin-top:auto;padding-bottom:20px;}
-.hero-tag{
-  display:inline-flex;align-items:center;gap:7px;
-  padding:5px 12px;border-radius:100px;margin-bottom:24px;
-  background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.2);
-  font-family:var(--mono);font-size:.68rem;color:var(--gr);letter-spacing:1px;
+.hero{position:relative;z-index:2;margin-bottom:30px;flex-shrink:0;}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:7px;padding:4px 13px;
+  border-radius:20px;margin-bottom:20px;
+  background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.2);
+  font-family:var(--mono);font-size:.62rem;color:var(--gr);letter-spacing:1.2px;
 }
-.hero-tag i{font-size:.6rem;}
-.hero h1{
-  font-size:clamp(2rem,3.2vw,2.8rem);font-weight:800;
-  color:var(--tx);line-height:1.1;letter-spacing:-1px;
-  margin-bottom:16px;
-}
-.hero h1 em{
-  font-style:normal;
-  background:linear-gradient(90deg,var(--cy),var(--cy2),var(--pu));
-  -webkit-background-clip:text;color:transparent;
-}
-.hero p{font-size:.95rem;color:var(--mt);line-height:1.7;max-width:340px;}
+.hero-badge span{width:5px;height:5px;border-radius:50%;background:var(--gr);animation:pulse 1.8s infinite;}
+.hero h1{font-size:clamp(1.8rem,3vw,2.8rem);font-weight:800;color:var(--tx);line-height:1.2;letter-spacing:-1px;margin-bottom:15px;}
+.hero h1 em{font-style:normal;background:linear-gradient(90deg,var(--cy),var(--cy2),var(--pu));-webkit-background-clip:text;color:transparent;}
+.hero p{font-size:.86rem;color:var(--mt);line-height:1.65;max-width:340px;margin-bottom:20px;}
 
-/* feature rows */
-.features{position:relative;z-index:2;display:flex;flex-direction:column;gap:14px;margin-top:36px;}
+.feats{position:relative;z-index:2;display:flex;flex-direction:column;gap:15px;margin-bottom:30px;flex-shrink:0;}
 .feat{display:flex;align-items:center;gap:14px;}
-.feat-dot{
-  flex-shrink:0;width:32px;height:32px;border-radius:8px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:.75rem;
-}
-.feat-dot.cy{background:rgba(56,189,248,.1);color:var(--cy);}
-.feat-dot.pu{background:rgba(129,140,248,.1);color:var(--pu);}
-.feat-dot.gr{background:rgba(52,211,153,.1);color:var(--gr);}
-.feat-text{font-size:.85rem;color:var(--mt);line-height:1.4;}
-.feat-text strong{color:var(--tx);display:block;font-size:.88rem;margin-bottom:2px;}
+.feat-ic{flex-shrink:0;width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:.8rem;}
+.feat-ic.cy{background:rgba(56,189,248,.1);color:var(--cy);}
+.feat-ic.pu{background:rgba(167,139,250,.1);color:var(--pu);}
+.feat-ic.gr{background:rgba(74,222,128,.1);color:var(--gr);}
+.feat-tx strong{display:block;font-size:.85rem;color:var(--tx);margin-bottom:3px;}
+.feat-tx span{font-size:.73rem;color:var(--mt);line-height:1.4;}
 
-/* live ticker strip */
-.ticker-strip{
-  position:relative;z-index:2;margin-top:28px;
-  padding:10px 0;border-top:1px solid var(--border);
-  overflow:hidden;
-}
-.ticker-inner{display:flex;gap:0;white-space:nowrap;animation:scrollTick 25s linear infinite;}
-.tick{
-  display:inline-flex;align-items:center;gap:6px;
-  padding:0 18px;font-family:var(--mono);font-size:.67rem;
-  border-right:1px solid rgba(255,255,255,.05);
-}
-.tick-sym{color:var(--cy);font-weight:500;}
-.tick-val{color:var(--tx);}
-.tick-chg.up{color:var(--gr);}
-.tick-chg.dn{color:var(--rd);}
+.ticker-strip{position:relative;z-index:2;margin-bottom:20px;padding-top:15px;border-top:1px solid var(--bd);overflow:hidden;flex-shrink:0;}
+.tick-inner{display:flex;white-space:nowrap;animation:scrollTick 26s linear infinite;}
+.tick{display:inline-flex;align-items:center;gap:5px;padding:0 15px;font-family:var(--mono);font-size:.65rem;border-right:1px solid rgba(255,255,255,.04);}
+.ts{color:var(--cy);font-weight:700;}
+.tu{color:var(--gr);}
+.td{color:var(--rd);}
 
-@keyframes scrollTick{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-
-/* ── RIGHT PANEL (form) ── */
-.right{
-  flex:1;display:flex;align-items:center;justify-content:center;
-  padding:40px 32px;overflow-y:auto;
-  background:var(--bg);
-}
-
-.form-box{width:100%;max-width:440px;}
-
-/* step indicator */
-.step-ind{
-  display:flex;align-items:center;gap:8px;
-  font-family:var(--mono);font-size:.7rem;color:var(--mt);
-  letter-spacing:1px;margin-bottom:32px;
-}
-.step-dot{
-  width:6px;height:6px;border-radius:50%;background:var(--mt2);
-  transition:.3s;
-}
-.step-dot.active{background:var(--cy);box-shadow:0 0 8px rgba(56,189,248,.5);}
-.step-dot.done{background:var(--gr);}
-.step-line{flex:1;height:1px;background:var(--mt2);}
-
-/* form header */
-.fhdr{margin-bottom:28px;}
-.fhdr .badge{
-  font-family:var(--mono);font-size:.68rem;color:var(--cy);
-  letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;display:block;
-}
-.fhdr h2{font-size:1.8rem;font-weight:800;color:var(--tx);letter-spacing:-.5px;line-height:1.2;}
-.fhdr p{font-size:.88rem;color:var(--mt);margin-top:6px;}
-
-/* flash messages */
-.flash{
-  padding:11px 16px;border-radius:10px;
-  font-size:.84rem;display:flex;align-items:flex-start;gap:10px;
-  margin-bottom:18px;
-}
-.flash.error{background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.25);color:var(--rd);}
-.flash.success{background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.25);color:var(--gr);}
-.flash i{margin-top:2px;flex-shrink:0;}
-
-/* input groups */
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-.field{margin-bottom:16px;}
-.field label{
-  display:block;font-size:.78rem;font-weight:600;
-  color:var(--mt);margin-bottom:7px;letter-spacing:.3px;
-  font-family:var(--mono);text-transform:uppercase;font-size:.67rem;
-}
-.field label .req{color:var(--cy);margin-left:2px;}
-.inp-wrap{position:relative;}
-.inp-wrap i.icon{
-  position:absolute;left:14px;top:50%;transform:translateY(-50%);
-  color:var(--mt);font-size:.8rem;transition:.2s;pointer-events:none;
-}
-.inp-wrap input{
-  width:100%;padding:12px 14px 12px 40px;
-  background:rgba(7,15,29,.8);border:1px solid var(--border);
-  border-radius:10px;color:var(--tx);font-size:.9rem;
-  font-family:var(--display);outline:none;transition:.2s;
-  -webkit-appearance:none;
-}
-.inp-wrap input:focus{border-color:var(--cy);background:rgba(56,189,248,.04);}
-.inp-wrap input:focus + .icon,
-.inp-wrap input:focus ~ i.icon{color:var(--cy);}
-/* fix icon order for sibling selector */
-.inp-wrap .icon{z-index:1;}
-.inp-wrap input:focus{border-color:var(--cy);}
-.inp-wrap:focus-within i.icon{color:var(--cy);}
-
-.inp-wrap input::placeholder{color:var(--mt);}
-.inp-wrap .toggle-pw{
-  position:absolute;right:14px;top:50%;transform:translateY(-50%);
-  background:none;border:none;color:var(--mt);cursor:pointer;
-  font-size:.8rem;padding:4px;transition:.2s;
-}
-.inp-wrap .toggle-pw:hover{color:var(--cy);}
-
-/* strength meter */
-.strength{margin-top:8px;}
-.strength-bar{
-  height:3px;border-radius:2px;background:var(--mt2);
-  overflow:hidden;margin-bottom:5px;
-}
-.strength-fill{height:100%;width:0;border-radius:2px;transition:.3s;}
-.strength-fill.weak{width:33%;background:var(--rd);}
-.strength-fill.medium{width:66%;background:var(--am);}
-.strength-fill.strong{width:100%;background:var(--gr);}
-.strength-label{font-family:var(--mono);font-size:.65rem;color:var(--mt);}
-
-/* role selector */
-.role-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
-.role-card{
-  border:1px solid var(--border);border-radius:10px;padding:14px;
-  cursor:pointer;transition:.2s;position:relative;
-  background:rgba(7,15,29,.6);
-}
-.role-card:hover{border-color:var(--border-h);}
-.role-card input{position:absolute;opacity:0;width:0;height:0;}
-.role-card.selected{
-  border-color:rgba(56,189,248,.5);
-  background:rgba(56,189,248,.06);
-}
-.role-card.selected .role-check{opacity:1;}
-.role-icon{font-size:1.3rem;margin-bottom:8px;}
-.role-icon.cy{color:var(--cy);}
-.role-icon.pu{color:var(--pu);}
-.role-title{font-size:.83rem;font-weight:700;color:var(--tx);margin-bottom:3px;}
-.role-desc{font-size:.72rem;color:var(--mt);line-height:1.4;}
-.role-check{
-  position:absolute;top:10px;right:10px;
-  width:18px;height:18px;border-radius:50%;
-  background:var(--cy);display:flex;align-items:center;justify-content:center;
-  opacity:0;transition:.2s;font-size:.6rem;color:#000;
-}
-
-/* terms */
-.terms-row{
-  display:flex;align-items:flex-start;gap:10px;
-  margin-bottom:20px;cursor:pointer;
-}
-.terms-row input{display:none;}
-.checkmark{
-  flex-shrink:0;width:18px;height:18px;border-radius:5px;
-  border:1.5px solid var(--border-h);margin-top:1px;
-  display:flex;align-items:center;justify-content:center;
-  transition:.2s;
-}
-.terms-row input:checked ~ .checkmark{
-  background:var(--cy);border-color:var(--cy);
-}
-.checkmark i{color:#000;font-size:.65rem;opacity:0;transition:.2s;}
-.terms-row input:checked ~ .checkmark i{opacity:1;}
-.terms-txt{font-size:.82rem;color:var(--mt);line-height:1.5;}
-.terms-txt a{color:var(--cy);text-decoration:none;}
-.terms-txt a:hover{text-decoration:underline;}
-
-/* submit button */
-.btn-submit{
-  width:100%;padding:14px;border-radius:10px;border:none;cursor:pointer;
-  background:linear-gradient(90deg,var(--cy),var(--cy2));
-  color:#000;font-size:.95rem;font-weight:800;font-family:var(--display);
-  letter-spacing:.3px;transition:.2s;position:relative;overflow:hidden;
-  display:flex;align-items:center;justify-content:center;gap:8px;
-}
-.btn-submit::before{
-  content:"";position:absolute;inset:0;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent);
-  transform:translateX(-100%);transition:.6s;
-}
-.btn-submit:hover::before{transform:translateX(100%);}
-.btn-submit:hover{transform:translateY(-1px);box-shadow:0 10px 30px rgba(56,189,248,.35);}
-.btn-submit:active{transform:translateY(0);}
-.btn-submit:disabled{opacity:.5;cursor:not-allowed;transform:none;}
-
-/* divider */
-.divider{
-  display:flex;align-items:center;gap:12px;
-  margin:18px 0;font-family:var(--mono);font-size:.68rem;color:var(--mt);
-}
-.divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--border);}
-
-/* login link */
-.login-link{
-  text-align:center;font-size:.85rem;color:var(--mt);
-}
-.login-link a{
-  color:var(--cy);font-weight:600;text-decoration:none;
-  transition:.2s;
-}
-.login-link a:hover{color:var(--cy2);}
-
-/* bottom stat strip */
 .stat-strip{
   position:relative;z-index:2;
-  display:grid;grid-template-columns:repeat(3,1fr);
-  gap:1px;background:var(--border);
-  border-top:1px solid var(--border);border-radius:0 0 0 0;
-  margin-top:28px;overflow:hidden;border-radius:10px;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+  background:var(--bd);border-radius:12px;overflow:hidden;
+  flex-shrink:0;
 }
-.stat-item{
-  padding:14px;background:rgba(7,15,29,.6);text-align:center;
+.stat-item{padding:12px;background:rgba(6,14,35,.7);text-align:center;}
+.stat-val{font-family:var(--mono);font-size:.9rem;color:var(--cy);font-weight:700;}
+.stat-key{font-size:.62rem;color:var(--mt);margin-top:4px;}
+
+/* ══ RIGHT / FORM PANEL - IMPROVED SPACING ══ */
+.right{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  padding:40px 32px;overflow-y:auto;background:var(--bg);
+  position:relative;z-index:1;
 }
-.stat-val{font-family:var(--mono);font-size:.95rem;color:var(--cy);font-weight:500;}
-.stat-key{font-size:.68rem;color:var(--mt);margin-top:3px;}
+.right::-webkit-scrollbar{width:3px;}
+.right::-webkit-scrollbar-thumb{background:var(--mt2);}
 
-/* particles canvas */
-#particles{position:absolute;inset:0;pointer-events:none;z-index:1;}
+.form-box{width:100%;max-width:480px;}
 
-/* scrollbar */
-.right::-webkit-scrollbar{width:4px;}
-.right::-webkit-scrollbar-track{background:transparent;}
-.right::-webkit-scrollbar-thumb{background:var(--mt2);border-radius:2px;}
+/* Step dots */
+.steps{display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:.62rem;color:var(--mt);letter-spacing:1px;margin-bottom:30px;}
+.sd{width:6px;height:6px;border-radius:50%;background:var(--mt2);transition:.3s;}
+.sd.on{background:var(--cy);box-shadow:0 0 8px rgba(56,189,248,.5);}
+.sd.done{background:var(--gr);}
+.sl{flex:1;height:1px;background:var(--mt2);}
 
-/* animations */
+/* Flash */
+.flash{padding:12px 15px;border-radius:10px;font-size:.8rem;display:flex;align-items:flex-start;gap:10px;margin-bottom:16px;animation:fadeUp .4s ease both;}
+.flash.error{background:rgba(251,113,133,.08);border:1px solid rgba(251,113,133,.25);color:var(--rd);}
+.flash.success{background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.25);color:var(--gr);}
+.flash.warning{background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.25);color:var(--am);}
+.flash i{margin-top:2px;flex-shrink:0;}
+
+/* Form header */
+.fhdr{margin-bottom:28px;}
+.fhdr .badge{font-family:var(--mono);font-size:.65rem;color:var(--cy);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;display:block;}
+.fhdr h2{font-size:1.8rem;font-weight:800;color:var(--tx);letter-spacing:-.5px;line-height:1.2;}
+.fhdr p{font-size:.85rem;color:var(--mt);margin-top:6px;}
+
+/* Rows */
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+
+/* Field */
+.fg{margin-bottom:16px;}
+.fl{font-family:var(--mono);font-size:.6rem;color:var(--mt);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:6px;display:flex;align-items:center;gap:5px;}
+.fl i{color:var(--cy);font-size:.62rem;}
+.fl .req{color:var(--cy);}
+.iw{position:relative;}
+.iw i.ico{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--mt);font-size:.75rem;pointer-events:none;transition:.2s;z-index:1;}
+.iw:focus-within i.ico{color:var(--cy);}
+.iw input{
+  width:100%;padding:11px 38px 11px 40px;
+  background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.09);
+  border-radius:10px;color:var(--tx);font-size:.88rem;font-family:var(--sans);
+  outline:none;transition:.2s;
+}
+.iw input:focus{border-color:var(--cy);background:rgba(56,189,248,.04);box-shadow:0 0 0 3px rgba(56,189,248,.08);}
+.iw input::placeholder{color:var(--mt2);font-size:.8rem;}
+.iw input.ok{border-color:rgba(74,222,128,.35);}
+.iw input.err{border-color:rgba(251,113,133,.4);}
+.iw .tpw{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--mt);cursor:pointer;font-size:.75rem;padding:3px;transition:.2s;}
+.iw .tpw:hover{color:var(--cy);}
+.fmsg{font-family:var(--mono);font-size:.58rem;margin-top:5px;}
+.fmsg.valid{color:var(--gr);}
+.fmsg.invalid{color:var(--rd);}
+
+/* Username availability indicator */
+.username-status{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  margin-top:6px;
+  font-family:var(--mono);
+  font-size:.56rem;
+}
+.username-status i{font-size:.52rem;}
+.username-status.available{color:var(--gr);}
+.username-status.taken{color:var(--rd);}
+.username-status.checking{color:var(--am);}
+
+/* Password strength */
+.pw-str{margin-top:8px;}
+.pw-track{height:3px;background:rgba(255,255,255,.07);border-radius:20px;overflow:hidden;margin-bottom:6px;}
+.pw-fill{height:100%;border-radius:20px;width:0;transition:width .3s,background .3s;}
+.pw-reqs{display:flex;gap:10px;flex-wrap:wrap;}
+.req-item{display:flex;align-items:center;gap:4px;font-family:var(--mono);font-size:.57rem;color:var(--mt);transition:.2s;}
+.req-item.ok{color:var(--gr);}
+.req-item i{font-size:.5rem;}
+
+/* Role selector */
+.role-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.role-opt input{display:none;}
+.role-opt label{
+  display:flex;align-items:center;gap:10px;
+  padding:12px 14px;border-radius:10px;
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.025);
+  cursor:pointer;transition:.2s;position:relative;
+}
+.role-opt label:hover{border-color:rgba(56,189,248,.22);}
+.role-opt input:checked + label{border-color:rgba(56,189,248,.45);background:rgba(56,189,248,.07);}
+.role-opt input:checked + label.admin-lbl{border-color:rgba(251,113,133,.45);background:rgba(251,113,133,.07);}
+.role-ic{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.8rem;}
+.role-ic.u{background:rgba(56,189,248,.1);color:var(--cy);}
+.role-ic.a{background:rgba(251,113,133,.12);color:var(--rd);}
+.role-nm{font-size:.8rem;font-weight:700;}
+.role-ds{font-family:var(--mono);font-size:.56rem;color:var(--mt);margin-top:2px;}
+.role-chk{margin-left:auto;width:14px;height:14px;border-radius:50%;border:1px solid rgba(255,255,255,.12);transition:.2s;flex-shrink:0;}
+.role-opt input:checked + label .role-chk{background:var(--cy);border-color:var(--cy);}
+.role-opt input:checked + label.admin-lbl .role-chk{background:var(--rd);border-color:var(--rd);}
+
+/* ── ADMIN PASSKEY PANEL ── */
+.admin-key-wrap{
+  display:none;
+  margin-top:14px;
+  background:rgba(251,113,133,.05);
+  border:1px solid rgba(251,113,133,.22);
+  border-radius:10px;
+  padding:15px;
+  position:relative;
+  overflow:hidden;
+}
+.admin-key-wrap::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,rgba(251,113,133,.5),transparent);
+}
+.admin-key-wrap.show{display:block;animation:fadeUp .35s ease both;}
+.ak-hdr{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
+.ak-hdr i{color:var(--rd);font-size:.9rem;}
+.ak-hdr span{font-family:var(--mono);font-size:.68rem;color:var(--rd);font-weight:700;letter-spacing:1px;}
+.ak-note{font-size:.76rem;color:var(--mt);margin-bottom:12px;line-height:1.5;}
+.ak-note strong{color:var(--am);}
+.ak-input-wrap{position:relative;}
+.ak-input-wrap i{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--rd);font-size:.75rem;pointer-events:none;}
+.ak-inp{
+  width:100%;padding:11px 40px 11px 40px;
+  background:rgba(251,113,133,.06);border:1px solid rgba(251,113,133,.25);
+  border-radius:8px;color:var(--tx);font-family:var(--mono);font-size:.82rem;
+  outline:none;transition:.2s;letter-spacing:2px;
+}
+.ak-inp:focus{border-color:var(--rd);box-shadow:0 0 0 3px rgba(251,113,133,.1);}
+.ak-inp::placeholder{color:var(--mt2);letter-spacing:0;font-size:.76rem;}
+.ak-tpw{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--mt);cursor:pointer;font-size:.72rem;padding:3px;transition:.2s;}
+.ak-tpw:hover{color:var(--rd);}
+.ak-hint{font-family:var(--mono);font-size:.59rem;color:var(--mt);margin-top:8px;display:flex;align-items:center;gap:5px;}
+.ak-hint i{color:var(--am);font-size:.56rem;}
+
+/* Submit */
+.btn-reg{
+  width:100%;background:linear-gradient(135deg,#0369a1,#0891b2);
+  color:#fff;border:none;border-radius:10px;padding:14px 22px;
+  font-size:.92rem;font-weight:700;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  font-family:var(--sans);transition:.22s;
+  box-shadow:0 5px 22px rgba(3,105,161,.28);
+  position:relative;overflow:hidden;
+}
+.btn-reg::after{content:"";position:absolute;top:0;left:-120%;width:60%;height:100%;background:linear-gradient(120deg,transparent,rgba(255,255,255,.1),transparent);transition:.55s;}
+.btn-reg:hover::after{left:160%;}
+.btn-reg:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(3,105,161,.42);}
+.btn-reg:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+
+/* Security badges */
+.sec-bar{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;margin-top:12px;}
+.sec-item{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:.58rem;color:var(--mt);}
+.sec-item i{color:var(--gr);font-size:.54rem;}
+
+/* Terms */
+.terms-note{text-align:center;font-family:var(--mono);font-size:.58rem;color:var(--mt2);line-height:1.6;padding:12px 14px;border-top:1px solid var(--bd);margin-top:5px;}
+.terms-note a{color:var(--mt);text-decoration:underline;}
+
+/* Footer */
+.reg-foot{text-align:center;margin-top:14px;font-size:.8rem;color:var(--mt);}
+.reg-foot a{color:var(--cy);font-weight:700;text-decoration:none;}
+.reg-foot a:hover{text-decoration:underline;}
+
+/* Animations */
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+@keyframes scrollTick{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
 .form-box>*{animation:fadeUp .5s ease both;}
 .form-box>*:nth-child(1){animation-delay:.05s}
-.form-box>*:nth-child(2){animation-delay:.1s}
-.form-box>*:nth-child(3){animation-delay:.15s}
-.form-box>*:nth-child(4){animation-delay:.2s}
+.form-box>*:nth-child(2){animation-delay:.09s}
+.form-box>*:nth-child(3){animation-delay:.13s}
 
-/* error states */
-.inp-wrap input.has-error{border-color:rgba(248,113,113,.5);}
-.field-err{font-size:.72rem;color:var(--rd);font-family:var(--mono);margin-top:5px;display:none;}
-.field-err.show{display:block;}
+::-webkit-scrollbar{width:3px;}
+::-webkit-scrollbar-thumb{background:var(--mt2);border-radius:2px;}
 
-@media(max-width:900px){
-  .left{display:none;}
-  .right{flex:1;}
-}
+@media(max-width:900px){.left{display:none;}.right{flex:1;}}
+@media(max-width:480px){.row2{grid-template-columns:1fr;}.role-grid{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
@@ -345,75 +296,44 @@ body{
   <div class="orb orb1"></div>
   <div class="orb orb2"></div>
   <div class="orb orb3"></div>
-  <canvas id="particles"></canvas>
+  <canvas id="pcanvas"></canvas>
 
-  <!-- Brand -->
   <div class="brand">
-    <div class="brand-icon">
-      <img src="/static/images/logo.png" alt="StockAI" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+    <div class="brand-ico">
+      <img src="/static/images/logo.png" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
       <i class="fa-solid fa-chart-line" style="display:none;"></i>
     </div>
     <div>
-      <div class="brand-name">Stock<span style="color:var(--cy)">AI</span></div>
+      <div class="brand-name">STOCK<span>AI</span></div>
       <div class="brand-sub">INTELLIGENCE PLATFORM</div>
     </div>
   </div>
 
-  <!-- Hero -->
   <div class="hero">
-    <div class="hero-tag"><i class="fa-solid fa-circle" style="color:var(--gr);font-size:.5rem;"></i> MARKETS ARE LIVE</div>
+    <div class="hero-badge"><span></span> MARKETS ARE LIVE</div>
     <h1>Trade smarter<br>with <em>AI</em><br>precision</h1>
-    <p>Join thousands of investors using machine learning signals, real-time analytics, and predictive models to stay ahead of the market.</p>
+    <p>Join investors using ML signals, real-time analytics and predictive models to stay ahead of the market.</p>
+  </div>
 
-    <div class="features">
-      <div class="feat">
-        <div class="feat-dot cy"><i class="fa-solid fa-brain-circuit"></i></div>
-        <div class="feat-text">
-          <strong>AI Prediction Engine</strong>
-          Linear regression + LSTM models with 12+ technical indicators
-        </div>
-      </div>
-      <div class="feat">
-        <div class="feat-dot pu"><i class="fa-solid fa-chart-candlestick"></i></div>
-        <div class="feat-text">
-          <strong>Live Market Data</strong>
-          Real-time quotes, NSE/BSE support, candlestick charting
-        </div>
-      </div>
-      <div class="feat">
-        <div class="feat-dot gr"><i class="fa-solid fa-file-chart-column"></i></div>
-        <div class="feat-text">
-          <strong>PDF Research Reports</strong>
-          Institutional-grade reports generated in seconds
-        </div>
-      </div>
+  <div class="feats">
+    <div class="feat">
+      <div class="feat-ic cy"><i class="fa-solid fa-brain-circuit"></i></div>
+      <div class="feat-tx"><strong>AI Prediction Engine</strong><span>Linear regression + LSTM with 12+ indicators</span></div>
+    </div>
+    <div class="feat">
+      <div class="feat-ic pu"><i class="fa-solid fa-chart-candlestick"></i></div>
+      <div class="feat-tx"><strong>Live Market Data</strong><span>Real-time quotes, NSE/BSE, candlestick charts</span></div>
+    </div>
+    <div class="feat">
+      <div class="feat-ic gr"><i class="fa-solid fa-file-chart-column"></i></div>
+      <div class="feat-tx"><strong>PDF Research Reports</strong><span>Institutional-grade reports in seconds</span></div>
     </div>
   </div>
 
-  <!-- Live ticker -->
   <div class="ticker-strip">
-    <div class="ticker-inner">
-      <span class="tick"><span class="tick-sym">AAPL</span><span class="tick-val">$211.45</span><span class="tick-chg up">+1.2%</span></span>
-      <span class="tick"><span class="tick-sym">TSLA</span><span class="tick-val">$248.90</span><span class="tick-chg dn">-0.8%</span></span>
-      <span class="tick"><span class="tick-sym">INFY.NS</span><span class="tick-val">₹1842</span><span class="tick-chg up">+0.6%</span></span>
-      <span class="tick"><span class="tick-sym">MSFT</span><span class="tick-val">$415.20</span><span class="tick-chg up">+0.4%</span></span>
-      <span class="tick"><span class="tick-sym">NVDA</span><span class="tick-val">$875.30</span><span class="tick-chg up">+2.1%</span></span>
-      <span class="tick"><span class="tick-sym">RELIANCE.NS</span><span class="tick-val">₹2945</span><span class="tick-chg dn">-0.3%</span></span>
-      <span class="tick"><span class="tick-sym">AMZN</span><span class="tick-val">$185.60</span><span class="tick-chg up">+0.9%</span></span>
-      <span class="tick"><span class="tick-sym">GOOGL</span><span class="tick-val">$165.40</span><span class="tick-chg dn">-0.2%</span></span>
-      <!-- duplicate for seamless loop -->
-      <span class="tick"><span class="tick-sym">AAPL</span><span class="tick-val">$211.45</span><span class="tick-chg up">+1.2%</span></span>
-      <span class="tick"><span class="tick-sym">TSLA</span><span class="tick-val">$248.90</span><span class="tick-chg dn">-0.8%</span></span>
-      <span class="tick"><span class="tick-sym">INFY.NS</span><span class="tick-val">₹1842</span><span class="tick-chg up">+0.6%</span></span>
-      <span class="tick"><span class="tick-sym">MSFT</span><span class="tick-val">$415.20</span><span class="tick-chg up">+0.4%</span></span>
-      <span class="tick"><span class="tick-sym">NVDA</span><span class="tick-val">$875.30</span><span class="tick-chg up">+2.1%</span></span>
-      <span class="tick"><span class="tick-sym">RELIANCE.NS</span><span class="tick-val">₹2945</span><span class="tick-chg dn">-0.3%</span></span>
-      <span class="tick"><span class="tick-sym">AMZN</span><span class="tick-val">$185.60</span><span class="tick-chg up">+0.9%</span></span>
-      <span class="tick"><span class="tick-sym">GOOGL</span><span class="tick-val">$165.40</span><span class="tick-chg dn">-0.2%</span></span>
-    </div>
+    <div class="tick-inner" id="tickerInner"></div>
   </div>
 
-  <!-- Stats -->
   <div class="stat-strip">
     <div class="stat-item"><div class="stat-val">12+</div><div class="stat-key">AI Indicators</div></div>
     <div class="stat-item"><div class="stat-val">5Y</div><div class="stat-key">Data History</div></div>
@@ -421,31 +341,20 @@ body{
   </div>
 </div>
 
-<!-- ══ RIGHT PANEL (FORM) ══ -->
+<!-- ══ RIGHT / FORM PANEL ══ -->
 <div class="right">
   <div class="form-box">
 
-    <!-- Step indicator -->
-    <div class="step-ind">
-      <div class="step-dot active"></div>
-      <div class="step-line"></div>
-      <div class="step-dot"></div>
-      <div class="step-line"></div>
-      <div class="step-dot"></div>
-      <span style="margin-left:4px;">STEP 1 OF 1</span>
+    <!-- Step indicators -->
+    <div class="steps">
+      <div class="sd on" id="sd1"></div><div class="sl"></div>
+      <div class="sd"    id="sd2"></div><div class="sl"></div>
+      <div class="sd"    id="sd3"></div>
+      <span style="margin-left:5px;">STEP 1 OF 1</span>
     </div>
 
-    <!-- Flash messages -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        {% for category, message in messages %}
-        <div class="flash {{ category }}">
-          <i class="fa-solid {{ 'fa-circle-exclamation' if category == 'error' else 'fa-circle-check' }}"></i>
-          <span>{{ message }}</span>
-        </div>
-        {% endfor %}
-      {% endif %}
-    {% endwith %}
+    <!-- Flash messages container -->
+    <div id="flashContainer"></div>
 
     <!-- Header -->
     <div class="fhdr">
@@ -455,204 +364,462 @@ body{
     </div>
 
     <!-- Form -->
-    <form method="POST" action="/register" id="regForm" autocomplete="off">
+    <form method="POST" action="/register" id="rf" autocomplete="off" novalidate>
 
       <!-- Name row -->
       <div class="row2">
-        <div class="field">
-          <label>First Name <span class="req">*</span></label>
-          <div class="inp-wrap">
-            <i class="icon fa-solid fa-user"></i>
-            <input type="text" name="first_name" placeholder="Harsha" required id="fname">
+        <div class="fg">
+          <label class="fl"><i class="fa-solid fa-user"></i> First Name <span class="req">*</span></label>
+          <div class="iw">
+            <i class="ico fa-solid fa-user"></i>
+            <input type="text" name="first_name" id="fname" placeholder="Harsha" required>
           </div>
         </div>
-        <div class="field">
-          <label>Last Name</label>
-          <div class="inp-wrap">
-            <i class="icon fa-solid fa-user"></i>
-            <input type="text" name="last_name" placeholder="Vardhan">
+        <div class="fg">
+          <label class="fl"><i class="fa-solid fa-user"></i> Last Name</label>
+          <div class="iw">
+            <i class="ico fa-solid fa-user"></i>
+            <input type="text" name="last_name" id="lname" placeholder="Vardhan">
           </div>
         </div>
       </div>
 
       <!-- Username -->
-      <div class="field">
-        <label>Username <span class="req">*</span></label>
-        <div class="inp-wrap">
-          <i class="icon fa-solid fa-at"></i>
-          <input type="text" name="username" placeholder="harshavardhan" required id="uname"
-                 pattern="[a-zA-Z0-9_]{3,20}" title="3-20 chars, letters/numbers/underscores">
+      <div class="fg">
+        <label class="fl"><i class="fa-solid fa-at"></i> Username <span class="req">*</span></label>
+        <div class="iw">
+          <i class="ico fa-solid fa-at" id="unico"></i>
+          <input type="text" name="username" id="uname" placeholder="harsha_trader"
+                 required minlength="3" maxlength="20" autocomplete="off">
+          <div class="username-status" id="usernameStatus"></div>
         </div>
-        <div class="field-err" id="uname-err">Username must be 3–20 characters</div>
+        <div class="fmsg" id="unmsg"></div>
       </div>
 
       <!-- Email -->
-      <div class="field">
-        <label>Email Address <span class="req">*</span></label>
-        <div class="inp-wrap">
-          <i class="icon fa-solid fa-envelope"></i>
-          <input type="email" name="email" placeholder="harsha@example.com" required id="email">
+      <div class="fg">
+        <label class="fl"><i class="fa-solid fa-envelope"></i> Email <span style="color:var(--mt);font-size:.54rem;">(optional)</span></label>
+        <div class="iw">
+          <i class="ico fa-solid fa-envelope"></i>
+          <input type="email" name="email" id="email" placeholder="you@example.com">
         </div>
-        <div class="field-err" id="email-err">Please enter a valid email</div>
       </div>
 
       <!-- Password -->
-      <div class="field">
-        <label>Password <span class="req">*</span></label>
-        <div class="inp-wrap">
-          <i class="icon fa-solid fa-lock"></i>
-          <input type="password" name="password" placeholder="Min. 8 characters" required id="pw" minlength="8">
-          <button type="button" class="toggle-pw" id="togglePw"><i class="fa-regular fa-eye"></i></button>
+      <div class="fg">
+        <label class="fl"><i class="fa-solid fa-lock"></i> Password <span class="req">*</span></label>
+        <div class="iw">
+          <i class="ico fa-solid fa-lock"></i>
+          <input type="password" name="password" id="pw" placeholder="Min. 6 characters"
+                 required minlength="6" oninput="chkPw()">
+          <button type="button" class="tpw" onclick="tg('pw','pe1')">
+            <i class="fa-solid fa-eye" id="pe1"></i>
+          </button>
         </div>
-        <div class="strength" id="strengthBox" style="display:none;">
-          <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
-          <div class="strength-label" id="strengthLabel">Too weak</div>
+        <div class="pw-str">
+          <div class="pw-track"><div class="pw-fill" id="pwfill"></div></div>
+          <div class="pw-reqs">
+            <div class="req-item" id="req1"><i class="fa-solid fa-circle-dot"></i>6+ chars</div>
+            <div class="req-item" id="req2"><i class="fa-solid fa-circle-dot"></i>Number</div>
+            <div class="req-item" id="req3"><i class="fa-solid fa-circle-dot"></i>Uppercase</div>
+            <div class="req-item" id="req4"><i class="fa-solid fa-circle-dot"></i>Symbol</div>
+          </div>
         </div>
       </div>
 
       <!-- Confirm password -->
-      <div class="field">
-        <label>Confirm Password <span class="req">*</span></label>
-        <div class="inp-wrap">
-          <i class="icon fa-solid fa-shield-check"></i>
-          <input type="password" name="confirm_password" placeholder="Repeat password" required id="cpw">
+      <div class="fg">
+        <label class="fl"><i class="fa-solid fa-lock"></i> Confirm Password <span class="req">*</span></label>
+        <div class="iw">
+          <i class="ico fa-solid fa-lock"></i>
+          <input type="password" name="confirm_password" id="cpw" placeholder="Repeat password"
+                 required oninput="chkCp()">
+          <button type="button" class="tpw" onclick="tg('cpw','pe2')">
+            <i class="fa-solid fa-eye" id="pe2"></i>
+          </button>
         </div>
-        <div class="field-err" id="cpw-err">Passwords do not match</div>
+        <div class="fmsg" id="cpmsg"></div>
       </div>
 
       <!-- Role selector -->
-      <div class="field">
-        <label>Account Type <span class="req">*</span></label>
+      <div class="fg">
+        <label class="fl"><i class="fa-solid fa-id-card"></i> Account Type</label>
         <div class="role-grid">
-          <label class="role-card selected" id="role-user" onclick="selectRole(this)">
-            <input type="radio" name="role" value="user" checked>
-            <div class="role-icon cy"><i class="fa-solid fa-user-chart"></i></div>
-            <div class="role-title">Investor</div>
-            <div class="role-desc">Personal stock tracking & AI predictions</div>
-            <div class="role-check"><i class="fa-solid fa-check"></i></div>
-          </label>
-          <label class="role-card" id="role-admin" onclick="selectRole(this)">
-            <input type="radio" name="role" value="admin">
-            <div class="role-icon pu"><i class="fa-solid fa-shield-halved"></i></div>
-            <div class="role-title">Admin</div>
-            <div class="role-desc">Full platform access & user management</div>
-            <div class="role-check"><i class="fa-solid fa-check"></i></div>
-          </label>
+          <div class="role-opt">
+            <input type="radio" name="role" id="rUser" value="user" checked onchange="onRoleChange()">
+            <label for="rUser">
+              <div class="role-ic u"><i class="fa-solid fa-user"></i></div>
+              <div><div class="role-nm">User</div><div class="role-ds">Standard access</div></div>
+              <div class="role-chk"></div>
+            </label>
+          </div>
+          <div class="role-opt">
+            <input type="radio" name="role" id="rAdmin" value="admin" onchange="onRoleChange()">
+            <label for="rAdmin" class="admin-lbl">
+              <div class="role-ic a"><i class="fa-solid fa-crown"></i></div>
+              <div><div class="role-nm" style="color:var(--rd)">Admin</div><div class="role-ds">Full access</div></div>
+              <div class="role-chk"></div>
+            </label>
+          </div>
         </div>
       </div>
 
-      <!-- Terms -->
-      <label class="terms-row">
-        <input type="checkbox" id="terms" required>
-        <div class="checkmark"><i class="fa-solid fa-check"></i></div>
-        <div class="terms-txt">
-          I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>. I understand this platform is for informational purposes only.
+      <!-- ADMIN PASSKEY PANEL -->
+      <div class="admin-key-wrap" id="adminKeyWrap">
+        <div class="ak-hdr">
+          <i class="fa-solid fa-shield-halved"></i>
+          <span>ADMIN SECURITY VERIFICATION</span>
         </div>
-      </label>
+        <div class="ak-note">
+          Admin accounts have <strong>full platform access</strong> including user management
+          and all data. A <strong>secret security key</strong> is required to register as admin.
+        </div>
+        <div class="ak-input-wrap">
+          <i class="fa-solid fa-key"></i>
+          <input class="ak-inp" type="password" name="admin_passkey" id="adminKey"
+                 placeholder="Enter admin security key…" autocomplete="off">
+          <button type="button" class="ak-tpw" onclick="tg('adminKey','ake1')">
+            <i class="fa-solid fa-eye" id="ake1"></i>
+          </button>
+        </div>
+        <div class="ak-hint">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          Default admin key: STOCKAI_ADMIN_2024
+        </div>
+      </div>
 
-      <button type="submit" class="btn-submit" id="submitBtn">
-        <i class="fa-solid fa-rocket"></i>
-        Create Account
-      </button>
+      <!-- Submit -->
+      <div style="margin-top:18px;">
+        <button type="submit" class="btn-reg" id="subBtn">
+          <i class="fa-solid fa-rocket"></i>
+          Create Account
+        </button>
+
+        <div class="sec-bar">
+          <div class="sec-item"><i class="fa-solid fa-shield-halved"></i>Password Hashed</div>
+          <div class="sec-item"><i class="fa-solid fa-lock"></i>Secure Storage</div>
+          <div class="sec-item"><i class="fa-solid fa-user-shield"></i>Private Data</div>
+        </div>
+
+        <div class="terms-note">
+          By registering you agree to our <a href="#">Terms of Service</a> &amp; <a href="#">Privacy Policy</a>.
+          This platform is for informational purposes only.
+        </div>
+      </div>
     </form>
 
-    <div class="divider">OR</div>
-    <div class="login-link">Already have an account? <a href="/login">Sign in here →</a></div>
-
+    <div class="reg-foot">Already have an account? <a href="/">Sign in →</a></div>
   </div>
 </div>
 
 <script>
-// ── Particles ──
-(function(){
-  const c=document.getElementById('particles');
-  if(!c)return;
-  const ctx=c.getContext('2d');
-  let pts=[];
-  function resize(){c.width=c.parentElement.offsetWidth;c.height=c.parentElement.offsetHeight;}
-  resize();window.addEventListener('resize',resize);
-  for(let i=0;i<40;i++) pts.push({
-    x:Math.random()*c.width,y:Math.random()*c.height,
-    vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,
-    r:Math.random()*1.5+.5,a:Math.random()*.5+.1
+// ── PARTICLES ──
+const cv=document.getElementById("pcanvas"),ctx=cv.getContext("2d");
+function rsz(){cv.width=cv.parentElement.offsetWidth;cv.height=cv.parentElement.offsetHeight;}
+rsz();window.addEventListener("resize",rsz);
+const pts=Array.from({length:36},()=>({x:Math.random()*cv.width,y:Math.random()*cv.height,dx:(Math.random()-.5)*.28,dy:(Math.random()-.5)*.28}));
+(function loop(){
+  ctx.clearRect(0,0,cv.width,cv.height);
+  pts.forEach(p=>{
+    p.x+=p.dx;p.y+=p.dy;
+    if(p.x<0||p.x>cv.width)p.dx*=-1;if(p.y<0||p.y>cv.height)p.dy*=-1;
+    ctx.fillStyle="rgba(56,189,248,.18)";ctx.beginPath();ctx.arc(p.x,p.y,1.2,0,Math.PI*2);ctx.fill();
+    pts.forEach(q=>{const d=Math.hypot(p.x-q.x,p.y-q.y);if(d<88){ctx.strokeStyle=`rgba(56,189,248,${.28*(1-d/88)})`;ctx.lineWidth=.2;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.stroke();}});
   });
-  function draw(){
-    ctx.clearRect(0,0,c.width,c.height);
-    pts.forEach(p=>{
-      p.x+=p.vx;p.y+=p.vy;
-      if(p.x<0||p.x>c.width)p.vx*=-1;
-      if(p.y<0||p.y>c.height)p.vy*=-1;
-      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-      ctx.fillStyle=`rgba(56,189,248,${p.a})`;ctx.fill();
-    });
-    // draw lines between close pts
-    for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){
-      const d=Math.hypot(pts[i].x-pts[j].x,pts[i].y-pts[j].y);
-      if(d<100){
-        ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);
-        ctx.strokeStyle=`rgba(56,189,248,${.08*(1-d/100)})`;ctx.lineWidth=.5;ctx.stroke();
-      }
-    }
-    requestAnimationFrame(draw);
-  }
-  draw();
+  requestAnimationFrame(loop);
 })();
 
-// ── Role selector ──
-function selectRole(el){
-  document.querySelectorAll('.role-card').forEach(c=>c.classList.remove('selected'));
-  el.classList.add('selected');
-  el.querySelector('input').checked=true;
+// ── TICKER ──
+const TK=[
+  {s:"AAPL",p:"$213.49",c:"+0.82%",u:1},{s:"TSLA",p:"$248.05",c:"-1.34%",u:0},
+  {s:"NVDA",p:"$875.40",c:"+2.11%",u:1},{s:"MSFT",p:"$415.32",c:"+0.47%",u:1},
+  {s:"INFY",p:"₹1,548",c:"+1.22%",u:1},{s:"TCS",p:"₹3,821",c:"-0.41%",u:0},
+  {s:"RELIANCE",p:"₹2,940",c:"+0.93%",u:1},{s:"GOOGL",p:"$175.18",c:"-0.23%",u:0}
+];
+document.getElementById("tickerInner").innerHTML=[...TK,...TK]
+  .map(t=>`<div class="tick"><span class="ts">${t.s}</span><span>${t.p}</span><span class="${t.u?'tu':'td'}">${t.c}</span></div>`)
+  .join("");
+
+// ── PASSWORD TOGGLE ──
+function tg(id,ico){
+  const i=document.getElementById(id),e=document.getElementById(ico);
+  if(i && e){
+    i.type=i.type==="password"?"text":"password";
+    e.className=i.type==="password"?"fa-solid fa-eye":"fa-solid fa-eye-slash";
+  }
 }
 
-// ── Password toggle ──
-document.getElementById('togglePw').addEventListener('click',function(){
-  const pw=document.getElementById('pw');
-  const icon=this.querySelector('i');
-  if(pw.type==='password'){pw.type='text';icon.className='fa-regular fa-eye-slash';}
-  else{pw.type='password';icon.className='fa-regular fa-eye';}
+// ── ROLE CHANGE → show/hide admin passkey ──
+function onRoleChange(){
+  const isAdmin=document.getElementById("rAdmin").checked;
+  const wrap=document.getElementById("adminKeyWrap");
+  if(isAdmin){
+    wrap.classList.add("show");
+  } else {
+    wrap.classList.remove("show");
+    document.getElementById("adminKey").value="";
+  }
+  updSteps();
+}
+
+// ── REAL-TIME USERNAME AVAILABILITY CHECK ──
+let usernameCheckTimeout;
+const usernameInput = document.getElementById("uname");
+const usernameStatus = document.getElementById("usernameStatus");
+
+usernameInput.addEventListener("input", function() {
+  clearTimeout(usernameCheckTimeout);
+  const username = this.value.trim();
+  
+  if(username.length < 3) {
+    usernameStatus.innerHTML = '';
+    usernameStatus.className = 'username-status';
+    return;
+  }
+  
+  usernameStatus.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Checking...';
+  usernameStatus.className = 'username-status checking';
+  
+  usernameCheckTimeout = setTimeout(async () => {
+    try {
+      const response = await fetch(`/api/check-username?username=${encodeURIComponent(username)}`);
+      const data = await response.json();
+      
+      if(data.available) {
+        usernameStatus.innerHTML = '<i class="fa-solid fa-circle-check"></i> Username available!';
+        usernameStatus.className = 'username-status available';
+        document.getElementById("uname").classList.add("ok");
+        document.getElementById("uname").classList.remove("err");
+      } else {
+        usernameStatus.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> Username taken';
+        usernameStatus.className = 'username-status taken';
+        document.getElementById("uname").classList.add("err");
+        document.getElementById("uname").classList.remove("ok");
+      }
+    } catch(e) {
+      usernameStatus.innerHTML = '';
+    }
+  }, 500);
 });
 
-// ── Password strength ──
-document.getElementById('pw').addEventListener('input',function(){
-  const v=this.value;
-  const box=document.getElementById('strengthBox');
-  const fill=document.getElementById('strengthFill');
-  const label=document.getElementById('strengthLabel');
-  if(!v){box.style.display='none';return;}
-  box.style.display='block';
-  let score=0;
-  if(v.length>=8)score++;
-  if(/[A-Z]/.test(v)&&/[a-z]/.test(v))score++;
-  if(/[0-9]/.test(v))score++;
-  if(/[^A-Za-z0-9]/.test(v))score++;
-  if(score<=1){fill.className='strength-fill weak';label.textContent='Weak password';}
-  else if(score<=3){fill.className='strength-fill medium';label.textContent='Medium strength';}
-  else{fill.className='strength-fill strong';label.textContent='Strong password ✓';}
+// ── USERNAME validation ──
+function chkUn(){
+  const v=document.getElementById("uname").value.trim();
+  const msg=document.getElementById("unmsg");
+  const inp=document.getElementById("uname");
+  if(!v){msg.textContent="";inp.className="";return;}
+  if(v.length<3||!/^[a-zA-Z0-9_]+$/.test(v)){
+    msg.textContent="✗ 3–20 chars, letters/numbers/underscore only";
+    msg.style.color="var(--rd)";inp.classList.add("err");inp.classList.remove("ok");
+  } else {
+    msg.textContent="✓ Format valid";
+    msg.style.color="var(--gr)";
+  }
+  updSteps();
+}
+
+// ── PASSWORD strength ──
+function chkPw(){
+  const pw=document.getElementById("pw").value;
+  const fill=document.getElementById("pwfill");
+  const has6=pw.length>=6,hasN=/\d/.test(pw),hasU=/[A-Z]/.test(pw),hasS=/[^a-zA-Z0-9]/.test(pw);
+  setR("req1",has6);setR("req2",hasN);setR("req3",hasU);setR("req4",hasS);
+  const s=[has6,hasN,hasU,hasS].filter(Boolean).length;
+  const cols=["","#fb7185","#fbbf24","#38bdf8","#4ade80"];
+  fill.style.width=(s*25)+"%";fill.style.background=cols[s]||"var(--mt2)";
+  updSteps();chkCp();
+}
+function setR(id,ok){
+  const el=document.getElementById(id);
+  if(el){
+    el.className="req-item"+(ok?" ok":"");
+    const icon=el.querySelector("i");
+    if(icon) icon.className=ok?"fa-solid fa-circle-check":"fa-solid fa-circle-dot";
+  }
+}
+
+// ── CONFIRM PW ──
+function chkCp(){
+  const pw=document.getElementById("pw").value;
+  const cp=document.getElementById("cpw");
+  const msg=document.getElementById("cpmsg");
+  if(!cp || !msg) return;
+  if(!cp.value){msg.textContent="";cp.className="";return;}
+  if(pw===cp.value){
+    msg.textContent="✓ Passwords match";msg.style.color="var(--gr)";
+    cp.classList.add("ok");cp.classList.remove("err");
+  } else {
+    msg.textContent="✗ Passwords do not match";msg.style.color="var(--rd)";
+    cp.classList.add("err");cp.classList.remove("ok");
+  }
+  updSteps();
+}
+
+// ── STEP DOTS ──
+function updSteps(){
+  const un=document.getElementById("uname")?.value.trim()||"";
+  const pw=document.getElementById("pw")?.value||"";
+  const cp=document.getElementById("cpw")?.value||"";
+  const ok1=un.length>=3&&/^[a-zA-Z0-9_]+$/.test(un);
+  const ok2=pw.length>=6;
+  const ok3=ok2&&pw===cp&&cp.length>0;
+  setSd("sd1",ok1,un.length>0);
+  setSd("sd2",ok2,pw.length>0);
+  setSd("sd3",ok3,cp.length>0);
+}
+function setSd(id,done,act){
+  const el=document.getElementById(id);
+  if(el) el.className="sd"+(done?" done":act?" on":"");
+}
+
+// ── DISPLAY FLASH MESSAGES ──
+function showFlashMessage(message, type) {
+  const container = document.getElementById('flashContainer');
+  const icon = type === 'success' ? 'circle-check' : (type === 'error' ? 'circle-xmark' : 'triangle-exclamation');
+  const flashDiv = document.createElement('div');
+  flashDiv.className = `flash ${type}`;
+  flashDiv.innerHTML = `<i class="fa-solid fa-${icon}"></i><span>${message}</span>`;
+  container.appendChild(flashDiv);
+  
+  setTimeout(() => {
+    flashDiv.style.opacity = '0';
+    setTimeout(() => flashDiv.remove(), 300);
+  }, 5000);
+}
+
+// ── FORM SUBMIT ──
+document.getElementById("rf")?.addEventListener("submit", async function(e){
+  e.preventDefault();
+  
+  const fn = document.getElementById("fname")?.value.trim();
+  const ln = document.getElementById("lname")?.value.trim();
+  const un = document.getElementById("uname")?.value.trim();
+  const email = document.getElementById("email")?.value.trim();
+  const pw = document.getElementById("pw")?.value;
+  const cp = document.getElementById("cpw")?.value;
+  const isAdmin = document.getElementById("rAdmin")?.checked;
+  const ak = document.getElementById("adminKey")?.value.trim();
+  
+  document.getElementById('flashContainer').innerHTML = '';
+  
+  if(!fn){
+    showFlashMessage("Please enter your first name.", "error");
+    document.getElementById("fname").focus();
+    return;
+  }
+  
+  if(!un){
+    showFlashMessage("Please enter a username.", "error");
+    document.getElementById("uname").focus();
+    return;
+  }
+  
+  if(un.length<3 || !/^[a-zA-Z0-9_]+$/.test(un)){
+    showFlashMessage("Username must be 3-20 characters with letters, numbers, or underscore only.", "error");
+    document.getElementById("uname").focus();
+    return;
+  }
+  
+  if(!pw){
+    showFlashMessage("Please enter a password.", "error");
+    document.getElementById("pw").focus();
+    return;
+  }
+  
+  if(pw.length<6){
+    showFlashMessage("Password must be at least 6 characters.", "error");
+    document.getElementById("pw").focus();
+    return;
+  }
+  
+  if(pw !== cp){
+    showFlashMessage("Passwords do not match.", "error");
+    document.getElementById("cpw").focus();
+    return;
+  }
+  
+  if(isAdmin && !ak){
+    showFlashMessage("Please enter the admin security key.", "error");
+    document.getElementById("adminKey").focus();
+    return;
+  }
+  
+  const btn = document.getElementById("subBtn");
+  const originalText = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Creating Account...';
+  
+  try {
+    const formData = new FormData();
+    formData.append('first_name', fn);
+    formData.append('last_name', ln);
+    formData.append('username', un);
+    formData.append('email', email);
+    formData.append('password', pw);
+    formData.append('confirm_password', cp);
+    formData.append('role', isAdmin ? 'admin' : 'user');
+    if(ak) formData.append('admin_passkey', ak);
+    
+    const response = await fetch('/register', {
+      method: 'POST',
+      body: formData
+    });
+    
+    const text = await response.text();
+    
+    if(response.redirected || text.includes('redirect') || text.includes('login')) {
+      showFlashMessage("Account created successfully! Redirecting to login...", "success");
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 2000);
+    } else if(text.includes('Username already taken')) {
+      showFlashMessage("Username already taken. Please choose another.", "error");
+      btn.disabled = false;
+      btn.innerHTML = originalText;
+    } else if(text.includes('error')) {
+      showFlashMessage("Registration failed. Please try again.", "error");
+      btn.disabled = false;
+      btn.innerHTML = originalText;
+    } else if(text.includes('success') || text.includes('Welcome')) {
+      showFlashMessage("Account created successfully! Redirecting to login...", "success");
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 2000);
+    } else {
+      showFlashMessage("Something went wrong. Please try again.", "error");
+      btn.disabled = false;
+      btn.innerHTML = originalText;
+    }
+  } catch(error) {
+    console.error('Registration error:', error);
+    showFlashMessage("Network error. Please try again.", "error");
+    btn.disabled = false;
+    btn.innerHTML = originalText;
+  }
 });
 
-// ── Real-time validation ──
-document.getElementById('cpw').addEventListener('input',function(){
-  const err=document.getElementById('cpw-err');
-  if(this.value && this.value!==document.getElementById('pw').value){
-    err.classList.add('show');this.classList.add('has-error');
-  } else {err.classList.remove('show');this.classList.remove('has-error');}
+// Initialize
+document.addEventListener("DOMContentLoaded", function(){
+  const isAdminChecked = document.getElementById("rAdmin")?.checked;
+  if(isAdminChecked){
+    const wrap = document.getElementById("adminKeyWrap");
+    if(wrap) wrap.classList.add("show");
+  }
+  
+  const signInLink = document.querySelector('.reg-foot a');
+  if(signInLink) {
+    signInLink.addEventListener('click', function(e) {
+      e.preventDefault();
+      window.location.href = '/';
+    });
+  }
 });
 
-document.getElementById('uname').addEventListener('input',function(){
-  const err=document.getElementById('uname-err');
-  if(this.value && !/^[a-zA-Z0-9_]{3,20}$/.test(this.value)){
-    err.classList.add('show');this.classList.add('has-error');
-  } else {err.classList.remove('show');this.classList.remove('has-error');}
-});
-
-// ── Form submit ──
-document.getElementById('regForm').addEventListener('submit',function(e){
-  const pw=document.getElementById('pw').value;
-  const cpw=document.getElementById('cpw').value;
-  if(pw!==cpw){e.preventDefault();document.getElementById('cpw-err').classList.add('show');return;}
-  const btn=document.getElementById('submitBtn');
-  btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Creating account…';
+window.addEventListener('load', function() {
+  if(usernameInput.value.trim().length >= 3) {
+    const event = new Event('input');
+    usernameInput.dispatchEvent(event);
+  }
 });
 </script>
 </body>

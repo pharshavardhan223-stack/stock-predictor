@@ -453,7 +453,7 @@ body::before{
   <div class="loader-ring"></div>
   <div class="loader-text">ANALYZING STOCK DATA</div>
   <div class="loader-steps">
-    <div class="lstep" id="ls1"><i class="fa-solid fa-circle-dot"></i> Fetching market data…</div>
+    <div class="lstep" id="ls1"><i class="fa-regular fa-circle"></i> Fetching market data…</div>
     <div class="lstep" id="ls2"><i class="fa-regular fa-circle"></i> Running ML models…</div>
     <div class="lstep" id="ls3"><i class="fa-regular fa-circle"></i> Calculating indicators…</div>
     <div class="lstep" id="ls4"><i class="fa-regular fa-circle"></i> Generating prediction report…</div>
@@ -554,24 +554,24 @@ body::before{
       <div class="setting-group">
         <div class="setting-label"><i class="fa-solid fa-calendar-days"></i>Forecast Period</div>
         <div class="seg-control">
-          <button class="seg-btn" onclick="setSeg(this,'days','3')">3 Days</button>
-          <button class="seg-btn active" onclick="setSeg(this,'days','7')">7 Days</button>
-          <button class="seg-btn" onclick="setSeg(this,'days','14')">14 Days</button>
-          <button class="seg-btn" onclick="setSeg(this,'days','30')">30 Days</button>
+          <button class="seg-btn" data-days="3" onclick="setDays(this,3)">3 Days</button>
+          <button class="seg-btn active" data-days="7" onclick="setDays(this,7)">7 Days</button>
+          <button class="seg-btn" data-days="14" onclick="setDays(this,14)">14 Days</button>
+          <button class="seg-btn" data-days="30" onclick="setDays(this,30)">30 Days</button>
         </div>
       </div>
       <div class="setting-group">
         <div class="setting-label"><i class="fa-solid fa-robot"></i>Model Type</div>
         <div class="seg-control">
-          <button class="seg-btn active" onclick="setSeg(this,'model','linear')">Linear</button>
-          <button class="seg-btn" onclick="setSeg(this,'model','lstm')">LSTM</button>
-          <button class="seg-btn" onclick="setSeg(this,'model','ensemble')">Ensemble</button>
+          <button class="seg-btn active" data-model="linear" onclick="setModel(this,'linear')">Linear</button>
+          <button class="seg-btn" data-model="lstm" onclick="setModel(this,'lstm')">LSTM</button>
+          <button class="seg-btn" data-model="ensemble" onclick="setModel(this,'ensemble')">Ensemble</button>
         </div>
       </div>
     </div>
 
     <!-- Hidden form to POST to /fetch_stock -->
-    <form id="predictForm" action="/fetch_stock" method="POST" style="display:none;">
+    <form id="predictForm" action="/fetch_stock" method="POST">
       <input type="hidden" name="symbol" id="formSymbol">
       <input type="hidden" name="days"   id="formDays"   value="7">
       <input type="hidden" name="model"  id="formModel"  value="linear">
@@ -727,15 +727,24 @@ const STOCKS = [
 let selectedSym   = "";
 let acIdx         = -1;
 let currentFilter = [];
-let days = "7", model = "linear";
+let daysValue = 7;
+let modelValue = "linear";
 
-/* ─── SEGMENT CONTROL ─── */
-function setSeg(btn, field, val){
-  const parent = btn.closest(".seg-control");
+/* ─── DAYS / MODEL SETTERS ─── */
+function setDays(btn, days){
+  daysValue = days;
+  document.getElementById("formDays").value = days;
+  const parent = btn.parentElement;
   parent.querySelectorAll(".seg-btn").forEach(b => b.classList.remove("active"));
   btn.classList.add("active");
-  if(field==="days")  { days  = val; document.getElementById("formDays").value  = val; }
-  if(field==="model") { model = val; document.getElementById("formModel").value = val; }
+}
+
+function setModel(btn, model){
+  modelValue = model;
+  document.getElementById("formModel").value = model;
+  const parent = btn.parentElement;
+  parent.querySelectorAll(".seg-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
 }
 
 /* ─── QUICK PICK ─── */
@@ -767,7 +776,7 @@ input.addEventListener("input", () => {
   selectedSym = "";
   if(!q){ closeAC(); return; }
   currentFilter = STOCKS.filter(s =>
-    s.sym.includes(q) || s.name.toUpperCase().includes(q)
+    s.sym.toUpperCase().includes(q) || s.name.toUpperCase().includes(q)
   ).slice(0, 7);
   renderAC();
 });
@@ -851,7 +860,10 @@ async function fetchPreview(sym){
   try {
     const r = await fetch(`/api/compare-full/${encodeURIComponent(sym)}?period=5d`);
     const d = await r.json();
-    if(d.error){ document.getElementById("previewName").textContent = "Symbol found — data pending"; return; }
+    if(d.error){ 
+      document.getElementById("previewName").textContent = "Symbol found — data pending"; 
+      return;
+    }
 
     const isIN = /\.(NS|BO)$/i.test(sym);
     const cur  = isIN ? "₹" : "$";
@@ -884,18 +896,23 @@ async function fetchPreview(sym){
       document.getElementById("previewOpen").textContent = cur + parseFloat(d.closes[0]).toFixed(2);
     }
   } catch(e){
+    console.error("Preview error:", e);
     document.getElementById("previewName").textContent = "Preview unavailable";
   }
 }
 
-/* ─── SUBMIT ─── */
+/* ─── SUBMIT PREDICTION - FIXED ─── */
 function submitPredict(){
   const sym = (selectedSym || document.getElementById("symbolInput").value.trim()).toUpperCase();
-  if(!sym){ shakeInput(); return; }
+  if(!sym){ 
+    shakeInput(); 
+    return; 
+  }
 
+  // Set form values
   document.getElementById("formSymbol").value = sym;
-  document.getElementById("formDays").value   = days;
-  document.getElementById("formModel").value  = model;
+  document.getElementById("formDays").value   = daysValue;
+  document.getElementById("formModel").value  = modelValue;
 
   // Show loader
   const overlay = document.getElementById("loaderOverlay");
@@ -909,34 +926,50 @@ function submitPredict(){
     if(idx < steps.length - 1){
       document.getElementById(steps[idx]).classList.remove("active");
       document.getElementById(steps[idx]).classList.add("done");
-      document.getElementById(steps[idx]).querySelector("i").className = "fa-solid fa-check";
+      document.getElementById(steps[idx]).querySelector("i").className = "fa-solid fa-check-circle";
       idx++;
       document.getElementById(steps[idx]).classList.add("active");
-      document.getElementById(steps[idx]).querySelector("i").className = "fa-solid fa-circle-dot";
+      document.getElementById(steps[idx]).querySelector("i").className = "fa-solid fa-circle-notch fa-spin";
     }
-  }, 900);
+  }, 800);
 
   // Disable button
   const btn = document.getElementById("predictBtn");
   btn.disabled = true;
   document.getElementById("btnSpinner").style.display = "block";
   document.getElementById("btnIcon").style.display    = "none";
-  document.getElementById("btnText").textContent      = "Analyzing…";
+  document.getElementById("btnText").textContent      = "Analyzing...";
 
+  // Clear the interval after steps complete and submit form
   setTimeout(() => {
     clearInterval(stepInterval);
+    // Mark all steps as done
+    steps.forEach(step => {
+      const el = document.getElementById(step);
+      if(el) {
+        el.classList.remove("active");
+        el.classList.add("done");
+        el.querySelector("i").className = "fa-solid fa-check-circle";
+      }
+    });
+    // Submit the form
     document.getElementById("predictForm").submit();
-  }, 3600);
+  }, 3400);
 }
 
 function shakeInput(){
   const inp = document.getElementById("symbolInput");
   inp.style.borderColor = "#fb7185";
   inp.style.animation = "none";
+  inp.offsetHeight; // force reflow
   setTimeout(() => { inp.style.animation = ""; }, 10);
   inp.focus();
   setTimeout(() => { inp.style.borderColor = ""; }, 1500);
 }
+
+// Initialize form values
+document.getElementById("formDays").value = 7;
+document.getElementById("formModel").value = "linear";
 </script>
 </body>
 </html>

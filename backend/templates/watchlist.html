@@ -418,6 +418,93 @@ body::before {
 }
 .btn-del-alert:hover { background:rgba(251,113,133,.2); }
 
+/* ===== POPUP ALERT STYLES (new) ===== */
+.popup-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(6px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.popup-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.popup-card {
+  background: linear-gradient(145deg, #0f172a, #020617);
+  border: 1px solid rgba(56,189,248,0.4);
+  border-radius: 28px;
+  max-width: 380px;
+  width: 85%;
+  padding: 28px 24px;
+  box-shadow: 0 30px 50px rgba(0,0,0,0.6), 0 0 0 2px rgba(56,189,248,0.1);
+  transform: scale(0.9);
+  transition: transform 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+  text-align: center;
+  position: relative;
+}
+
+.popup-overlay.active .popup-card {
+  transform: scale(1);
+}
+
+.popup-icon {
+  font-size: 3.2rem;
+  margin-bottom: 12px;
+}
+.popup-icon.warning { color: #fbbf24; }
+.popup-icon.info    { color: #38bdf8; }
+.popup-icon.success { color: #4ade80; }
+.popup-icon.danger  { color: #fb7185; }
+
+.popup-card h3 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #f1f5f9, #94a3b8);
+  -webkit-background-clip: text;
+  color: transparent;
+  margin-bottom: 12px;
+}
+
+.popup-message {
+  font-size: 1rem;
+  color: #cbd5e1;
+  line-height: 1.5;
+  margin: 16px 0;
+  background: rgba(255,255,255,0.03);
+  padding: 12px;
+  border-radius: 16px;
+  font-family: monospace;
+}
+
+.popup-close-btn {
+  background: linear-gradient(135deg, #0288d1, #0097a7);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 40px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: white;
+  cursor: pointer;
+  transition: 0.2s;
+  margin-top: 8px;
+  width: 100%;
+  font-family: monospace;
+}
+.popup-close-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(2,136,209,0.4);
+}
+
 /* ── RESPONSIVE ── */
 @media(max-width:768px){
   .topbar-nav .nav-btn span { display:none; }
@@ -439,12 +526,10 @@ body::before {
 
 <!-- ═══════ TOPBAR ═══════ -->
 <div class="topbar">
-
   <a href="/dashboard" class="topbar-brand">
     <i class="fa-solid fa-chart-line"></i>
     <span>Stock AI</span>
   </a>
-
   <div class="topbar-nav">
     <a href="/dashboard"        class="nav-btn"><i class="fa-solid fa-house"></i><span>Dashboard</span></a>
     <a href="/stock"            class="nav-btn"><i class="fa-solid fa-magnifying-glass-chart"></i><span>Predict</span></a>
@@ -459,18 +544,16 @@ body::before {
     <a href="/profile"          class="nav-btn"><i class="fa-solid fa-user"></i><span>Profile</span></a>
     <a href="/logout"           class="nav-btn danger"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a>
   </div>
-
   <div class="user-badge">
     <span class="udot"></span>
     <span>{{ session.get('user','User') | title }}</span>
   </div>
-
 </div>
 
 <!-- ═══════ MAIN ═══════ -->
 <div class="container">
 
-  <!-- Flash messages -->
+  <!-- Flash messages (original) -->
   {% with messages = get_flashed_messages(with_categories=true) %}
     {% for category, message in messages %}
       <div class="flash-msg {{ category }}">
@@ -652,7 +735,6 @@ body::before {
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
         <span class="badge-{{ alert.direction }}">{{ "▲ ABOVE" if alert.direction == "above" else "▼ BELOW" }}</span>
         <span class="alert-date">{{ alert.created_at[:10] if alert.created_at else '' }}</span>
-        <!-- Delete alert button -->
         <form method="POST" action="/alerts/remove" style="display:inline;">
           <input type="hidden" name="alert_id" value="{{ alert.id }}">
           <button type="submit" class="btn-del-alert">
@@ -672,26 +754,36 @@ body::before {
 
 </div>
 
+<!-- POPUP ALERT COMPONENT (new) -->
+<div id="globalPopup" class="popup-overlay">
+  <div class="popup-card">
+    <div class="popup-icon" id="popupIcon">🔔</div>
+    <h3 id="popupTitle">Alert</h3>
+    <div class="popup-message" id="popupMessage"></div>
+    <button class="popup-close-btn" id="popupCloseBtn">Got it</button>
+  </div>
+</div>
+
 <script>
 
-/* ── PARTICLES ── */
-const canvas = document.getElementById("bgCanvas");
-const ctx    = canvas.getContext("2d");
-function resize(){ canvas.width=innerWidth; canvas.height=innerHeight; }
+/* ── PARTICLES (unchanged) ── */
+const canvasEl = document.getElementById("bgCanvas");
+const ctxP     = canvasEl.getContext("2d");
+function resize(){ canvasEl.width=innerWidth; canvasEl.height=innerHeight; }
 resize(); addEventListener("resize",resize);
 let dots=[];
-for(let i=0;i<90;i++) dots.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,dx:(Math.random()-.5)*.6,dy:(Math.random()-.5)*.6});
+for(let i=0;i<90;i++) dots.push({x:Math.random()*canvasEl.width,y:Math.random()*canvasEl.height,dx:(Math.random()-.5)*.6,dy:(Math.random()-.5)*.6});
 function bgAnimate(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctxP.clearRect(0,0,canvasEl.width,canvasEl.height);
   dots.forEach(d=>{
     d.x+=d.dx; d.y+=d.dy;
-    if(d.x<0||d.x>canvas.width)  d.dx*=-1;
-    if(d.y<0||d.y>canvas.height) d.dy*=-1;
-    ctx.fillStyle="rgba(56,189,248,.45)";
-    ctx.beginPath(); ctx.arc(d.x,d.y,2,0,Math.PI*2); ctx.fill();
+    if(d.x<0||d.x>canvasEl.width)  d.dx*=-1;
+    if(d.y<0||d.y>canvasEl.height) d.dy*=-1;
+    ctxP.fillStyle="rgba(56,189,248,.45)";
+    ctxP.beginPath(); ctxP.arc(d.x,d.y,2,0,Math.PI*2); ctxP.fill();
     dots.forEach(o=>{
       const dx=d.x-o.x,dy=d.y-o.y,dist=Math.sqrt(dx*dx+dy*dy);
-      if(dist<125){ ctx.strokeStyle=`rgba(56,189,248,${1-dist/125})`; ctx.lineWidth=.4; ctx.beginPath(); ctx.moveTo(d.x,d.y); ctx.lineTo(o.x,o.y); ctx.stroke(); }
+      if(dist<125){ ctxP.strokeStyle=`rgba(56,189,248,${1-dist/125})`; ctxP.lineWidth=.4; ctxP.beginPath(); ctxP.moveTo(d.x,d.y); ctxP.lineTo(o.x,o.y); ctxP.stroke(); }
     });
   });
   requestAnimationFrame(bgAnimate);
@@ -719,16 +811,13 @@ const symbols = [
 const sparkCharts = {};
 
 function drawSparkline(symbol, closes){
-  const canvasEl = document.getElementById(`spark-${symbol}`);
-  if(!canvasEl || !closes || closes.length < 2) return;
-
+  const canvasElSp = document.getElementById(`spark-${symbol}`);
+  if(!canvasElSp || !closes || closes.length < 2) return;
   const isUp = closes[closes.length-1] >= closes[0];
   const color = isUp ? '#4ade80' : '#fb7185';
   const bgColor = isUp ? 'rgba(74,222,128,.08)' : 'rgba(251,113,133,.08)';
-
   if(sparkCharts[symbol]) sparkCharts[symbol].destroy();
-
-  sparkCharts[symbol] = new Chart(canvasEl, {
+  sparkCharts[symbol] = new Chart(canvasElSp, {
     type: 'line',
     data: {
       labels: closes.map((_,i) => i),
@@ -747,36 +836,119 @@ function drawSparkline(symbol, closes){
       maintainAspectRatio: false,
       animation: { duration: 800 },
       plugins:{ legend:{display:false}, tooltip:{enabled:false} },
-      scales:{
-        x:{display:false},
-        y:{display:false}
-      }
+      scales:{ x:{display:false}, y:{display:false} }
     }
   });
 }
 
-/* ── LOAD PRICES ── */
+/* ── POPUP FUNCTION (new) ── */
+function showPopupAlert(title, message, type = 'info') {
+  const overlay = document.getElementById('globalPopup');
+  const popupTitle = document.getElementById('popupTitle');
+  const popupMessage = document.getElementById('popupMessage');
+  const popupIcon = document.getElementById('popupIcon');
+  
+  popupTitle.innerText = title;
+  popupMessage.innerText = message;
+  
+  // reset icon classes and set based on type
+  popupIcon.className = 'popup-icon';
+  if (type === 'success') {
+    popupIcon.innerHTML = '✅';
+    popupIcon.classList.add('success');
+  } else if (type === 'danger') {
+    popupIcon.innerHTML = '⚠️';
+    popupIcon.classList.add('danger');
+  } else if (type === 'warning') {
+    popupIcon.innerHTML = '⚡';
+    popupIcon.classList.add('warning');
+  } else {
+    popupIcon.innerHTML = '🔔';
+    popupIcon.classList.add('info');
+  }
+  
+  overlay.classList.add('active');
+  
+  // auto hide after 5 seconds or manual close
+  if (window.popupTimeout) clearTimeout(window.popupTimeout);
+  window.popupTimeout = setTimeout(() => {
+    overlay.classList.remove('active');
+  }, 5000);
+}
+
+// close button
+document.getElementById('popupCloseBtn').addEventListener('click', () => {
+  document.getElementById('globalPopup').classList.remove('active');
+  if (window.popupTimeout) clearTimeout(window.popupTimeout);
+});
+
+/* ── ALERT CHECKER: compares live price vs existing alerts (trigger popup) ── */
+function checkAlertsAgainstPrices(priceData) {
+  // priceData is array of {symbol, price, change}
+  // We need alerts from server side (passed via jinja)
+  const alertsList = [
+    {% for alert in alerts %}
+    { id: {{ alert.id }}, symbol: "{{ alert.symbol }}", target: {{ alert.target_price }}, direction: "{{ alert.direction }}" },
+    {% endfor %}
+  ];
+  
+  if (!alertsList.length) return;
+  
+  for (let alert of alertsList) {
+    const stock = priceData.find(s => s.symbol === alert.symbol);
+    if (stock && stock.price && !isNaN(parseFloat(stock.price))) {
+      const currentPrice = parseFloat(stock.price);
+      const target = parseFloat(alert.target);
+      let triggered = false;
+      let triggerMsg = '';
+      if (alert.direction === 'above' && currentPrice > target) {
+        triggered = true;
+        triggerMsg = `${alert.symbol} is now ${getCurrency(alert.symbol)}${currentPrice.toFixed(2)} (above target ₹${target.toFixed(2)})`;
+      } else if (alert.direction === 'below' && currentPrice < target) {
+        triggered = true;
+        triggerMsg = `${alert.symbol} dropped to ${getCurrency(alert.symbol)}${currentPrice.toFixed(2)} (below target ₹${target.toFixed(2)})`;
+      }
+      if (triggered) {
+        // Show popup
+        showPopupAlert(`🚨 PRICE ALERT!`, triggerMsg, 'warning');
+        // Optional: optionally avoid multiple same alert spamming, but we can limit by localstorage flag per alert-id
+        const alertedKey = `alerted_${alert.id}`;
+        if (!sessionStorage.getItem(alertedKey)) {
+          sessionStorage.setItem(alertedKey, 'true');
+          showPopupAlert(`⚠️ Alert Triggered`, triggerMsg, 'warning');
+        }
+        // reset after 30 sec? Not needed for demo; but okay.
+        setTimeout(() => sessionStorage.removeItem(alertedKey), 30000);
+      }
+    }
+  }
+}
+
+/* ── LOAD PRICES (extended with alert checker) ── */
 async function loadPricesWithChange(){
   const updEl = document.getElementById("lastUpdated");
   if(updEl) updEl.innerHTML = '<span class="live-dot"></span> Refreshing...';
-
   try{
     const res  = await fetch("/api/watchlist-prices");
     const data = await res.json();
     const items = Array.isArray(data)
       ? data
       : Object.entries(data).map(([sym,info]) => ({symbol:sym,...info}));
-
+    
+    const priceSnapshot = [];
+    
     for(const item of items){
       const sym     = item.symbol;
       const cur     = getCurrency(sym);
       const priceEl = document.getElementById(`price-${sym}`);
       const changeEl= document.getElementById(`change-${sym}`);
       const card    = document.querySelector(`.wl-card[data-symbol="${sym}"]`);
-
+      let currentPrice = null;
+      
       if(priceEl){
         if(item.price && item.price !== "N/A" && item.price !== "Error"){
           const p = parseFloat(item.price);
+          currentPrice = p;
           priceEl.textContent  = `${cur}${p.toFixed(2)}`;
           priceEl.style.color  = item.change >= 0 ? "#4ade80" : "#fb7185";
           if(card) card.dataset.price = p;
@@ -785,7 +957,6 @@ async function loadPricesWithChange(){
           priceEl.style.color = "#64748b";
         }
       }
-
       if(changeEl){
         if(item.change !== undefined && item.change !== null){
           const arrow = item.change >= 0 ? "▲" : "▼";
@@ -798,14 +969,16 @@ async function loadPricesWithChange(){
           changeEl.className   = "wl-change neutral";
         }
       }
+      if(currentPrice !== null) {
+        priceSnapshot.push({ symbol: sym, price: currentPrice, change: item.change });
+      }
     }
-
+    // check alerts against live prices
+    if(priceSnapshot.length) checkAlertsAgainstPrices(priceSnapshot);
+    
     const now = new Date().toLocaleTimeString();
     if(updEl) updEl.innerHTML = `<span class="live-dot"></span> Last updated: ${now}`;
-
-    // load sparklines + company names via compare-full
     for(const sym of symbols) fetchSparkline(sym);
-
   } catch(e){
     loadIndividual();
   }
@@ -816,17 +989,12 @@ async function fetchSparkline(sym){
   try{
     const res  = await fetch(`/api/compare-full/${encodeURIComponent(sym)}?period=1mo`);
     const d    = await res.json();
-    const cur  = getCurrency(sym);
-
-    // company name
     const compEl = document.getElementById(`company-${sym}`);
     if(compEl && d.company_name){
       compEl.textContent = d.company_name;
     } else if(compEl) {
       compEl.textContent = `${sym} · ${sym.includes(".NS") ? "NSE" : "NASDAQ/NYSE"}`;
     }
-
-    // sparkline
     if(d.closes && d.closes.length > 1){
       drawSparkline(sym, d.closes.slice(-20));
     }
@@ -860,7 +1028,6 @@ function sortCards(){
   if(!grid) return;
   const cards = Array.from(grid.querySelectorAll(".wl-card"));
   const mode  = document.getElementById("sortSelect").value;
-
   cards.sort((a, b) => {
     const ap = parseFloat(a.dataset.price)  || 0;
     const bp = parseFloat(b.dataset.price)  || 0;
@@ -868,7 +1035,6 @@ function sortCards(){
     const bc = parseFloat(b.dataset.change) || 0;
     const as = a.dataset.symbol || "";
     const bs = b.dataset.symbol || "";
-
     if(mode === "price_asc")    return ap - bp;
     if(mode === "price_desc")   return bp - ap;
     if(mode === "change_asc")   return ac - bc;
@@ -876,7 +1042,6 @@ function sortCards(){
     if(mode === "alpha")        return as.localeCompare(bs);
     return 0;
   });
-
   cards.forEach(c => grid.appendChild(c));
 }
 
@@ -885,7 +1050,6 @@ if(symbols.length > 0){
   loadPricesWithChange();
   setInterval(loadPricesWithChange, 60000);
 }
-
 </script>
 </body>
 </html>

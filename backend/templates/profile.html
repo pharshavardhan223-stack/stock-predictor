@@ -5,329 +5,527 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>My Profile | Stock AI</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Cabinet+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Bebas+Neue&family=Barlow:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{
-  --bg:#030a14;--s1:rgba(6,14,35,.97);--s2:rgba(8,18,42,.9);
-  --bd:rgba(56,189,248,.1);--bdh:rgba(56,189,248,.28);
-  --cy:#38bdf8;--cy2:#22d3ee;--gr:#34d399;--rd:#f87171;--am:#fbbf24;--pu:#818cf8;
-  --tx:#e2e8f0;--mt:#64748b;--mt2:#1e293b;--mt3:#0f1929;
-  --mono:'DM Mono',monospace;--sans:'Cabinet Grotesk',sans-serif;
+  --bg:    #020b18;
+  --bg2:   #040f20;
+  --bg3:   #071428;
+  --card:  rgba(4,15,32,.95);
+  --bl:    #1e90ff;
+  --bl2:   #0066cc;
+  --bl3:   rgba(30,144,255,.12);
+  --cyan:  #00d4ff;
+  --sky:   #38bdf8;
+  --gr:    #00e87a;
+  --rd:    #ff3355;
+  --am:    #ffb800;
+  --pu:    #818cf8;
+  --tx:    #d4e6f8;
+  --mt:    #3d6080;
+  --mt2:   #071020;
+  --bd:    rgba(30,144,255,.12);
+  --bdh:   rgba(30,144,255,.4);
+  --mono:  'JetBrains Mono',monospace;
+  --dsp:   'Bebas Neue',sans-serif;
+  --sans:  'Barlow',sans-serif;
 }
+
+html{scroll-behavior:smooth;}
 body{min-height:100vh;background:var(--bg);color:var(--tx);font-family:var(--sans);overflow-x:hidden;}
-body::before{content:"";position:fixed;inset:0;
-  background:linear-gradient(rgba(56,189,248,.018) 1px,transparent 1px),
-             linear-gradient(90deg,rgba(56,189,248,.018) 1px,transparent 1px);
-  background-size:48px 48px;pointer-events:none;z-index:0;}
 
-/* ── NAV ── */
-.nav{position:sticky;top:0;z-index:200;height:58px;
-  background:rgba(3,10,20,.97);backdrop-filter:blur(20px);
+/* deep space bg */
+body::before{
+  content:"";position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% -10%,rgba(30,144,255,.16) 0%,transparent 60%),
+    radial-gradient(ellipse 40% 30% at 95% 85%,rgba(0,212,255,.07) 0%,transparent 50%);
+  pointer-events:none;z-index:0;
+}
+body::after{
+  content:"";position:fixed;inset:0;
+  background:
+    linear-gradient(rgba(30,144,255,.022) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(30,144,255,.022) 1px,transparent 1px);
+  background-size:48px 48px;pointer-events:none;z-index:0;
+}
+
+/* ── TOPBAR ── */
+.topbar{
+  position:sticky;top:0;z-index:300;height:54px;
+  background:rgba(2,11,24,.97);backdrop-filter:blur(24px);
   border-bottom:1px solid var(--bd);
-  display:flex;align-items:center;justify-content:space-between;padding:0 24px;}
-.nav-brand{display:flex;align-items:center;gap:9px;text-decoration:none;}
-.nav-logo{width:30px;height:30px;border-radius:8px;
-  background:rgba(56,189,248,.1);border:1px solid var(--bd);
-  display:flex;align-items:center;justify-content:center;}
-.nav-logo img{width:18px;object-fit:contain;}
-.nav-logo i{color:var(--cy);font-size:13px;}
-.nav-title{font-size:16px;font-weight:800;color:var(--tx);}
-.nav-title span{color:var(--cy);}
-.nav-links{display:flex;align-items:center;gap:2px;}
-.nl{display:flex;align-items:center;gap:5px;padding:6px 11px;border-radius:7px;
-  color:var(--mt);font-size:12px;font-weight:600;text-decoration:none;transition:.2s;white-space:nowrap;}
-.nl:hover{background:rgba(56,189,248,.07);color:var(--cy);}
-.nl.on{background:rgba(56,189,248,.1);color:var(--cy);}
-.nl.out{color:var(--rd);}
-.nl.out:hover{background:rgba(248,113,113,.07);}
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 22px;gap:12px;
+  box-shadow:0 1px 30px rgba(30,144,255,.07);
+  position:relative;
+}
+.topbar::after{
+  content:"";position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(30,144,255,.5),var(--cyan),rgba(30,144,255,.5),transparent);
+}
+.tb-brand{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;}
+.tb-logo{width:30px;height:30px;border-radius:7px;background:rgba(30,144,255,.12);border:1px solid rgba(30,144,255,.35);display:flex;align-items:center;justify-content:center;}
+.tb-logo img{width:16px;object-fit:contain;}
+.tb-logo i{color:var(--bl);font-size:13px;}
+.tb-name{font-family:var(--dsp);font-size:21px;color:var(--bl);letter-spacing:2px;}
+.tb-name span{color:var(--tx);}
+.tb-nav{display:flex;align-items:center;gap:2px;flex-wrap:wrap;}
+.tn{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:6px;color:var(--mt);font-size:.7rem;font-weight:600;text-decoration:none;transition:.2s;white-space:nowrap;font-family:var(--mono);}
+.tn:hover{background:rgba(30,144,255,.08);color:var(--sky);}
+.tn.on{background:rgba(30,144,255,.14);color:var(--bl);border:1px solid rgba(30,144,255,.3);}
+.tn.danger{color:var(--rd);}
+.tn.danger:hover{background:rgba(255,51,85,.1);}
+.tb-user{display:flex;align-items:center;gap:8px;padding:4px 14px;border-radius:20px;background:rgba(30,144,255,.06);border:1px solid rgba(30,144,255,.15);font-family:var(--mono);font-size:.65rem;color:var(--mt);flex-shrink:0;}
+.udot{width:6px;height:6px;background:var(--gr);border-radius:50%;animation:pulse 2s infinite;box-shadow:0 0 6px var(--gr);}
 
-/* ── LAYOUT ── */
-.page{max-width:1160px;margin:0 auto;padding:32px 24px 60px;position:relative;z-index:1;}
+/* ── PAGE ── */
+.page{max-width:1200px;margin:0 auto;padding:32px 20px 80px;position:relative;z-index:1;}
 
-/* ── PAGE HEADER ── */
-.phdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:12px;}
-.phdr-left{display:flex;align-items:center;gap:10px;}
-.phdr-badge{
-  font-family:var(--mono);font-size:.65rem;color:var(--cy);
-  letter-spacing:2px;padding:4px 10px;border:1px solid rgba(56,189,248,.25);
-  border-radius:4px;background:rgba(56,189,248,.05);}
-.phdr-title{font-size:1.6rem;font-weight:800;color:var(--tx);letter-spacing:-.5px;}
-.btn-edit{
-  display:flex;align-items:center;gap:7px;
-  padding:9px 18px;border-radius:9px;border:1px solid var(--bdh);
-  background:rgba(56,189,248,.07);color:var(--cy);font-size:.82rem;
-  font-weight:700;text-decoration:none;transition:.2s;font-family:var(--sans);}
-.btn-edit:hover{background:rgba(56,189,248,.14);transform:translateY(-1px);}
+/* ── PAGE HERO ── */
+.page-hero{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:28px;flex-wrap:wrap;gap:14px;
+  padding-bottom:20px;
+  border-bottom:1px solid var(--bd);
+  position:relative;
+}
+.page-hero::after{
+  content:"";position:absolute;bottom:-1px;left:0;width:180px;height:1px;
+  background:linear-gradient(90deg,var(--bl),transparent);
+}
+.hero-left{display:flex;align-items:center;gap:12px;}
+.hero-badge{
+  font-family:var(--mono);font-size:.6rem;color:var(--bl);
+  letter-spacing:2.5px;padding:4px 11px;
+  border:1px solid rgba(30,144,255,.28);border-radius:4px;
+  background:rgba(30,144,255,.06);
+}
+.hero-title{font-family:var(--dsp);font-size:2rem;letter-spacing:3px;color:var(--tx);}
+.hero-title span{color:var(--bl);}
+.btn-edit-hero{
+  display:flex;align-items:center;gap:8px;
+  padding:10px 20px;border-radius:9px;
+  border:1px solid var(--bdh);
+  background:rgba(30,144,255,.08);color:var(--sky);
+  font-size:.78rem;font-weight:700;text-decoration:none;
+  transition:.25s;font-family:var(--mono);letter-spacing:.5px;
+}
+.btn-edit-hero:hover{background:rgba(30,144,255,.18);transform:translateY(-2px);box-shadow:0 8px 24px rgba(30,144,255,.15);}
+
+/* ── FLASH ── */
+.flash{
+  padding:12px 18px;border-radius:10px;
+  margin-bottom:18px;font-size:.84rem;font-weight:600;
+  display:flex;align-items:center;gap:10px;
+}
+.flash.success{background:rgba(0,232,122,.08);border:1px solid rgba(0,232,122,.25);color:var(--gr);}
+.flash.error  {background:rgba(255,51,85,.08); border:1px solid rgba(255,51,85,.25); color:var(--rd);}
 
 /* ── GRID ── */
-.grid{display:grid;grid-template-columns:300px 1fr;gap:20px;align-items:start;}
-@media(max-width:900px){.grid{grid-template-columns:1fr;}}
+.grid{display:grid;grid-template-columns:300px 1fr;gap:22px;align-items:start;}
+@media(max-width:920px){.grid{grid-template-columns:1fr;}}
 
-/* ── PANEL BASE ── */
-.panel{background:var(--s1);border:1px solid var(--bd);border-radius:14px;overflow:hidden;}
-.panel-hdr{
-  padding:14px 18px;border-bottom:1px solid var(--bd);
-  display:flex;align-items:center;justify-content:space-between;
+/* ── PANEL ── */
+.panel{
+  background:var(--card);border:1px solid var(--bd);
+  border-radius:14px;overflow:hidden;
+  backdrop-filter:blur(20px);position:relative;
 }
-.panel-hdr h3{font-size:.8rem;font-weight:700;color:var(--mt);letter-spacing:1.5px;text-transform:uppercase;font-family:var(--mono);}
-.panel-hdr .tag{font-family:var(--mono);font-size:.65rem;padding:3px 8px;border-radius:4px;letter-spacing:.5px;}
-.tag-green{background:rgba(52,211,153,.1);color:var(--gr);}
-.tag-cy{background:rgba(56,189,248,.1);color:var(--cy);}
-.tag-pu{background:rgba(129,140,248,.1);color:var(--pu);}
+.panel::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(30,144,255,.35),transparent);
+  pointer-events:none;
+}
+.panel-hdr{
+  padding:13px 18px;border-bottom:1px solid var(--bd);
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(30,144,255,.03);
+}
+.panel-hdr h3{font-family:var(--mono);font-size:.65rem;color:var(--sky);letter-spacing:2.5px;text-transform:uppercase;}
+.ptag{font-family:var(--mono);font-size:.58rem;padding:3px 9px;border-radius:4px;letter-spacing:.5px;}
+.ptag-gr {background:rgba(0,232,122,.08);color:var(--gr);border:1px solid rgba(0,232,122,.25);}
+.ptag-bl {background:rgba(30,144,255,.1);color:var(--bl);border:1px solid rgba(30,144,255,.25);}
+.ptag-am {background:rgba(255,184,0,.1);color:var(--am);border:1px solid rgba(255,184,0,.25);}
 
-/* ── AVATAR CARD ── */
-.avatar-panel{padding:28px 20px;text-align:center;}
-.avatar-ring{
-  position:relative;width:90px;height:90px;margin:0 auto 16px;
-  border-radius:50%;
-  background:linear-gradient(135deg,var(--cy),var(--pu));
-  padding:2.5px;
+/* ── LEFT: AVATAR CARD ── */
+.avatar-panel{padding:28px 20px 20px;text-align:center;}
+
+/* Rotating border ring */
+.avatar-ring-wrap{
+  position:relative;width:100px;height:100px;
+  margin:0 auto 18px;
+}
+.avatar-ring-wrap::before{
+  content:"";position:absolute;inset:-3px;border-radius:50%;
+  background:conic-gradient(var(--bl),var(--cyan),var(--pu),var(--bl));
+  animation:spin 4s linear infinite;
+}
+.avatar-ring-wrap::after{
+  content:"";position:absolute;inset:-1px;border-radius:50%;
+  background:var(--bg2);
 }
 .avatar-inner{
-  width:100%;height:100%;border-radius:50%;
-  background:var(--mt3);display:flex;align-items:center;justify-content:center;
-  font-size:2rem;font-weight:800;color:var(--cy);
-  position:relative;overflow:hidden;
+  position:absolute;inset:3px;border-radius:50%;
+  background:var(--mt2);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--dsp);font-size:2.4rem;color:var(--bl);
+  overflow:hidden;z-index:1;
 }
 .avatar-inner img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
-.avatar-online{
-  position:absolute;bottom:4px;right:4px;
-  width:16px;height:16px;background:var(--gr);border-radius:50%;
-  border:2.5px solid var(--s1);
+.avatar-online-dot{
+  position:absolute;bottom:6px;right:6px;z-index:2;
+  width:14px;height:14px;background:var(--gr);border-radius:50%;
+  border:2px solid var(--bg2);box-shadow:0 0 8px var(--gr);
 }
-.profile-name{font-size:1.15rem;font-weight:800;color:var(--tx);margin-bottom:4px;}
-.profile-handle{font-family:var(--mono);font-size:.75rem;color:var(--cy);margin-bottom:6px;}
-.profile-role{
-  display:inline-flex;align-items:center;gap:5px;
-  padding:3px 10px;border-radius:100px;font-size:.7rem;font-weight:700;
-  margin-bottom:18px;letter-spacing:.5px;font-family:var(--mono);
-}
-.role-user{background:rgba(56,189,248,.1);color:var(--cy);border:1px solid rgba(56,189,248,.2);}
-.role-admin{background:rgba(251,191,36,.1);color:var(--am);border:1px solid rgba(251,191,36,.2);}
-.profile-bio{font-size:.82rem;color:var(--mt);line-height:1.6;margin-bottom:20px;}
 
-/* quick stat mini-bar */
-.qstat{display:flex;justify-content:center;gap:1px;margin-bottom:20px;border-radius:10px;overflow:hidden;background:var(--bd);}
-.qs{flex:1;padding:10px 8px;background:var(--mt3);text-align:center;}
-.qs-val{font-family:var(--mono);font-size:.95rem;color:var(--cy);}
-.qs-key{font-size:.65rem;color:var(--mt);margin-top:3px;}
+.profile-name{font-size:1.2rem;font-weight:800;color:var(--tx);margin-bottom:4px;letter-spacing:-.3px;}
+.profile-handle{font-family:var(--mono);font-size:.72rem;color:var(--bl);margin-bottom:8px;}
+.profile-role{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:4px 14px;border-radius:100px;font-size:.65rem;font-weight:700;
+  margin-bottom:16px;letter-spacing:1px;font-family:var(--mono);
+}
+.role-user  {background:rgba(30,144,255,.1);color:var(--bl);border:1px solid rgba(30,144,255,.25);}
+.role-admin {background:rgba(255,184,0,.1);color:var(--am);border:1px solid rgba(255,184,0,.25);}
+
+.profile-bio{
+  font-size:.8rem;color:var(--mt);line-height:1.65;
+  margin-bottom:18px;padding:10px 14px;
+  background:rgba(30,144,255,.03);border:1px solid var(--bd);
+  border-radius:8px;text-align:left;
+}
+
+/* mini stat bar */
+.qstat{
+  display:flex;gap:1px;margin-bottom:20px;
+  border-radius:10px;overflow:hidden;
+  background:var(--bd);
+}
+.qs{flex:1;padding:10px 6px;background:var(--mt2);text-align:center;}
+.qs-val{font-family:var(--mono);font-size:.95rem;color:var(--bl);font-weight:600;}
+.qs-key{font-size:.6rem;color:var(--mt);margin-top:3px;letter-spacing:.5px;}
 
 /* detail rows */
-.detail-rows{padding:0 20px 20px;}
-.detail-row{
+.detail-rows{padding:0 18px 18px;}
+.det-row{
   display:flex;align-items:center;gap:12px;
-  padding:11px 0;border-bottom:1px solid rgba(56,189,248,.05);
+  padding:11px 0;border-bottom:1px solid rgba(30,144,255,.06);
 }
-.detail-row:last-child{border-bottom:none;}
-.detail-row i{width:30px;height:30px;background:var(--mt3);border-radius:8px;
-  display:flex;align-items:center;justify-content:center;font-size:.75rem;color:var(--cy);flex-shrink:0;}
-.detail-key{font-size:.72rem;color:var(--mt);margin-bottom:2px;font-family:var(--mono);}
-.detail-val{font-size:.87rem;color:var(--tx);font-weight:600;}
-.detail-val.mono{font-family:var(--mono);font-size:.8rem;}
+.det-row:last-child{border-bottom:none;}
+.det-icon{
+  width:30px;height:30px;border-radius:8px;
+  background:rgba(30,144,255,.08);border:1px solid rgba(30,144,255,.15);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.72rem;color:var(--bl);flex-shrink:0;
+}
+.det-key{font-family:var(--mono);font-size:.62rem;color:var(--mt);margin-bottom:2px;letter-spacing:.5px;}
+.det-val{font-size:.85rem;color:var(--tx);font-weight:600;}
+.det-val.mono{font-family:var(--mono);font-size:.78rem;}
 
 /* ── RIGHT COLUMN ── */
 .right-col{display:flex;flex-direction:column;gap:20px;}
 
 /* ── STATS BAND ── */
-.stats-band{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--bd);border-radius:14px;overflow:hidden;}
-.sb-item{padding:18px;background:var(--s1);position:relative;overflow:hidden;}
-.sb-item::after{
-  content:"";position:absolute;bottom:0;left:0;right:0;height:2px;
-  background:linear-gradient(90deg,var(--cy),transparent);
-  opacity:0;transition:.3s;
+.stats-band{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:1px;background:var(--bd);
+  border-radius:14px;overflow:hidden;
+  border:1px solid var(--bd);
 }
-.sb-item:hover::after{opacity:1;}
-.sb-label{font-family:var(--mono);font-size:.65rem;color:var(--mt);letter-spacing:1px;margin-bottom:8px;}
-.sb-val{font-size:1.6rem;font-weight:800;color:var(--tx);letter-spacing:-1px;line-height:1;}
-.sb-sub{font-size:.72rem;color:var(--mt);margin-top:5px;display:flex;align-items:center;gap:5px;}
+@media(max-width:700px){.stats-band{grid-template-columns:repeat(2,1fr);}}
+.sb{
+  padding:18px 16px;background:var(--card);
+  position:relative;overflow:hidden;
+  transition:.25s;
+}
+.sb:hover{background:rgba(7,20,50,.9);}
+.sb::after{
+  content:"";position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:var(--sb-color,var(--bl));
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .35s ease;
+}
+.sb:hover::after{transform:scaleX(1);}
+.sb-label{font-family:var(--mono);font-size:.6rem;color:var(--mt);letter-spacing:1.5px;margin-bottom:8px;text-transform:uppercase;}
+.sb-val{font-family:var(--mono);font-size:1.65rem;font-weight:700;color:var(--tx);line-height:1;margin-bottom:5px;}
+.sb-sub{font-size:.72rem;color:var(--mt);display:flex;align-items:center;gap:5px;}
 .sb-sub .up{color:var(--gr);}
 .sb-sub .dn{color:var(--rd);}
+.sb-sub i{font-size:.65rem;}
 
-/* ── SECTION TABS ── */
-.tabs{display:flex;gap:2px;padding:14px 16px;border-bottom:1px solid var(--bd);}
+/* ── TABS ── */
+.tabs{display:flex;gap:2px;padding:13px 16px;border-bottom:1px solid var(--bd);overflow-x:auto;}
 .tab{
-  padding:6px 14px;border-radius:7px;border:1px solid transparent;
-  font-size:.78rem;font-weight:700;color:var(--mt);cursor:pointer;
-  transition:.2s;font-family:var(--mono);
+  padding:7px 14px;border-radius:7px;border:1px solid transparent;
+  font-family:var(--mono);font-size:.65rem;font-weight:600;
+  color:var(--mt);cursor:pointer;transition:.2s;white-space:nowrap;
+  letter-spacing:.5px;
 }
-.tab:hover{color:var(--tx);}
-.tab.active{background:rgba(56,189,248,.1);border-color:rgba(56,189,248,.25);color:var(--cy);}
+.tab:hover{color:var(--sky);}
+.tab.active{
+  background:rgba(30,144,255,.1);border-color:rgba(30,144,255,.28);
+  color:var(--bl);
+}
+.tab-content{display:none;}
+.tab-content.active{display:block;}
 
-/* ── FORM FIELDS ── */
-.form-section{padding:20px;}
+/* ── FORM ── */
+.form-body{padding:20px;}
 .field-2col{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media(max-width:600px){.field-2col{grid-template-columns:1fr;}}
 .field{margin-bottom:16px;}
-.field label{display:block;font-family:var(--mono);font-size:.65rem;color:var(--mt);
-  letter-spacing:1px;text-transform:uppercase;margin-bottom:7px;}
+.field label{
+  display:block;font-family:var(--mono);font-size:.6rem;
+  color:var(--mt);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:7px;
+}
 .inp-wrap{position:relative;}
-.inp-wrap i.ico{position:absolute;left:13px;top:50%;transform:translateY(-50%);
-  color:var(--mt);font-size:.75rem;pointer-events:none;transition:.2s;}
-.inp-wrap input,.inp-wrap select{
-  width:100%;padding:11px 13px 11px 38px;
-  background:var(--mt3);border:1px solid var(--bd);border-radius:9px;
-  color:var(--tx);font-size:.88rem;font-family:var(--sans);outline:none;transition:.2s;}
-.inp-wrap input:focus,.inp-wrap select:focus{border-color:var(--cy);background:rgba(56,189,248,.03);}
-.inp-wrap:focus-within i.ico{color:var(--cy);}
-.inp-wrap input::placeholder{color:var(--mt);}
-.inp-wrap select option{background:var(--bg);}
+.inp-wrap .ico{
+  position:absolute;left:12px;top:50%;transform:translateY(-50%);
+  color:var(--mt);font-size:.72rem;pointer-events:none;transition:.2s;
+}
+.inp-wrap input,.inp-wrap select,.inp-wrap textarea{
+  width:100%;padding:11px 13px 11px 36px;
+  background:rgba(7,16,32,.8);border:1px solid rgba(30,144,255,.18);
+  border-radius:9px;color:var(--tx);font-size:.88rem;font-family:var(--sans);
+  outline:none;transition:.2s;
+}
+.inp-wrap input:focus,.inp-wrap select:focus,.inp-wrap textarea:focus{
+  border-color:var(--bl);box-shadow:0 0 0 3px rgba(30,144,255,.1);
+  background:rgba(7,20,40,.9);
+}
+.inp-wrap:focus-within .ico{color:var(--bl);}
+.inp-wrap input::placeholder,.inp-wrap textarea::placeholder{color:rgba(61,96,128,.6);}
 .inp-wrap input[readonly]{color:var(--mt);cursor:not-allowed;}
+.inp-wrap select option{background:#040f20;}
+.inp-wrap textarea{padding-top:11px;resize:vertical;min-height:80px;}
 
-/* avatar upload */
-.avatar-upload{
+/* avatar upload strip */
+.avatar-upload-strip{
   display:flex;align-items:center;gap:16px;
-  padding:16px;background:var(--mt3);border:1px solid var(--bd);
-  border-radius:10px;margin-bottom:16px;
+  padding:14px;background:rgba(7,16,32,.6);
+  border:1px solid var(--bd);border-radius:10px;margin-bottom:18px;
 }
-.avatar-preview{
+.au-preview{
   width:52px;height:52px;border-radius:50%;
-  background:linear-gradient(135deg,rgba(56,189,248,.2),rgba(129,140,248,.1));
+  background:rgba(30,144,255,.1);border:1px solid rgba(30,144,255,.25);
   display:flex;align-items:center;justify-content:center;
-  font-size:1.2rem;font-weight:800;color:var(--cy);flex-shrink:0;overflow:hidden;
+  font-family:var(--dsp);font-size:1.4rem;color:var(--bl);flex-shrink:0;overflow:hidden;
 }
-.avatar-preview img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
-.avatar-upload-info{flex:1;}
-.avatar-upload-info h4{font-size:.85rem;font-weight:700;color:var(--tx);margin-bottom:3px;}
-.avatar-upload-info p{font-size:.72rem;color:var(--mt);}
+.au-preview img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+.au-info{flex:1;}
+.au-info h4{font-size:.85rem;font-weight:700;color:var(--tx);margin-bottom:3px;}
+.au-info p{font-size:.72rem;color:var(--mt);}
 .btn-upload{
-  padding:7px 14px;border-radius:7px;border:1px solid var(--bdh);
-  background:rgba(56,189,248,.07);color:var(--cy);font-size:.75rem;
-  font-weight:700;cursor:pointer;transition:.2s;font-family:var(--sans);}
-.btn-upload:hover{background:rgba(56,189,248,.14);}
+  padding:7px 14px;border-radius:7px;
+  border:1px solid var(--bdh);background:rgba(30,144,255,.08);
+  color:var(--sky);font-size:.72rem;font-weight:700;
+  cursor:pointer;transition:.2s;font-family:var(--mono);
+}
+.btn-upload:hover{background:rgba(30,144,255,.18);}
 
-/* save button */
+/* action buttons */
+.btn-actions{display:flex;align-items:center;gap:10px;margin-top:6px;flex-wrap:wrap;}
 .btn-save{
-  padding:12px 28px;border-radius:9px;border:none;
-  background:linear-gradient(90deg,var(--cy),var(--cy2));
-  color:#000;font-size:.9rem;font-weight:800;font-family:var(--sans);
-  cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:7px;}
-.btn-save:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(56,189,248,.3);}
-.btn-actions{display:flex;align-items:center;gap:10px;margin-top:4px;}
+  padding:11px 26px;border-radius:9px;border:none;
+  background:linear-gradient(90deg,var(--bl),var(--cyan));
+  color:#000;font-size:.85rem;font-weight:800;font-family:var(--sans);
+  cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:7px;
+  letter-spacing:.5px;
+}
+.btn-save:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(30,144,255,.3);}
 .btn-cancel{
-  padding:12px 20px;border-radius:9px;border:1px solid var(--bd);
-  background:none;color:var(--mt);font-size:.88rem;font-weight:600;
-  font-family:var(--sans);cursor:pointer;transition:.2s;}
-.btn-cancel:hover{border-color:var(--bdh);color:var(--tx);}
+  padding:11px 20px;border-radius:9px;border:1px solid var(--bd);
+  background:none;color:var(--mt);font-size:.85rem;
+  font-family:var(--sans);cursor:pointer;transition:.2s;font-weight:600;
+}
+.btn-cancel:hover{border-color:rgba(255,51,85,.3);color:var(--rd);}
 
-/* ── SECURITY PANEL ── */
-.security-rows{padding:0 18px 18px;}
+/* ── SECURITY ── */
+.sec-rows{padding:4px 18px 18px;}
 .sec-row{
   display:flex;align-items:center;justify-content:space-between;
-  padding:14px 0;border-bottom:1px solid rgba(56,189,248,.05);gap:12px;
+  padding:14px 0;border-bottom:1px solid rgba(30,144,255,.06);gap:12px;flex-wrap:wrap;
 }
 .sec-row:last-child{border-bottom:none;}
 .sec-left{display:flex;align-items:center;gap:12px;}
 .sec-icon{
-  width:36px;height:36px;border-radius:9px;background:var(--mt3);
+  width:38px;height:38px;border-radius:10px;
+  background:rgba(30,144,255,.08);border:1px solid rgba(30,144,255,.15);
   display:flex;align-items:center;justify-content:center;font-size:.8rem;flex-shrink:0;
 }
-.sec-icon.cy{color:var(--cy);}
+.sec-icon.bl{color:var(--bl);}
 .sec-icon.gr{color:var(--gr);}
 .sec-icon.am{color:var(--am);}
 .sec-icon.rd{color:var(--rd);}
-.sec-title{font-size:.87rem;font-weight:700;color:var(--tx);}
+.sec-title{font-size:.88rem;font-weight:700;color:var(--tx);}
 .sec-desc{font-size:.74rem;color:var(--mt);margin-top:2px;}
 .sec-action{
   padding:6px 14px;border-radius:7px;border:1px solid var(--bd);
-  font-size:.75rem;font-weight:700;color:var(--mt);
-  background:none;cursor:pointer;transition:.2s;white-space:nowrap;font-family:var(--sans);}
-.sec-action:hover{border-color:var(--bdh);color:var(--cy);}
-.sec-badge{font-family:var(--mono);font-size:.7rem;padding:4px 9px;border-radius:5px;}
-.badge-on{background:rgba(52,211,153,.1);color:var(--gr);}
-.badge-off{background:rgba(248,113,113,.1);color:var(--rd);}
+  font-family:var(--mono);font-size:.65rem;font-weight:600;color:var(--mt);
+  background:none;cursor:pointer;transition:.2s;text-decoration:none;white-space:nowrap;
+}
+.sec-action:hover{border-color:var(--bdh);color:var(--bl);}
+.sbadge{font-family:var(--mono);font-size:.65rem;padding:4px 10px;border-radius:5px;font-weight:700;}
+.sbadge-on {background:rgba(0,232,122,.08);color:var(--gr);border:1px solid rgba(0,232,122,.2);}
+.sbadge-off{background:rgba(255,51,85,.08);color:var(--rd);border:1px solid rgba(255,51,85,.2);}
 
-/* ── ACTIVITY FEED ── */
-.activity-list{padding:0 18px 18px;}
+/* password change inline */
+.pw-change-box{
+  margin:16px 18px;padding:16px;
+  background:rgba(30,144,255,.04);border:1px solid rgba(30,144,255,.15);
+  border-radius:10px;display:none;
+}
+.pw-change-box.open{display:block;}
+.pw-change-box .field{margin-bottom:12px;}
+.pw-change-box .field:last-of-type{margin-bottom:0;}
+
+/* danger zone */
+.danger-zone{
+  margin:0 18px 18px;padding:16px;
+  background:rgba(255,51,85,.04);border:1px solid rgba(255,51,85,.15);
+  border-radius:10px;
+}
+.dz-title{font-family:var(--mono);font-size:.7rem;font-weight:700;color:var(--rd);margin-bottom:5px;display:flex;align-items:center;gap:7px;letter-spacing:1px;}
+.dz-desc{font-size:.78rem;color:var(--mt);margin-bottom:12px;line-height:1.5;}
+.btn-danger{
+  padding:9px 18px;border-radius:8px;
+  border:1px solid rgba(255,51,85,.4);background:rgba(255,51,85,.07);
+  color:var(--rd);font-size:.78rem;font-weight:700;cursor:pointer;
+  transition:.2s;font-family:var(--mono);
+}
+.btn-danger:hover{background:rgba(255,51,85,.15);}
+
+/* ── ACTIVITY ── */
+.act-list{padding:4px 18px 18px;}
 .act-item{
   display:flex;align-items:flex-start;gap:12px;
-  padding:11px 0;border-bottom:1px solid rgba(56,189,248,.04);
+  padding:12px 0;border-bottom:1px solid rgba(30,144,255,.05);
 }
 .act-item:last-child{border-bottom:none;}
 .act-dot{
-  flex-shrink:0;width:8px;height:8px;border-radius:50%;
-  margin-top:6px;
+  width:8px;height:8px;border-radius:50%;
+  flex-shrink:0;margin-top:6px;
 }
-.act-dot.buy{background:var(--gr);box-shadow:0 0 6px rgba(52,211,153,.4);}
-.act-dot.sell{background:var(--rd);box-shadow:0 0 6px rgba(248,113,113,.4);}
-.act-dot.info{background:var(--cy);box-shadow:0 0 6px rgba(56,189,248,.4);}
+.act-dot.buy {background:var(--gr);box-shadow:0 0 6px rgba(0,232,122,.4);}
+.act-dot.sell{background:var(--rd);box-shadow:0 0 6px rgba(255,51,85,.4);}
+.act-dot.info{background:var(--bl);box-shadow:0 0 6px rgba(30,144,255,.4);}
 .act-dot.warn{background:var(--am);}
 .act-body{flex:1;}
 .act-text{font-size:.83rem;color:var(--tx);line-height:1.4;}
-.act-text strong{color:var(--cy);}
-.act-time{font-family:var(--mono);font-size:.68rem;color:var(--mt);margin-top:3px;}
-.act-tag{
-  flex-shrink:0;font-family:var(--mono);font-size:.65rem;
-  padding:3px 7px;border-radius:4px;margin-top:2px;
+.act-text strong{color:var(--bl);}
+.act-time{font-family:var(--mono);font-size:.65rem;color:var(--mt);margin-top:4px;}
+.act-badge{
+  flex-shrink:0;font-family:var(--mono);font-size:.6rem;
+  padding:3px 8px;border-radius:4px;margin-top:2px;font-weight:700;
 }
 
-/* ── TAB CONTENT ── */
-.tab-content{display:none;}
-.tab-content.active{display:block;}
-
-/* ── DANGER ZONE ── */
-.danger-zone{
-  padding:18px;margin:0 18px 18px;
-  background:rgba(248,113,113,.04);border:1px solid rgba(248,113,113,.15);
-  border-radius:10px;
+/* ── PREFERENCES ── */
+.pref-toggle-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:13px 0;border-bottom:1px solid rgba(30,144,255,.06);
 }
-.dz-title{font-size:.8rem;font-weight:700;color:var(--rd);margin-bottom:4px;display:flex;align-items:center;gap:6px;}
-.dz-desc{font-size:.78rem;color:var(--mt);margin-bottom:12px;}
-.btn-danger{
-  padding:9px 18px;border-radius:8px;
-  border:1px solid rgba(248,113,113,.4);
-  background:rgba(248,113,113,.07);color:var(--rd);
-  font-size:.8rem;font-weight:700;cursor:pointer;transition:.2s;font-family:var(--sans);}
-.btn-danger:hover{background:rgba(248,113,113,.15);}
+.pref-toggle-row:last-child{border-bottom:none;}
+.pref-left{flex:1;}
+.pref-name{font-size:.87rem;font-weight:700;color:var(--tx);margin-bottom:3px;}
+.pref-desc{font-size:.73rem;color:var(--mt);}
 
+/* toggle switch */
+.tgl{position:relative;width:44px;height:24px;flex-shrink:0;}
+.tgl input{opacity:0;width:0;height:0;}
+.tgl-sl{
+  position:absolute;inset:0;
+  background:rgba(7,16,32,.8);border:1px solid rgba(30,144,255,.2);
+  border-radius:24px;cursor:pointer;transition:.3s;
+}
+.tgl-sl::before{
+  content:"";position:absolute;width:17px;height:17px;
+  left:3px;top:3px;background:var(--mt);border-radius:50%;transition:.3s;
+}
+.tgl input:checked+.tgl-sl{background:rgba(30,144,255,.18);border-color:var(--bl);}
+.tgl input:checked+.tgl-sl::before{transform:translateX(20px);background:var(--bl);}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-thumb{background:rgba(30,144,255,.25);border-radius:4px;}
+
+/* ── ANIMATIONS ── */
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
+@keyframes spin{to{transform:rotate(360deg)}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-.panel{animation:fadeUp .4s ease both;}
-.stats-band{animation:fadeUp .4s ease .1s both;}
-.right-col>.panel:nth-child(2){animation:fadeUp .4s ease .2s both;}
+@keyframes slideIn{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:translateX(0)}}
+
+.panel{animation:fadeUp .45s ease both;}
+.stats-band{animation:fadeUp .45s ease .08s both;}
+.right-col>.panel{animation:fadeUp .45s ease .15s both;}
+.det-row{animation:slideIn .3s ease both;}
+.det-row:nth-child(1){animation-delay:.05s}
+.det-row:nth-child(2){animation-delay:.1s}
+.det-row:nth-child(3){animation-delay:.15s}
+.det-row:nth-child(4){animation-delay:.2s}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  .tb-nav .tn span{display:none;}
+  .topbar{padding:0 12px;}
+  .hero-title{font-size:1.5rem;}
+}
 </style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav class="nav">
-  <a href="/dashboard" class="nav-brand">
-    <div class="nav-logo">
-      <img src="/static/images/logo.png" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-      <i class="fa-solid fa-chart-line" style="display:none;"></i>
+<!-- ══ TOPBAR ══ -->
+<div class="topbar">
+  <a href="/dashboard" class="tb-brand">
+    <div class="tb-logo">
+      <img src="/static/images/logo.png" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+      <i class="fa-solid fa-chart-line" style="display:none"></i>
     </div>
-    <div class="nav-title">Stock<span>AI</span></div>
+    <div class="tb-name">STOCK<span>AI</span></div>
   </a>
-  <div class="nav-links">
-    <a href="/dashboard"         class="nl"><i class="fa-solid fa-house"></i><span>Dashboard</span></a>
-    <a href="/stock"             class="nl"><i class="fa-solid fa-magnifying-glass-chart"></i><span>Predict</span></a>
-    <a href="/compare"           class="nl"><i class="fa-solid fa-code-compare"></i><span>Compare</span></a>
-    <a href="/live"              class="nl"><i class="fa-solid fa-signal-stream"></i><span>Live</span></a>
-    <a href="/history"           class="nl"><i class="fa-solid fa-clock-rotate-left"></i><span>History</span></a>
-    <a href="/profile"           class="nl on"><i class="fa-solid fa-user"></i><span>Profile</span></a>
-    <a href="/logout"            class="nl out"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a>
-  </div>
-</nav>
 
+  <div class="tb-nav">
+    <a href="/dashboard"         class="tn"><i class="fa-solid fa-house"></i><span>Dashboard</span></a>
+    <a href="/trader"            class="tn"><i class="fa-solid fa-terminal"></i><span>Terminal</span></a>
+    <a href="/stock"             class="tn"><i class="fa-solid fa-brain"></i><span>Predict</span></a>
+    <a href="/live"              class="tn"><i class="fa-solid fa-bolt"></i><span>Live</span></a>
+    <a href="/compare"           class="tn"><i class="fa-solid fa-code-compare"></i><span>Compare</span></a>
+    <a href="/watchlist"         class="tn"><i class="fa-solid fa-star"></i><span>Watchlist</span></a>
+    <a href="/portfolio-advisor" class="tn"><i class="fa-solid fa-chart-pie"></i><span>Advisor</span></a>
+    <a href="/finance-tracker"   class="tn"><i class="fa-solid fa-wallet"></i><span>Finance</span></a>
+    <a href="/news"              class="tn"><i class="fa-solid fa-newspaper"></i><span>News</span></a>
+    <a href="/history"           class="tn"><i class="fa-solid fa-clock-rotate-left"></i><span>History</span></a>
+    <a href="/profile"           class="tn on"><i class="fa-solid fa-user"></i><span>Profile</span></a>
+    <a href="/logout"            class="tn danger"><i class="fa-solid fa-right-from-bracket"></i></a>
+  </div>
+
+  <div class="tb-user">
+    <div class="udot"></div>
+    <span>{{ session.get('user','User') | title }}</span>
+  </div>
+</div>
+
+<!-- ══ PAGE ══ -->
 <div class="page">
 
-  <!-- Page header -->
-  <div class="phdr">
-    <div class="phdr-left">
-      <span class="phdr-badge">PROFILE</span>
-      <h1 class="phdr-title">My Account</h1>
+  <!-- Page hero -->
+  <div class="page-hero">
+    <div class="hero-left">
+      <span class="hero-badge">PROFILE</span>
+      <h1 class="hero-title">MY <span>ACCOUNT</span></h1>
     </div>
-    <a href="/edit_profile" class="btn-edit"><i class="fa-solid fa-pen-to-square"></i> Edit Profile</a>
+    <a href="/edit-profile" class="btn-edit-hero">
+      <i class="fa-solid fa-pen-to-square"></i> EDIT PROFILE
+    </a>
   </div>
 
   <!-- Flash messages -->
   {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
       {% for category, message in messages %}
-      <div style="padding:11px 16px;border-radius:10px;font-size:.84rem;
-        background:{{ 'rgba(248,113,113,.08)' if category=='error' else 'rgba(52,211,153,.08)' }};
-        border:1px solid {{ 'rgba(248,113,113,.25)' if category=='error' else 'rgba(52,211,153,.25)' }};
-        color:{{ 'var(--rd)' if category=='error' else 'var(--gr)' }};
-        display:flex;align-items:center;gap:10px;margin-bottom:18px;">
-        <i class="fa-solid {{ 'fa-circle-exclamation' if category=='error' else 'fa-circle-check' }}"></i>
+      <div class="flash {{ category }}">
+        <i class="fa-solid {{ 'fa-circle-check' if category == 'success' else 'fa-circle-exclamation' }}"></i>
         {{ message }}
       </div>
       {% endfor %}
@@ -336,99 +534,130 @@ body::before{content:"";position:fixed;inset:0;
 
   <div class="grid">
 
-    <!-- ── LEFT: Profile card ── -->
+    <!-- ══ LEFT: PROFILE CARD ══ -->
     <div>
       <div class="panel">
         <div class="panel-hdr">
-          <h3>Profile</h3>
-          <span class="tag tag-green">● ACTIVE</span>
+          <h3>Profile Card</h3>
+          <span class="ptag ptag-gr">● ONLINE</span>
         </div>
 
-        <!-- Avatar -->
         <div class="avatar-panel">
-          <div class="avatar-ring">
+          <!-- Animated avatar ring -->
+          <div class="avatar-ring-wrap">
             <div class="avatar-inner">
-              {% if session.get('avatar') %}
+              {% if session.get('profile_photo') %}
+                <img src="/static/profile_pics/{{ session.profile_photo }}" alt="Avatar">
+              {% elif session.get('avatar') %}
                 <img src="{{ session.avatar }}" alt="Avatar">
               {% else %}
                 {{ (session.get('user','?')[0])|upper }}
               {% endif %}
             </div>
-            <div class="avatar-online"></div>
+            <div class="avatar-online-dot"></div>
           </div>
-          <div class="profile-name">{{ session.get('full_name', session.get('user','User')) }}</div>
+
+          <div class="profile-name">
+            {% if session.get('first_name') or session.get('last_name') %}
+              {{ session.get('first_name','') }} {{ session.get('last_name','') }}
+            {% else %}
+              {{ session.get('user','User') | title }}
+            {% endif %}
+          </div>
           <div class="profile-handle">@{{ session.get('user','username') }}</div>
-          <div class="profile-role {{ 'role-admin' if session.get('role')=='admin' else 'role-user' }}">
-            <i class="fa-solid {{ 'fa-shield-halved' if session.get('role')=='admin' else 'fa-user-chart' }}"></i>
-            {{ (session.get('role','user'))|upper }}
+
+          <div class="profile-role {{ 'role-admin' if session.get('role') == 'admin' else 'role-user' }}">
+            <i class="fa-solid {{ 'fa-shield-halved' if session.get('role') == 'admin' else 'fa-user' }}"></i>
+            {{ (session.get('role','user')) | upper }}
           </div>
-          <div class="profile-bio">Stock investor & data enthusiast using AI-powered analytics to make smarter trading decisions.</div>
+
+          <div class="profile-bio">
+            Stock investor &amp; data enthusiast. Using AI-powered analytics to make smarter trading and investment decisions every day.
+          </div>
 
           <!-- Quick stats -->
           <div class="qstat">
-            <div class="qs"><div class="qs-val">{{ session.get('pred_count',0) }}</div><div class="qs-key">Predictions</div></div>
-            <div class="qs"><div class="qs-val">{{ session.get('watch_count',0) }}</div><div class="qs-key">Watchlist</div></div>
-            <div class="qs"><div class="qs-val">{{ session.get('report_count',0) }}</div><div class="qs-key">Reports</div></div>
+            <div class="qs">
+              <div class="qs-val" id="qsPred">{{ total }}</div>
+              <div class="qs-key">Predictions</div>
+            </div>
+            <div class="qs">
+              <div class="qs-val">{{ session.get('watch_count', '—') }}</div>
+              <div class="qs-key">Watchlist</div>
+            </div>
+            <div class="qs">
+              <div class="qs-val">{{ session.get('report_count', 0) }}</div>
+              <div class="qs-key">Reports</div>
+            </div>
           </div>
         </div>
 
         <!-- Detail rows -->
         <div class="detail-rows">
-          <div class="detail-row">
-            <i class="fa-solid fa-envelope"></i>
+          <div class="det-row">
+            <div class="det-icon"><i class="fa-solid fa-envelope"></i></div>
             <div>
-              <div class="detail-key">EMAIL</div>
-              <div class="detail-val mono">{{ session.get('email','—') }}</div>
+              <div class="det-key">EMAIL</div>
+              <div class="det-val mono">{{ session.get('email', '—') }}</div>
             </div>
           </div>
-          <div class="detail-row">
-            <i class="fa-solid fa-calendar-days"></i>
+          <div class="det-row">
+            <div class="det-icon"><i class="fa-solid fa-calendar-days"></i></div>
             <div>
-              <div class="detail-key">MEMBER SINCE</div>
-              <div class="detail-val">{{ session.get('joined','—') }}</div>
+              <div class="det-key">MEMBER SINCE</div>
+              <div class="det-val">{{ session.get('joined', '—') }}</div>
             </div>
           </div>
-          <div class="detail-row">
-            <i class="fa-solid fa-location-dot"></i>
+          <div class="det-row">
+            <div class="det-icon"><i class="fa-solid fa-location-dot"></i></div>
             <div>
-              <div class="detail-key">REGION</div>
-              <div class="detail-val">{{ session.get('region','India') }}</div>
+              <div class="det-key">REGION</div>
+              <div class="det-val">{{ session.get('region', 'India') }}</div>
             </div>
           </div>
-          <div class="detail-row">
-            <i class="fa-solid fa-clock"></i>
+          <div class="det-row">
+            <div class="det-icon"><i class="fa-solid fa-clock"></i></div>
             <div>
-              <div class="detail-key">LAST LOGIN</div>
-              <div class="detail-val mono">{{ session.get('last_login','—') }}</div>
+              <div class="det-key">LAST ACTIVE</div>
+              <div class="det-val mono">{{ last }}</div>
+            </div>
+          </div>
+          <div class="det-row">
+            <div class="det-icon"><i class="fa-solid fa-gauge-high"></i></div>
+            <div>
+              <div class="det-key">ACCOUNT ROLE</div>
+              <div class="det-val" style="color:{{ 'var(--am)' if session.get('role') == 'admin' else 'var(--bl)' }};">
+                {{ session.get('role','user') | upper }}
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- ── RIGHT ── -->
+    <!-- ══ RIGHT ══ -->
     <div class="right-col">
 
       <!-- Stats band -->
       <div class="stats-band">
-        <div class="sb-item">
+        <div class="sb" style="--sb-color:var(--bl);">
           <div class="sb-label">PREDICTIONS RUN</div>
-          <div class="sb-val">{{ session.get('pred_count',0) }}</div>
-          <div class="sb-sub"><span class="up">↑ 12%</span> this month</div>
+          <div class="sb-val">{{ total }}</div>
+          <div class="sb-sub"><i class="fa-solid fa-arrow-trend-up up"></i> <span class="up">Active</span></div>
         </div>
-        <div class="sb-item">
-          <div class="sb-label">AVG CONFIDENCE</div>
-          <div class="sb-val">{{ session.get('avg_conf','—') }}%</div>
-          <div class="sb-sub"><span class="up">↑ 4pt</span> vs last month</div>
+        <div class="sb" style="--sb-color:var(--gr);">
+          <div class="sb-label">LAST ACTIVITY</div>
+          <div class="sb-val" style="font-size:1rem;margin-top:6px;">{{ last[:10] if last != 'N/A' else '—' }}</div>
+          <div class="sb-sub" style="color:var(--mt);">Most recent</div>
         </div>
-        <div class="sb-item">
+        <div class="sb" style="--sb-color:var(--am);">
           <div class="sb-label">REPORTS SAVED</div>
-          <div class="sb-val">{{ session.get('report_count',0) }}</div>
+          <div class="sb-val">{{ session.get('report_count', 0) }}</div>
           <div class="sb-sub" style="color:var(--mt);">PDF downloads</div>
         </div>
-        <div class="sb-item">
+        <div class="sb" style="--sb-color:var(--pu);">
           <div class="sb-label">ACCURACY RATE</div>
-          <div class="sb-val">{{ session.get('accuracy','—') }}%</div>
+          <div class="sb-val">{{ session.get('accuracy','—') }}{% if session.get('accuracy') %}%{% endif %}</div>
           <div class="sb-sub"><span class="up">↑</span> 3-month rolling</div>
         </div>
       </div>
@@ -437,40 +666,43 @@ body::before{content:"";position:fixed;inset:0;
       <div class="panel">
         <div class="panel-hdr">
           <h3>Account Settings</h3>
-          <span class="tag tag-cy">EDITABLE</span>
+          <span class="ptag ptag-bl">EDITABLE</span>
         </div>
 
         <div class="tabs">
           <div class="tab active" onclick="switchTab('info',this)">Personal Info</div>
           <div class="tab" onclick="switchTab('security',this)">Security</div>
-          <div class="tab" onclick="switchTab('activity',this)">Activity</div>
+          <div class="tab" onclick="switchTab('activity',this)">Activity Log</div>
           <div class="tab" onclick="switchTab('preferences',this)">Preferences</div>
+          <div class="tab" onclick="switchTab('danger',this)" style="color:rgba(255,51,85,.6);">⚠ Danger</div>
         </div>
 
-        <!-- TAB: Personal Info -->
+        <!-- ── TAB: PERSONAL INFO ── -->
         <div class="tab-content active" id="tab-info">
-          <div class="form-section">
-            <!-- Avatar -->
-            <div class="avatar-upload">
-              <div class="avatar-preview">
-                {% if session.get('avatar') %}
-                  <img src="{{ session.avatar }}" alt="">
+          <div class="form-body">
+
+            <!-- Avatar upload strip -->
+            <div class="avatar-upload-strip">
+              <div class="au-preview" id="auPreview">
+                {% if session.get('profile_photo') %}
+                  <img src="/static/profile_pics/{{ session.profile_photo }}" alt="">
                 {% else %}
                   {{ (session.get('user','?')[0])|upper }}
                 {% endif %}
               </div>
-              <div class="avatar-upload-info">
+              <div class="au-info">
                 <h4>Profile Photo</h4>
-                <p>JPG, PNG or GIF · Max 2MB</p>
+                <p>JPG, PNG or GIF &nbsp;·&nbsp; Max 2MB</p>
               </div>
-              <button class="btn-upload" onclick="document.getElementById('avatarInput').click()">
+              <button class="btn-upload" type="button" onclick="document.getElementById('avatarFile').click()">
                 <i class="fa-solid fa-upload"></i> Upload
               </button>
-              <input type="file" id="avatarInput" accept="image/*" style="display:none"
-                     onchange="previewAvatar(this)">
+              <input type="file" id="avatarFile" accept="image/*" style="display:none" onchange="previewAvatar(this)">
             </div>
 
-            <form method="POST" action="/edit_profile" enctype="multipart/form-data">
+            <form method="POST" action="/edit-profile" enctype="multipart/form-data">
+              <input type="file" name="photo" id="avatarFileForm" accept="image/*" style="display:none">
+
               <div class="field-2col">
                 <div class="field">
                   <label>First Name</label>
@@ -489,7 +721,7 @@ body::before{content:"";position:fixed;inset:0;
               </div>
 
               <div class="field">
-                <label>Username</label>
+                <label>Username (cannot be changed)</label>
                 <div class="inp-wrap">
                   <i class="ico fa-solid fa-at"></i>
                   <input type="text" value="{{ session.get('user','') }}" readonly>
@@ -510,17 +742,17 @@ body::before{content:"";position:fixed;inset:0;
                   <div class="inp-wrap">
                     <i class="ico fa-solid fa-globe"></i>
                     <select name="region">
-                      <option value="India" {{ 'selected' if session.get('region')=='India' }}>India</option>
-                      <option value="US" {{ 'selected' if session.get('region')=='US' }}>United States</option>
-                      <option value="UK" {{ 'selected' if session.get('region')=='UK' }}>United Kingdom</option>
-                      <option value="Other" {{ 'selected' if session.get('region') not in ['India','US','UK'] }}>Other</option>
+                      <option value="India" {{ 'selected' if session.get('region')=='India' }}>🇮🇳 India</option>
+                      <option value="US"    {{ 'selected' if session.get('region')=='US'    }}>🇺🇸 United States</option>
+                      <option value="UK"    {{ 'selected' if session.get('region')=='UK'    }}>🇬🇧 United Kingdom</option>
+                      <option value="Other" {{ 'selected' if session.get('region') not in ['India','US','UK'] }}>🌍 Other</option>
                     </select>
                   </div>
                 </div>
                 <div class="field">
                   <label>Default Currency</label>
                   <div class="inp-wrap">
-                    <i class="ico fa-solid fa-indian-rupee-sign"></i>
+                    <i class="ico fa-solid fa-coins"></i>
                     <select name="currency">
                       <option value="INR" {{ 'selected' if session.get('currency','INR')=='INR' }}>₹ INR</option>
                       <option value="USD" {{ 'selected' if session.get('currency')=='USD' }}>$ USD</option>
@@ -531,36 +763,70 @@ body::before{content:"";position:fixed;inset:0;
               </div>
 
               <div class="btn-actions">
-                <button type="submit" class="btn-save"><i class="fa-solid fa-floppy-disk"></i> Save Changes</button>
-                <button type="button" class="btn-cancel">Cancel</button>
+                <button type="submit" class="btn-save"><i class="fa-solid fa-floppy-disk"></i> SAVE CHANGES</button>
+                <button type="button" class="btn-cancel" onclick="history.back()">Cancel</button>
               </div>
             </form>
           </div>
         </div>
 
-        <!-- TAB: Security -->
+        <!-- ── TAB: SECURITY ── -->
         <div class="tab-content" id="tab-security">
-          <div class="security-rows">
+          <div class="sec-rows">
+
             <div class="sec-row">
               <div class="sec-left">
-                <div class="sec-icon cy"><i class="fa-solid fa-lock"></i></div>
+                <div class="sec-icon bl"><i class="fa-solid fa-lock"></i></div>
                 <div>
                   <div class="sec-title">Password</div>
-                  <div class="sec-desc">Last changed: <span style="color:var(--cy);">{{ session.get('pw_changed','Never') }}</span></div>
+                  <div class="sec-desc">Set a strong password to protect your account</div>
                 </div>
               </div>
-              <a href="/edit_profile#password" class="sec-action">Change</a>
+              <button class="sec-action" onclick="togglePwBox()">Change</button>
             </div>
+
+            <!-- Inline password change form -->
+            <div class="pw-change-box" id="pwChangeBox">
+              <form method="POST" action="/edit-profile">
+                <div class="field">
+                  <label>Current Password</label>
+                  <div class="inp-wrap">
+                    <i class="ico fa-solid fa-lock"></i>
+                    <input type="password" name="current_password" placeholder="Current password">
+                  </div>
+                </div>
+                <div class="field">
+                  <label>New Password</label>
+                  <div class="inp-wrap">
+                    <i class="ico fa-solid fa-key"></i>
+                    <input type="password" name="new_password" placeholder="Min 6 characters">
+                  </div>
+                </div>
+                <div class="field">
+                  <label>Confirm New Password</label>
+                  <div class="inp-wrap">
+                    <i class="ico fa-solid fa-key"></i>
+                    <input type="password" name="confirm_password" placeholder="Repeat new password">
+                  </div>
+                </div>
+                <div class="btn-actions">
+                  <button type="submit" class="btn-save"><i class="fa-solid fa-floppy-disk"></i> UPDATE PASSWORD</button>
+                  <button type="button" class="btn-cancel" onclick="togglePwBox()">Cancel</button>
+                </div>
+              </form>
+            </div>
+
             <div class="sec-row">
               <div class="sec-left">
                 <div class="sec-icon gr"><i class="fa-solid fa-shield-check"></i></div>
                 <div>
-                  <div class="sec-title">Two-Factor Auth</div>
+                  <div class="sec-title">Two-Factor Authentication</div>
                   <div class="sec-desc">Add an extra layer of security to your account</div>
                 </div>
               </div>
-              <span class="sec-badge badge-off">DISABLED</span>
+              <span class="sbadge sbadge-off">DISABLED</span>
             </div>
+
             <div class="sec-row">
               <div class="sec-left">
                 <div class="sec-icon am"><i class="fa-solid fa-bell"></i></div>
@@ -569,77 +835,80 @@ body::before{content:"";position:fixed;inset:0;
                   <div class="sec-desc">Price alerts and prediction notifications</div>
                 </div>
               </div>
-              <span class="sec-badge badge-on">ENABLED</span>
+              <span class="sbadge sbadge-on">ENABLED</span>
             </div>
+
             <div class="sec-row">
               <div class="sec-left">
                 <div class="sec-icon rd"><i class="fa-solid fa-right-from-bracket"></i></div>
                 <div>
                   <div class="sec-title">Active Sessions</div>
-                  <div class="sec-desc">You have 1 active session right now</div>
+                  <div class="sec-desc">1 active session right now</div>
                 </div>
               </div>
-              <a href="/logout" class="sec-action" style="color:var(--rd);">Sign Out All</a>
+              <a href="/logout" class="sec-action" style="color:var(--rd);border-color:rgba(255,51,85,.2);">Sign Out All</a>
             </div>
-          </div>
-          <!-- Danger zone -->
-          <div class="danger-zone">
-            <div class="dz-title"><i class="fa-solid fa-triangle-exclamation"></i> DANGER ZONE</div>
-            <div class="dz-desc">Once you delete your account, there is no going back. All predictions, history, and data will be permanently removed.</div>
-            <button class="btn-danger"><i class="fa-solid fa-trash"></i> Delete Account</button>
+
           </div>
         </div>
 
-        <!-- TAB: Activity -->
+        <!-- ── TAB: ACTIVITY LOG ── -->
         <div class="tab-content" id="tab-activity">
-          <div class="activity-list">
-            <div class="act-item">
-              <div class="act-dot buy"></div>
-              <div class="act-body">
-                <div class="act-text">Predicted <strong>AAPL</strong> — BUY signal with 84.2% confidence</div>
-                <div class="act-time">Today, 09:24 AM</div>
+          <div class="act-list">
+            {% if activities %}
+              {% for act in activities %}
+              <div class="act-item">
+                <div class="act-dot {{ 'buy' if act.action == 'BUY' else 'sell' if act.action == 'SELL' else 'info' }}"></div>
+                <div class="act-body">
+                  <div class="act-text">
+                    Predicted &mdash; <strong>{{ act.action }}</strong> signal
+                    {% if act.get('stock') %} on <strong>{{ act.stock }}</strong>{% endif %}
+                    {% if act.get('confidence') %} · {{ act.confidence }}% confidence{% endif %}
+                  </div>
+                  <div class="act-time">{{ act.time }}</div>
+                </div>
+                <span class="act-badge"
+                  style="background:{{ 'rgba(0,232,122,.08)' if act.action=='BUY' else 'rgba(255,51,85,.08)' if act.action=='SELL' else 'rgba(30,144,255,.08)' }};
+                         color:{{ 'var(--gr)' if act.action=='BUY' else 'var(--rd)' if act.action=='SELL' else 'var(--bl)' }};
+                         border:1px solid {{ 'rgba(0,232,122,.2)' if act.action=='BUY' else 'rgba(255,51,85,.2)' if act.action=='SELL' else 'rgba(30,144,255,.2)' }};">
+                  {{ act.action }}
+                </span>
               </div>
-              <span class="act-tag" style="background:rgba(52,211,153,.1);color:var(--gr);">BUY</span>
-            </div>
-            <div class="act-item">
-              <div class="act-dot info"></div>
-              <div class="act-body">
-                <div class="act-text">Downloaded PDF report for <strong>TSLA</strong></div>
-                <div class="act-time">Yesterday, 03:15 PM</div>
+              {% endfor %}
+            {% else %}
+              <!-- fallback static activity if none from DB -->
+              <div class="act-item">
+                <div class="act-dot info"></div>
+                <div class="act-body">
+                  <div class="act-text">Logged in to <strong>Stock AI</strong></div>
+                  <div class="act-time">Just now</div>
+                </div>
+                <span class="act-badge" style="background:rgba(30,144,255,.08);color:var(--bl);border:1px solid rgba(30,144,255,.2);">LOGIN</span>
               </div>
-              <span class="act-tag" style="background:rgba(56,189,248,.1);color:var(--cy);">PDF</span>
-            </div>
-            <div class="act-item">
-              <div class="act-dot sell"></div>
-              <div class="act-body">
-                <div class="act-text">Predicted <strong>INFY.NS</strong> — SELL signal with 71.3% confidence</div>
-                <div class="act-time">2 days ago, 11:40 AM</div>
+              <div class="act-item">
+                <div class="act-dot info"></div>
+                <div class="act-body">
+                  <div class="act-text">No prediction history yet — <a href="/stock" style="color:var(--bl);">run your first prediction</a></div>
+                  <div class="act-time">—</div>
+                </div>
               </div>
-              <span class="act-tag" style="background:rgba(248,113,113,.1);color:var(--rd);">SELL</span>
-            </div>
-            <div class="act-item">
-              <div class="act-dot info"></div>
-              <div class="act-body">
-                <div class="act-text">Added <strong>NVDA</strong> to watchlist with ₹900 alert</div>
-                <div class="act-time">3 days ago, 08:55 AM</div>
-              </div>
-              <span class="act-tag" style="background:rgba(129,140,248,.1);color:var(--pu);">WATCH</span>
-            </div>
-            <div class="act-item">
-              <div class="act-dot warn"></div>
-              <div class="act-body">
-                <div class="act-text">Compared <strong>AAPL vs MSFT</strong> — Full technical analysis</div>
-                <div class="act-time">4 days ago, 02:30 PM</div>
-              </div>
-              <span class="act-tag" style="background:rgba(251,191,36,.1);color:var(--am);">COMPARE</span>
-            </div>
+            {% endif %}
           </div>
+
+          {% if total > 5 %}
+          <div style="text-align:center;padding:0 18px 18px;">
+            <a href="/history" style="font-family:var(--mono);font-size:.68rem;color:var(--bl);text-decoration:none;border:1px solid rgba(30,144,255,.2);padding:7px 18px;border-radius:7px;background:rgba(30,144,255,.06);">
+              VIEW FULL HISTORY →
+            </a>
+          </div>
+          {% endif %}
         </div>
 
-        <!-- TAB: Preferences -->
+        <!-- ── TAB: PREFERENCES ── -->
         <div class="tab-content" id="tab-preferences">
-          <div class="form-section">
-            <form method="POST" action="/edit_profile">
+          <div class="form-body">
+            <form method="POST" action="/edit-profile">
+
               <div class="field-2col">
                 <div class="field">
                   <label>Default Forecast Days</label>
@@ -664,49 +933,148 @@ body::before{content:"";position:fixed;inset:0;
                   </div>
                 </div>
               </div>
+
               <div class="field">
                 <label>Default Market</label>
                 <div class="inp-wrap">
                   <i class="ico fa-solid fa-building-columns"></i>
                   <select name="default_market">
-                    <option value="NSE">NSE (India)</option>
-                    <option value="NYSE">NYSE (US)</option>
-                    <option value="NASDAQ">NASDAQ (US)</option>
-                    <option value="BSE">BSE (India)</option>
+                    <option value="NSE">🇮🇳 NSE (India)</option>
+                    <option value="BSE">🇮🇳 BSE (India)</option>
+                    <option value="NYSE">🇺🇸 NYSE (US)</option>
+                    <option value="NASDAQ">🇺🇸 NASDAQ (US)</option>
                   </select>
                 </div>
               </div>
+
+              <!-- Toggle preferences -->
+              <div style="padding:8px 0 16px;">
+                <div class="pref-toggle-row">
+                  <div class="pref-left">
+                    <div class="pref-name">Email Price Alerts</div>
+                    <div class="pref-desc">Get notified when watchlist stocks hit targets</div>
+                  </div>
+                  <label class="tgl">
+                    <input type="checkbox" name="pref_email_alerts" checked>
+                    <span class="tgl-sl"></span>
+                  </label>
+                </div>
+                <div class="pref-toggle-row">
+                  <div class="pref-left">
+                    <div class="pref-name">Auto-save Predictions</div>
+                    <div class="pref-desc">Automatically log all predictions to history</div>
+                  </div>
+                  <label class="tgl">
+                    <input type="checkbox" name="pref_auto_save" checked>
+                    <span class="tgl-sl"></span>
+                  </label>
+                </div>
+                <div class="pref-toggle-row">
+                  <div class="pref-left">
+                    <div class="pref-name">Show LSTM Predictions</div>
+                    <div class="pref-desc">Display deep learning model forecasts on charts</div>
+                  </div>
+                  <label class="tgl">
+                    <input type="checkbox" name="pref_lstm" checked>
+                    <span class="tgl-sl"></span>
+                  </label>
+                </div>
+              </div>
+
               <div class="btn-actions">
-                <button type="submit" class="btn-save"><i class="fa-solid fa-floppy-disk"></i> Save Preferences</button>
+                <button type="submit" class="btn-save"><i class="fa-solid fa-floppy-disk"></i> SAVE PREFERENCES</button>
               </div>
             </form>
+          </div>
+        </div>
+
+        <!-- ── TAB: DANGER ZONE ── -->
+        <div class="tab-content" id="tab-danger">
+          <div style="padding:20px 18px 0;">
+            <div style="font-family:var(--mono);font-size:.62rem;color:var(--mt);letter-spacing:1.5px;margin-bottom:16px;">DESTRUCTIVE ACTIONS — IRREVERSIBLE</div>
+          </div>
+
+          <div class="danger-zone">
+            <div class="dz-title"><i class="fa-solid fa-trash"></i> DELETE ACCOUNT</div>
+            <div class="dz-desc">Permanently delete your account, all prediction history, watchlists, and reports. This action cannot be undone.</div>
+            <button class="btn-danger" onclick="confirmDelete()">
+              <i class="fa-solid fa-triangle-exclamation"></i> Delete My Account
+            </button>
+          </div>
+
+          <div class="danger-zone" style="margin-top:12px;">
+            <div class="dz-title"><i class="fa-solid fa-eraser"></i> CLEAR PREDICTION HISTORY</div>
+            <div class="dz-desc">Remove all {{ total }} predictions from your history log. Your account stays active.</div>
+            <button class="btn-danger" onclick="confirmClearHistory()">
+              <i class="fa-solid fa-broom"></i> Clear History
+            </button>
           </div>
         </div>
 
       </div><!-- /panel -->
     </div><!-- /right-col -->
   </div><!-- /grid -->
-</div>
+</div><!-- /page -->
 
 <script>
-function switchTab(id,el){
+// ── TAB SWITCH ──
+function switchTab(id, el){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
   el.classList.add('active');
   document.getElementById('tab-'+id).classList.add('active');
 }
 
+// ── AVATAR PREVIEW ──
 function previewAvatar(input){
-  if(input.files&&input.files[0]){
-    const reader=new FileReader();
-    reader.onload=e=>{
-      document.querySelectorAll('.avatar-preview,.avatar-inner').forEach(el=>{
-        el.innerHTML=`<img src="${e.target.result}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
-      });
+  if(input.files && input.files[0]){
+    const reader = new FileReader();
+    reader.onload = e => {
+      const preview = document.getElementById('auPreview');
+      preview.innerHTML = `<img src="${e.target.result}" alt="">`;
+      // Also sync to form file input
+      const dt = new DataTransfer();
+      dt.items.add(input.files[0]);
+      document.getElementById('avatarFileForm').files = dt.files;
     };
     reader.readAsDataURL(input.files[0]);
   }
 }
+
+// ── PASSWORD CHANGE BOX ──
+function togglePwBox(){
+  const box = document.getElementById('pwChangeBox');
+  box.classList.toggle('open');
+}
+
+// ── DANGER CONFIRMS ──
+function confirmDelete(){
+  if(confirm('⚠️ Are you absolutely sure?\n\nThis will permanently delete your account and all data.\nThis CANNOT be undone.')){
+    window.location.href = '/delete-account';
+  }
+}
+function confirmClearHistory(){
+  if(confirm('Clear all prediction history?\n\nThis removes all history records. Your account stays active.')){
+    window.location.href = '/clear-history';
+  }
+}
+
+// ── ANIMATE STATS COUNTER ──
+function countUp(el, target, duration=800){
+  const num = parseInt(target) || 0;
+  if(!num) return;
+  let start=0;
+  const step = num / (duration / 16);
+  const tick = setInterval(()=>{
+    start = Math.min(start+step, num);
+    el.textContent = Math.floor(start);
+    if(start >= num) clearInterval(tick);
+  }, 16);
+}
+window.addEventListener('DOMContentLoaded', ()=>{
+  const predEl = document.getElementById('qsPred');
+  if(predEl){ countUp(predEl, predEl.textContent); }
+});
 </script>
 </body>
 </html>
